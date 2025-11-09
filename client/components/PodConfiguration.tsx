@@ -26,6 +26,7 @@ interface PodConfig {
   imagePullSecrets?: string[];
   restartPolicy?: string;
   runtimeClassName?: string;
+  affinity?: any;
 }
 
 interface PodConfigurationProps {
