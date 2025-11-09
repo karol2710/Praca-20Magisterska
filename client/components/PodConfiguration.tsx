@@ -288,23 +288,30 @@ export default function PodConfiguration({ config, onConfigChange }: PodConfigur
           {/* Section Content */}
           {expandedSections.has(section.id) && (
             <div className="px-4 py-4 border-t border-border bg-muted/10 space-y-4">
-              {section.fields.map((field) => (
-                <div key={String(field.key)}>
-                  {field.type === "checkbox" ? (
-                    renderField(field)
-                  ) : (
-                    <>
-                      <label className="block text-sm font-medium text-foreground mb-2">
-                        {field.label}
-                      </label>
-                      {renderField(field)}
-                    </>
-                  )}
-                  {field.description && (
-                    <p className="text-xs text-foreground/50 mt-1">{field.description}</p>
-                  )}
-                </div>
-              ))}
+              {section.id === "affinity" ? (
+                <AffinityConfiguration
+                  affinity={config.affinity || {}}
+                  onAffinityChange={(affinity) => onConfigChange("affinity", affinity)}
+                />
+              ) : (
+                section.fields.map((field) => (
+                  <div key={String(field.key)}>
+                    {field.type === "checkbox" ? (
+                      renderField(field)
+                    ) : (
+                      <>
+                        <label className="block text-sm font-medium text-foreground mb-2">
+                          {field.label}
+                        </label>
+                        {renderField(field)}
+                      </>
+                    )}
+                    {field.description && (
+                      <p className="text-xs text-foreground/50 mt-1">{field.description}</p>
+                    )}
+                  </div>
+                ))
+              )}
             </div>
           )}
         </div>
