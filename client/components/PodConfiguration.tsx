@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
+import AffinityConfiguration from "./AffinityConfiguration";
 
 interface PodConfig {
   labels?: Record<string, string>;
