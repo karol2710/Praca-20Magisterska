@@ -313,10 +313,17 @@ export default function CreateChart() {
               {workflows.length > 0 && (
                 <div className="space-y-2">
                   {workflows.map((workflow) => (
-                    <button
+                    <div
                       key={workflow.id}
                       onClick={() => setActiveWorkflowId(workflow.id)}
-                      className={`w-full p-4 rounded-lg border-2 text-left transition-all flex items-center justify-between ${
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          setActiveWorkflowId(workflow.id);
+                        }
+                      }}
+                      className={`w-full p-4 rounded-lg border-2 text-left transition-all flex items-center justify-between cursor-pointer ${
                         activeWorkflowId === workflow.id
                           ? "border-primary bg-primary/5"
                           : "border-border hover:border-primary/30"
@@ -331,11 +338,11 @@ export default function CreateChart() {
                           e.stopPropagation();
                           deleteWorkflow(workflow.id);
                         }}
-                        className="text-destructive hover:bg-destructive/10 p-1 rounded"
+                        className="text-destructive hover:bg-destructive/10 p-1 rounded hover:opacity-75 transition-opacity"
                       >
                         <X className="w-5 h-5" />
                       </button>
-                    </button>
+                    </div>
                   ))}
                 </div>
               )}
