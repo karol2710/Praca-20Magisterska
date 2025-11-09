@@ -1,0 +1,306 @@
+import { useState } from "react";
+import { ChevronDown } from "lucide-react";
+
+interface PodConfig {
+  labels?: Record<string, string>;
+  annotations?: Record<string, string>;
+  podDeathTime?: number;
+  terminationGracePeriodSeconds?: number;
+  nodeName?: string;
+  nodeSelector?: Record<string, string>;
+  priority?: number;
+  priorityClassName?: string;
+  schedulerName?: string;
+  automountServiceAccountToken?: boolean;
+  serviceAccountName?: string;
+  hostname?: string;
+  subdomain?: string;
+  dnsPolicy?: string;
+  enableServiceLinks?: boolean;
+  hostNetwork?: boolean;
+  hostIPC?: boolean;
+  hostPID?: boolean;
+  shareProcessNamespace?: boolean;
+  hostUsers?: boolean;
+  imagePullSecrets?: string[];
+  restartPolicy?: string;
+  runtimeClassName?: string;
+}
+
+interface PodConfigurationProps {
+  config: PodConfig;
+  onConfigChange: (key: keyof PodConfig, value: any) => void;
+}
+
+interface ConfigSection {
+  id: string;
+  title: string;
+  description: string;
+  fields: ConfigField[];
+}
+
+interface ConfigField {
+  key: keyof PodConfig;
+  label: string;
+  type: "text" | "number" | "checkbox" | "select" | "tags";
+  placeholder?: string;
+  options?: { value: string; label: string }[];
+  description?: string;
+}
+
+const configSections: ConfigSection[] = [
+  {
+    id: "metadata",
+    title: "Metadata",
+    description: "Labels and annotations for the Pod",
+    fields: [
+      { key: "labels", label: "Labels", type: "tags", description: "Key-value labels for Pod selection" },
+      { key: "annotations", label: "Annotations", type: "tags", description: "Metadata annotations" },
+    ],
+  },
+  {
+    id: "lifecycle",
+    title: "Lifecycle",
+    description: "Pod lifecycle and termination settings",
+    fields: [
+      { key: "podDeathTime", label: "Pod Death Time (seconds)", type: "number", placeholder: "300" },
+      { key: "terminationGracePeriodSeconds", label: "Termination Grace Period (seconds)", type: "number", placeholder: "30" },
+      {
+        key: "restartPolicy",
+        label: "Restart Policy",
+        type: "select",
+        options: [
+          { value: "Always", label: "Always" },
+          { value: "OnFailure", label: "OnFailure" },
+          { value: "Never", label: "Never" },
+        ],
+      },
+    ],
+  },
+  {
+    id: "scheduling",
+    title: "Scheduling",
+    description: "Node affinity and priority settings",
+    fields: [
+      { key: "nodeName", label: "Node Name", type: "text", placeholder: "worker-node-1" },
+      { key: "priority", label: "Priority", type: "number", placeholder: "0" },
+      { key: "priorityClassName", label: "Priority Class Name", type: "text" },
+      { key: "schedulerName", label: "Scheduler Name", type: "text" },
+    ],
+  },
+  {
+    id: "security",
+    title: "Security",
+    description: "Service account and security settings",
+    fields: [
+      { key: "serviceAccountName", label: "Service Account Name", type: "text" },
+      { key: "automountServiceAccountToken", label: "Automount Service Account Token", type: "checkbox" },
+    ],
+  },
+  {
+    id: "networking",
+    title: "Networking",
+    description: "DNS, hostname, and network settings",
+    fields: [
+      { key: "hostname", label: "Hostname", type: "text" },
+      { key: "subdomain", label: "Subdomain", type: "text" },
+      {
+        key: "dnsPolicy",
+        label: "DNS Policy",
+        type: "select",
+        options: [
+          { value: "ClusterFirstWithHostNet", label: "ClusterFirstWithHostNet" },
+          { value: "ClusterFirst", label: "ClusterFirst" },
+          { value: "Default", label: "Default" },
+          { value: "None", label: "None" },
+        ],
+      },
+      { key: "enableServiceLinks", label: "Enable Service Links", type: "checkbox" },
+      { key: "hostNetwork", label: "Host Network", type: "checkbox" },
+      { key: "hostIPC", label: "Host IPC", type: "checkbox" },
+      { key: "hostPID", label: "Host PID", type: "checkbox" },
+      { key: "hostUsers", label: "Host Users", type: "checkbox" },
+      { key: "shareProcessNamespace", label: "Share Process Namespace", type: "checkbox" },
+    ],
+  },
+  {
+    id: "storage",
+    title: "Storage & Images",
+    description: "Volumes and image pull settings",
+    fields: [
+      { key: "imagePullSecrets", label: "Image Pull Secrets", type: "tags", description: "Names of image pull secrets" },
+    ],
+  },
+  {
+    id: "advanced",
+    title: "Advanced",
+    description: "Runtime and advanced settings",
+    fields: [
+      { key: "runtimeClassName", label: "Runtime Class Name", type: "text" },
+    ],
+  },
+];
+
+export default function PodConfiguration({ config, onConfigChange }: PodConfigurationProps) {
+  const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set());
+
+  const toggleSection = (sectionId: string) => {
+    const newExpanded = new Set(expandedSections);
+    if (newExpanded.has(sectionId)) {
+      newExpanded.delete(sectionId);
+    } else {
+      newExpanded.add(sectionId);
+    }
+    setExpandedSections(newExpanded);
+  };
+
+  const renderField = (field: ConfigField) => {
+    const value = config[field.key];
+
+    switch (field.type) {
+      case "text":
+        return (
+          <input
+            type="text"
+            value={(value as string) || ""}
+            onChange={(e) => onConfigChange(field.key, e.target.value || undefined)}
+            placeholder={field.placeholder}
+            className="input-field"
+          />
+        );
+
+      case "number":
+        return (
+          <input
+            type="number"
+            value={(value as number) || ""}
+            onChange={(e) => onConfigChange(field.key, e.target.value ? parseInt(e.target.value) : undefined)}
+            placeholder={field.placeholder}
+            className="input-field"
+          />
+        );
+
+      case "checkbox":
+        return (
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={(value as boolean) || false}
+              onChange={(e) => onConfigChange(field.key, e.target.checked ? true : undefined)}
+              className="w-4 h-4 rounded border-border bg-input cursor-pointer"
+            />
+            <span className="text-foreground text-sm">{field.label}</span>
+          </label>
+        );
+
+      case "select":
+        return (
+          <select
+            value={(value as string) || ""}
+            onChange={(e) => onConfigChange(field.key, e.target.value || undefined)}
+            className="input-field"
+          >
+            <option value="">Select {field.label}</option>
+            {field.options?.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
+        );
+
+      case "tags":
+        return (
+          <div className="space-y-2">
+            <div className="flex flex-wrap gap-2">
+              {Array.isArray(value)
+                ? value.map((tag, idx) => (
+                    <div
+                      key={idx}
+                      className="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm flex items-center gap-2"
+                    >
+                      {tag}
+                      <button
+                        onClick={() => {
+                          const newValue = (value as string[]).filter((_, i) => i !== idx);
+                          onConfigChange(field.key, newValue.length > 0 ? newValue : undefined);
+                        }}
+                        className="text-primary hover:opacity-70"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))
+                : null}
+            </div>
+            <input
+              type="text"
+              placeholder={`Add ${field.label} (key=value)`}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  const input = e.currentTarget;
+                  const newValue = input.value.trim();
+                  if (newValue) {
+                    const currentArray = Array.isArray(value) ? (value as string[]) : [];
+                    onConfigChange(field.key, [...currentArray, newValue]);
+                    input.value = "";
+                  }
+                }
+              }}
+              className="input-field"
+            />
+          </div>
+        );
+
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className="space-y-3">
+      {configSections.map((section) => (
+        <div key={section.id} className="bg-muted/20 border border-border rounded-lg overflow-hidden">
+          {/* Section Header */}
+          <button
+            onClick={() => toggleSection(section.id)}
+            className="w-full px-4 py-3 flex items-center justify-between hover:bg-muted/30 transition-colors"
+          >
+            <div className="text-left">
+              <h4 className="font-semibold text-foreground">{section.title}</h4>
+              <p className="text-sm text-foreground/60">{section.description}</p>
+            </div>
+            <ChevronDown
+              className={`w-5 h-5 text-foreground/60 transition-transform ${
+                expandedSections.has(section.id) ? "rotate-180" : ""
+              }`}
+            />
+          </button>
+
+          {/* Section Content */}
+          {expandedSections.has(section.id) && (
+            <div className="px-4 py-4 border-t border-border bg-muted/10 space-y-4">
+              {section.fields.map((field) => (
+                <div key={String(field.key)}>
+                  {field.type === "checkbox" ? (
+                    renderField(field)
+                  ) : (
+                    <>
+                      <label className="block text-sm font-medium text-foreground mb-2">
+                        {field.label}
+                      </label>
+                      {renderField(field)}
+                    </>
+                  )}
+                  {field.description && (
+                    <p className="text-xs text-foreground/50 mt-1">{field.description}</p>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
