@@ -134,6 +134,12 @@ const configSections: ConfigSection[] = [
     ],
   },
   {
+    id: "affinity",
+    title: "Pod Affinity",
+    description: "Node and pod affinity/anti-affinity rules",
+    fields: [],
+  },
+  {
     id: "advanced",
     title: "Advanced",
     description: "Runtime and advanced settings",
