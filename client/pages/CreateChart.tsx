@@ -1,10 +1,12 @@
 import { useState } from "react";
 import Layout from "@/components/Layout";
-import { Upload, Plus, X, Zap } from "lucide-react";
+import { Upload, Plus, X, Zap, ChevronDown } from "lucide-react";
 
 type ChartMode = "standard" | "advanced";
 type InputType = "file" | "repo";
 type WorkloadType = "Pod" | "Deployment" | "ReplicaSet" | "StatefulSet" | "DaemonSet" | "Job" | "CronJob";
+type RestartPolicy = "Always" | "OnFailure" | "Never";
+type DNSPolicy = "ClusterFirstWithHostNet" | "ClusterFirst" | "Default" | "None";
 
 interface Container {
   id: string;
@@ -13,7 +15,46 @@ interface Container {
   env: Record<string, string>;
 }
 
-interface WorkloadConfig {
+interface PodConfig {
+  // Metadata
+  labels?: Record<string, string>;
+  annotations?: Record<string, string>;
+
+  // Lifecycle
+  podDeathTime?: number;
+  terminationGracePeriodSeconds?: number;
+
+  // Scheduling
+  nodeName?: string;
+  nodeSelector?: Record<string, string>;
+  priority?: number;
+  priorityClassName?: string;
+  schedulerName?: string;
+
+  // Security
+  automountServiceAccountToken?: boolean;
+  serviceAccountName?: string;
+
+  // Networking
+  hostname?: string;
+  subdomain?: string;
+  dnsPolicy?: DNSPolicy;
+  enableServiceLinks?: boolean;
+  hostNetwork?: boolean;
+  hostIPC?: boolean;
+  hostPID?: boolean;
+  shareProcessNamespace?: boolean;
+  hostUsers?: boolean;
+
+  // Storage
+  imagePullSecrets?: string[];
+
+  // Advanced
+  restartPolicy?: RestartPolicy;
+  runtimeClassName?: string;
+}
+
+interface WorkloadConfig extends PodConfig {
   replicas?: number;
   serviceName?: string;
   schedule?: string;
