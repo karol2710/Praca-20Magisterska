@@ -1,7 +1,7 @@
 import "./global.css";
 
 import { Toaster } from "@/components/ui/toaster";
-import { createRoot } from "react-dom/client";
+import { createRoot, Root } from "react-dom/client";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -33,15 +33,26 @@ const AppComponent = () => (
   </QueryClientProvider>
 );
 
-const initializeApp = () => {
+let root: Root | null = null;
+
+const renderApp = () => {
   const rootElement = document.getElementById("root");
   if (!rootElement) return;
 
-  // Check if root is already initialized
-  const rootContainer = (rootElement as any)._reactRootContainer;
-  if (!rootContainer) {
-    createRoot(rootElement).render(<AppComponent />);
+  if (!root) {
+    root = createRoot(rootElement);
   }
+  root.render(<AppComponent />);
 };
 
-initializeApp();
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", renderApp);
+} else {
+  renderApp();
+}
+
+if (import.meta.hot) {
+  import.meta.hot.accept(() => {
+    renderApp();
+  });
+}
