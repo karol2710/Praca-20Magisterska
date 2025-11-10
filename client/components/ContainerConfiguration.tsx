@@ -60,8 +60,8 @@ export interface ContainerConfig {
   
   // Lifecycle
   lifecycle?: {
-    postStart?: LifecycleHandler;
-    preStop?: LifecycleHandler;
+    postStart?: LifecycleHook;
+    preStop?: LifecycleHook;
   };
   
   // I/O
