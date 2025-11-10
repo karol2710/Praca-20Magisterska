@@ -120,8 +120,8 @@ interface LifecycleHookEditorProps {
 }
 
 function LifecycleHookEditor({ title, hook, onHookChange }: LifecycleHookEditorProps) {
-  const [hookType, setHookType] = useState<"exec" | "httpGet" | "tcpSocket" | "sleep" | undefined>(
-    hook?.exec ? "exec" : hook?.httpGet ? "httpGet" : hook?.tcpSocket ? "tcpSocket" : hook?.sleep ? "sleep" : undefined
+  const [hookType, setHookType] = useState<"exec" | "httpGet" | "sleep" | undefined>(
+    hook?.exec ? "exec" : hook?.httpGet ? "httpGet" : hook?.sleep ? "sleep" : undefined
   );
 
   return (
