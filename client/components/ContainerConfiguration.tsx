@@ -85,6 +85,18 @@ export interface ContainerConfig {
     devicePath: string;
     name: string;
   }[];
+
+  // Volume Mounts
+  volumeMounts?: {
+    devicePath?: string;
+    mountPath: string;
+    mountPropagation?: string;
+    name: string;
+    readOnly?: boolean;
+    recursiveReadOnly?: boolean;
+    subPath?: string;
+    subPathExpr?: string;
+  }[];
 }
 
 interface SecurityContext {
