@@ -771,6 +771,25 @@ export default function CreateChart() {
                         />
                       </div>
                     )}
+
+                    {activeWorkload.type === "Deployment" && (
+                      <div className="space-y-4">
+                        <p className="text-foreground/60 text-sm font-medium mb-4">Deployment Metadata</p>
+                        <DeploymentConfiguration
+                          config={{
+                            namespace: activeWorkload.config.deploymentNamespace,
+                            labels: activeWorkload.config.deploymentLabels,
+                            annotations: activeWorkload.config.deploymentAnnotations,
+                            deletionGracePeriodSeconds: activeWorkload.config.deploymentDeletionGracePeriodSeconds,
+                            ownerReferences: activeWorkload.config.deploymentOwnerReferences,
+                          }}
+                          onConfigChange={(key, value) => {
+                            const configKey: keyof WorkloadConfig = `deployment${key.charAt(0).toUpperCase() + key.slice(1)}` as any;
+                            updateWorkloadConfig(activeWorkload.id, configKey, value);
+                          }}
+                        />
+                      </div>
+                    )}
                   </div>
 
                   {/* Init Containers Section */}
