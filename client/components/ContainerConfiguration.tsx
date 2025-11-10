@@ -281,63 +281,380 @@ export default function ContainerConfiguration({
 
       case "environment":
         return (
-          <div className="space-y-4">
+          <div className="space-y-6">
             <div>
-              <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center justify-between mb-3">
                 <label className="block text-sm font-medium text-foreground">Environment Variables</label>
                 <button
                   onClick={() => {
                     const env = container.env || [];
-                    onConfigChange("env", [...env, { name: "", value: "" }]);
+                    onConfigChange("env", [...env, { name: "" }]);
                   }}
                   className="text-primary hover:opacity-70 text-sm"
                 >
-                  + Add
+                  + Add Variable
                 </button>
               </div>
-              <div className="space-y-2">
+              <div className="space-y-3">
                 {container.env?.map((e, idx) => (
-                  <div key={idx} className="flex gap-2 items-end">
-                    <input
-                      type="text"
-                      value={e.name}
-                      onChange={(env) => {
-                        const updated = [...(container.env || [])];
-                        updated[idx].name = env.target.value;
-                        onConfigChange("env", updated);
-                      }}
-                      placeholder="KEY"
-                      className="input-field flex-1"
-                    />
-                    <input
-                      type="text"
-                      value={e.value}
-                      onChange={(env) => {
-                        const updated = [...(container.env || [])];
-                        updated[idx].value = env.target.value;
-                        onConfigChange("env", updated);
-                      }}
-                      placeholder="value"
-                      className="input-field flex-1"
-                    />
-                    <button
-                      onClick={() => {
-                        onConfigChange(
-                          "env",
-                          container.env?.filter((_, i) => i !== idx)
-                        );
-                      }}
-                      className="px-3 py-2 text-destructive hover:bg-destructive/10 rounded"
-                    >
-                      ×
-                    </button>
+                  <div key={idx} className="p-4 bg-muted/20 border border-border rounded-lg space-y-3">
+                    <div className="flex gap-2 items-end">
+                      <input
+                        type="text"
+                        value={e.name}
+                        onChange={(env) => {
+                          const updated = [...(container.env || [])];
+                          updated[idx].name = env.target.value;
+                          onConfigChange("env", updated);
+                        }}
+                        placeholder="VARIABLE_NAME"
+                        className="input-field flex-1"
+                      />
+                      <button
+                        onClick={() => {
+                          onConfigChange(
+                            "env",
+                            container.env?.filter((_, i) => i !== idx)
+                          );
+                        }}
+                        className="px-3 py-2 text-destructive hover:bg-destructive/10 rounded"
+                      >
+                        ×
+                      </button>
+                    </div>
+
+                    {/* Value vs ValueFrom Toggle */}
+                    <div className="flex gap-2 text-xs">
+                      <label className="flex items-center gap-1 cursor-pointer">
+                        <input
+                          type="radio"
+                          checked={!e.valueFrom}
+                          onChange={() => {
+                            const updated = [...(container.env || [])];
+                            updated[idx] = { ...e, value: "", valueFrom: undefined };
+                            onConfigChange("env", updated);
+                          }}
+                          className="w-3 h-3 cursor-pointer"
+                        />
+                        <span className="text-foreground">Value</span>
+                      </label>
+                      <label className="flex items-center gap-1 cursor-pointer">
+                        <input
+                          type="radio"
+                          checked={!!e.valueFrom}
+                          onChange={() => {
+                            const updated = [...(container.env || [])];
+                            updated[idx] = { ...e, value: undefined, valueFrom: {} };
+                            onConfigChange("env", updated);
+                          }}
+                          className="w-3 h-3 cursor-pointer"
+                        />
+                        <span className="text-foreground">Value From</span>
+                      </label>
+                    </div>
+
+                    {/* Simple Value */}
+                    {!e.valueFrom && (
+                      <input
+                        type="text"
+                        value={e.value || ""}
+                        onChange={(env) => {
+                          const updated = [...(container.env || [])];
+                          updated[idx].value = env.target.value || undefined;
+                          onConfigChange("env", updated);
+                        }}
+                        placeholder="value"
+                        className="input-field w-full"
+                      />
+                    )}
+
+                    {/* ValueFrom Options */}
+                    {e.valueFrom && (
+                      <div className="space-y-3 pt-2 border-t border-border">
+                        {/* ConfigMap Key Reference */}
+                        <div className="space-y-2">
+                          <label className="flex items-center gap-2 text-xs cursor-pointer">
+                            <input
+                              type="radio"
+                              checked={!!e.valueFrom?.configMapKeyRef && !e.valueFrom?.fieldRef && !e.valueFrom?.resourceFieldRef && !e.valueFrom?.secretKeyRef}
+                              onChange={() => {
+                                const updated = [...(container.env || [])];
+                                updated[idx] = {
+                                  ...e,
+                                  valueFrom: { configMapKeyRef: { name: "", key: "" } },
+                                };
+                                onConfigChange("env", updated);
+                              }}
+                              className="w-3 h-3 cursor-pointer"
+                            />
+                            <span className="text-foreground font-medium">ConfigMap Key Reference</span>
+                          </label>
+                          {e.valueFrom?.configMapKeyRef && (
+                            <div className="grid grid-cols-2 gap-2 pl-5">
+                              <div>
+                                <label className="block text-xs font-medium text-foreground mb-1">Name</label>
+                                <input
+                                  type="text"
+                                  value={e.valueFrom.configMapKeyRef.name || ""}
+                                  onChange={(ev) => {
+                                    const updated = [...(container.env || [])];
+                                    updated[idx] = {
+                                      ...e,
+                                      valueFrom: {
+                                        ...e.valueFrom,
+                                        configMapKeyRef: { ...e.valueFrom.configMapKeyRef, name: ev.target.value },
+                                      },
+                                    };
+                                    onConfigChange("env", updated);
+                                  }}
+                                  placeholder="config-name"
+                                  className="input-field text-sm"
+                                />
+                              </div>
+                              <div>
+                                <label className="block text-xs font-medium text-foreground mb-1">Key</label>
+                                <input
+                                  type="text"
+                                  value={e.valueFrom.configMapKeyRef.key || ""}
+                                  onChange={(ev) => {
+                                    const updated = [...(container.env || [])];
+                                    updated[idx] = {
+                                      ...e,
+                                      valueFrom: {
+                                        ...e.valueFrom,
+                                        configMapKeyRef: { ...e.valueFrom.configMapKeyRef, key: ev.target.value },
+                                      },
+                                    };
+                                    onConfigChange("env", updated);
+                                  }}
+                                  placeholder="config-key"
+                                  className="input-field text-sm"
+                                />
+                              </div>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Field Reference */}
+                        <div className="space-y-2">
+                          <label className="flex items-center gap-2 text-xs cursor-pointer">
+                            <input
+                              type="radio"
+                              checked={!!e.valueFrom?.fieldRef && !e.valueFrom?.configMapKeyRef && !e.valueFrom?.resourceFieldRef && !e.valueFrom?.secretKeyRef}
+                              onChange={() => {
+                                const updated = [...(container.env || [])];
+                                updated[idx] = {
+                                  ...e,
+                                  valueFrom: { fieldRef: { apiVersion: "v1", fieldPath: "" } },
+                                };
+                                onConfigChange("env", updated);
+                              }}
+                              className="w-3 h-3 cursor-pointer"
+                            />
+                            <span className="text-foreground font-medium">Field Reference</span>
+                          </label>
+                          {e.valueFrom?.fieldRef && (
+                            <div className="grid grid-cols-2 gap-2 pl-5">
+                              <div>
+                                <label className="block text-xs font-medium text-foreground mb-1">API Version</label>
+                                <input
+                                  type="text"
+                                  value={e.valueFrom.fieldRef.apiVersion || ""}
+                                  onChange={(ev) => {
+                                    const updated = [...(container.env || [])];
+                                    updated[idx] = {
+                                      ...e,
+                                      valueFrom: {
+                                        ...e.valueFrom,
+                                        fieldRef: { ...e.valueFrom.fieldRef, apiVersion: ev.target.value },
+                                      },
+                                    };
+                                    onConfigChange("env", updated);
+                                  }}
+                                  placeholder="v1"
+                                  className="input-field text-sm"
+                                />
+                              </div>
+                              <div>
+                                <label className="block text-xs font-medium text-foreground mb-1">Field Path</label>
+                                <input
+                                  type="text"
+                                  value={e.valueFrom.fieldRef.fieldPath || ""}
+                                  onChange={(ev) => {
+                                    const updated = [...(container.env || [])];
+                                    updated[idx] = {
+                                      ...e,
+                                      valueFrom: {
+                                        ...e.valueFrom,
+                                        fieldRef: { ...e.valueFrom.fieldRef, fieldPath: ev.target.value },
+                                      },
+                                    };
+                                    onConfigChange("env", updated);
+                                  }}
+                                  placeholder="metadata.name"
+                                  className="input-field text-sm"
+                                />
+                              </div>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Resource Field Reference */}
+                        <div className="space-y-2">
+                          <label className="flex items-center gap-2 text-xs cursor-pointer">
+                            <input
+                              type="radio"
+                              checked={!!e.valueFrom?.resourceFieldRef && !e.valueFrom?.configMapKeyRef && !e.valueFrom?.fieldRef && !e.valueFrom?.secretKeyRef}
+                              onChange={() => {
+                                const updated = [...(container.env || [])];
+                                updated[idx] = {
+                                  ...e,
+                                  valueFrom: { resourceFieldRef: { resource: "" } },
+                                };
+                                onConfigChange("env", updated);
+                              }}
+                              className="w-3 h-3 cursor-pointer"
+                            />
+                            <span className="text-foreground font-medium">Resource Field Reference</span>
+                          </label>
+                          {e.valueFrom?.resourceFieldRef && (
+                            <div className="grid grid-cols-3 gap-2 pl-5">
+                              <div>
+                                <label className="block text-xs font-medium text-foreground mb-1">Container Name</label>
+                                <input
+                                  type="text"
+                                  value={e.valueFrom.resourceFieldRef.containerName || ""}
+                                  onChange={(ev) => {
+                                    const updated = [...(container.env || [])];
+                                    updated[idx] = {
+                                      ...e,
+                                      valueFrom: {
+                                        ...e.valueFrom,
+                                        resourceFieldRef: { ...e.valueFrom.resourceFieldRef, containerName: ev.target.value || undefined },
+                                      },
+                                    };
+                                    onConfigChange("env", updated);
+                                  }}
+                                  placeholder="container-name"
+                                  className="input-field text-sm"
+                                />
+                              </div>
+                              <div>
+                                <label className="block text-xs font-medium text-foreground mb-1">Resource</label>
+                                <input
+                                  type="text"
+                                  value={e.valueFrom.resourceFieldRef.resource || ""}
+                                  onChange={(ev) => {
+                                    const updated = [...(container.env || [])];
+                                    updated[idx] = {
+                                      ...e,
+                                      valueFrom: {
+                                        ...e.valueFrom,
+                                        resourceFieldRef: { ...e.valueFrom.resourceFieldRef, resource: ev.target.value },
+                                      },
+                                    };
+                                    onConfigChange("env", updated);
+                                  }}
+                                  placeholder="limits.cpu"
+                                  className="input-field text-sm"
+                                />
+                              </div>
+                              <div>
+                                <label className="block text-xs font-medium text-foreground mb-1">Divisor</label>
+                                <input
+                                  type="text"
+                                  value={e.valueFrom.resourceFieldRef.divisor || ""}
+                                  onChange={(ev) => {
+                                    const updated = [...(container.env || [])];
+                                    updated[idx] = {
+                                      ...e,
+                                      valueFrom: {
+                                        ...e.valueFrom,
+                                        resourceFieldRef: { ...e.valueFrom.resourceFieldRef, divisor: ev.target.value || undefined },
+                                      },
+                                    };
+                                    onConfigChange("env", updated);
+                                  }}
+                                  placeholder="1m"
+                                  className="input-field text-sm"
+                                />
+                              </div>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Secret Key Reference */}
+                        <div className="space-y-2">
+                          <label className="flex items-center gap-2 text-xs cursor-pointer">
+                            <input
+                              type="radio"
+                              checked={!!e.valueFrom?.secretKeyRef && !e.valueFrom?.configMapKeyRef && !e.valueFrom?.fieldRef && !e.valueFrom?.resourceFieldRef}
+                              onChange={() => {
+                                const updated = [...(container.env || [])];
+                                updated[idx] = {
+                                  ...e,
+                                  valueFrom: { secretKeyRef: { name: "", key: "" } },
+                                };
+                                onConfigChange("env", updated);
+                              }}
+                              className="w-3 h-3 cursor-pointer"
+                            />
+                            <span className="text-foreground font-medium">Secret Key Reference</span>
+                          </label>
+                          {e.valueFrom?.secretKeyRef && (
+                            <div className="grid grid-cols-2 gap-2 pl-5">
+                              <div>
+                                <label className="block text-xs font-medium text-foreground mb-1">Name</label>
+                                <input
+                                  type="text"
+                                  value={e.valueFrom.secretKeyRef.name || ""}
+                                  onChange={(ev) => {
+                                    const updated = [...(container.env || [])];
+                                    updated[idx] = {
+                                      ...e,
+                                      valueFrom: {
+                                        ...e.valueFrom,
+                                        secretKeyRef: { ...e.valueFrom.secretKeyRef, name: ev.target.value },
+                                      },
+                                    };
+                                    onConfigChange("env", updated);
+                                  }}
+                                  placeholder="secret-name"
+                                  className="input-field text-sm"
+                                />
+                              </div>
+                              <div>
+                                <label className="block text-xs font-medium text-foreground mb-1">Key</label>
+                                <input
+                                  type="text"
+                                  value={e.valueFrom.secretKeyRef.key || ""}
+                                  onChange={(ev) => {
+                                    const updated = [...(container.env || [])];
+                                    updated[idx] = {
+                                      ...e,
+                                      valueFrom: {
+                                        ...e.valueFrom,
+                                        secretKeyRef: { ...e.valueFrom.secretKeyRef, key: ev.target.value },
+                                      },
+                                    };
+                                    onConfigChange("env", updated);
+                                  }}
+                                  placeholder="secret-key"
+                                  className="input-field text-sm"
+                                />
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
             </div>
 
             <div>
-              <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center justify-between mb-3">
                 <label className="block text-sm font-medium text-foreground">Environment From</label>
                 <button
                   onClick={() => {
@@ -357,7 +674,7 @@ export default function ContainerConfiguration({
                       value={ef.configMapRef || ""}
                       onChange={(e) => {
                         const updated = [...(container.envFrom || [])];
-                        updated[idx] = { ...ef, configMapRef: e.target.value };
+                        updated[idx] = { ...ef, configMapRef: e.target.value || undefined };
                         onConfigChange("envFrom", updated);
                       }}
                       placeholder="ConfigMap name"
@@ -368,7 +685,7 @@ export default function ContainerConfiguration({
                       value={ef.secretRef || ""}
                       onChange={(e) => {
                         const updated = [...(container.envFrom || [])];
-                        updated[idx] = { ...ef, secretRef: e.target.value };
+                        updated[idx] = { ...ef, secretRef: e.target.value || undefined };
                         onConfigChange("envFrom", updated);
                       }}
                       placeholder="Secret name"
