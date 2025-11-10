@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Layout from "@/components/Layout";
 import PodConfiguration from "@/components/PodConfiguration";
+import ContainerConfiguration, { ContainerConfig } from "@/components/ContainerConfiguration";
 import { Upload, Plus, X, Zap } from "lucide-react";
 
 type ChartMode = "standard" | "advanced";
@@ -9,11 +10,8 @@ type WorkloadType = "Pod" | "Deployment" | "ReplicaSet" | "StatefulSet" | "Daemo
 type RestartPolicy = "Always" | "OnFailure" | "Never";
 type DNSPolicy = "ClusterFirstWithHostNet" | "ClusterFirst" | "Default" | "None";
 
-interface Container {
+interface Container extends ContainerConfig {
   id: string;
-  image: string;
-  port: number;
-  env: Record<string, string>;
 }
 
 interface PodConfig {
