@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ChevronDown, X } from "lucide-react";
+import PodConfiguration from "./PodConfiguration";
 
 interface OwnerReference {
   apiVersion?: string;
