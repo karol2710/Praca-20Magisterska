@@ -76,6 +76,35 @@ export interface ContainerConfig {
   // Advanced
   resizePolicy?: { type: string; resourceName: string }[];
   restartPolicy?: "Always" | "OnFailure" | "Never";
+
+  // Security Context
+  securityContext?: SecurityContext;
+}
+
+interface SecurityContext {
+  allowPrivilegeEscalation?: boolean;
+  appArmor?: {
+    type?: string;
+    localhostProfile?: string;
+  };
+  capabilities?: {
+    add?: string[];
+    drop?: string[];
+  };
+  procMount?: string;
+  runAsGroup?: number;
+  runAsNonRoot?: boolean;
+  runAsUser?: number;
+  seLinuxOptions?: {
+    level?: string;
+    role?: string;
+    type?: string;
+    user?: string;
+  };
+  seccompProfile?: {
+    type?: string;
+    localhostProfile?: string;
+  };
 }
 
 interface ProbeConfig {
