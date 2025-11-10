@@ -157,6 +157,12 @@ const configSections: ConfigSection[] = [
     fields: [],
   },
   {
+    id: "resourceClaims",
+    title: "Resource Claims",
+    description: "Resource claims for the Pod",
+    fields: [],
+  },
+  {
     id: "storage",
     title: "Storage & Images",
     description: "Volumes and image pull settings",
