@@ -8,7 +8,13 @@ export interface ContainerConfig {
   workingDirectory?: string;
   
   // Ports
-  ports?: { name?: string; containerPort: number; protocol?: "TCP" | "UDP" | "SCTP" }[];
+  ports?: {
+    name?: string;
+    containerPort: number;
+    hostPort?: number;
+    hostIP?: string;
+    protocol?: "TCP" | "UDP" | "SCTP"
+  }[];
   
   // Command
   command?: string[];
