@@ -149,6 +149,7 @@ interface Volume {
 interface PodConfig {
   labels?: Record<string, string>;
   annotations?: Record<string, string>;
+  namespace?: string;
   podDeathTime?: number;
   terminationGracePeriodSeconds?: number;
   nodeName?: string;
