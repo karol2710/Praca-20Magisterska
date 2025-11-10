@@ -25,6 +25,10 @@ interface PodConfig {
       value?: string;
     }[];
   };
+  hostAliases?: {
+    ip: string;
+    hostnames: string[];
+  }[];
   enableServiceLinks?: boolean;
   hostNetwork?: boolean;
   hostIPC?: boolean;
