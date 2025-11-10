@@ -1635,8 +1635,33 @@ export default function ContainerConfiguration({
 
       case "probes":
         return (
-          <div className="space-y-4 text-sm">
-            <p className="text-foreground/60">Probe configuration details coming in depth - for now basic structure</p>
+          <div className="space-y-6">
+            {/* Liveness Probe */}
+            <ProbeEditor
+              title="Liveness Probe"
+              probe={container.livenessProbe}
+              onProbeChange={(probe) => {
+                onConfigChange("livenessProbe", probe);
+              }}
+            />
+
+            {/* Readiness Probe */}
+            <ProbeEditor
+              title="Readiness Probe"
+              probe={container.readinessProbe}
+              onProbeChange={(probe) => {
+                onConfigChange("readinessProbe", probe);
+              }}
+            />
+
+            {/* Startup Probe */}
+            <ProbeEditor
+              title="Startup Probe"
+              probe={container.startupProbe}
+              onProbeChange={(probe) => {
+                onConfigChange("startupProbe", probe);
+              }}
+            />
           </div>
         );
 
