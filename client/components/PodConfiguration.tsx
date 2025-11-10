@@ -183,6 +183,7 @@ interface PodConfig {
   securityContext?: PodSecurityContext;
   tolerations?: Toleration[];
   topologySpreadConstraints?: TopologySpreadConstraint[];
+  volumes?: Volume[];
   enableServiceLinks?: boolean;
   hostNetwork?: boolean;
   hostIPC?: boolean;
