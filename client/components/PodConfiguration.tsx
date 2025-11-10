@@ -1714,6 +1714,459 @@ export default function PodConfiguration({ config, onConfigChange }: PodConfigur
                     </div>
                   </div>
                 </div>
+              ) : section.id === "volumes" ? (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between mb-4">
+                    <h5 className="font-medium text-foreground text-sm">Volumes</h5>
+                    <button
+                      onClick={() => {
+                        const volumes = config.volumes || [];
+                        onConfigChange("volumes", [...volumes, { name: "" }]);
+                      }}
+                      className="text-primary hover:opacity-70 text-sm"
+                    >
+                      + Add Volume
+                    </button>
+                  </div>
+                  <div className="space-y-4">
+                    {(config.volumes || []).map((volume, idx) => (
+                      <div key={idx} className="p-4 bg-muted/20 border border-border rounded-lg space-y-4">
+                        {/* Volume Name */}
+                        <div>
+                          <label className="block text-xs font-medium text-foreground mb-1">Name*</label>
+                          <input
+                            type="text"
+                            value={volume.name}
+                            onChange={(e) => {
+                              const updated = [...(config.volumes || [])];
+                              updated[idx] = { ...volume, name: e.target.value };
+                              onConfigChange("volumes", updated);
+                            }}
+                            placeholder="volume-name"
+                            className="input-field text-sm"
+                          />
+                        </div>
+
+                        {/* Volume Type Selection */}
+                        <div>
+                          <label className="block text-xs font-medium text-foreground mb-2">Volume Type</label>
+                          <select
+                            value={
+                              volume.configMap ? "configMap" :
+                              volume.emptyDir ? "emptyDir" :
+                              volume.ephemeral ? "ephemeral" :
+                              volume.hostPath ? "hostPath" :
+                              volume.persistentVolumeClaim ? "persistentVolumeClaim" :
+                              volume.secret ? "secret" : ""
+                            }
+                            onChange={(e) => {
+                              const updated = [...(config.volumes || [])];
+                              const newVolume: Volume = { name: volume.name };
+
+                              switch(e.target.value) {
+                                case "configMap":
+                                  newVolume.configMap = { name: "" };
+                                  break;
+                                case "emptyDir":
+                                  newVolume.emptyDir = {};
+                                  break;
+                                case "ephemeral":
+                                  newVolume.ephemeral = { volumeClaimTemplate: { metadata: {}, spec: {} } };
+                                  break;
+                                case "hostPath":
+                                  newVolume.hostPath = { path: "" };
+                                  break;
+                                case "persistentVolumeClaim":
+                                  newVolume.persistentVolumeClaim = { claimName: "" };
+                                  break;
+                                case "secret":
+                                  newVolume.secret = { secretName: "" };
+                                  break;
+                              }
+                              updated[idx] = newVolume;
+                              onConfigChange("volumes", updated);
+                            }}
+                            className="input-field text-sm"
+                          >
+                            <option value="">Select Type</option>
+                            <option value="configMap">ConfigMap</option>
+                            <option value="emptyDir">Empty Directory</option>
+                            <option value="ephemeral">Ephemeral</option>
+                            <option value="hostPath">Host Path</option>
+                            <option value="persistentVolumeClaim">Persistent Volume Claim</option>
+                            <option value="secret">Secret</option>
+                          </select>
+                        </div>
+
+                        {/* ConfigMap */}
+                        {volume.configMap && (
+                          <div className="border-t border-border pt-3 space-y-3">
+                            <h6 className="text-xs font-semibold text-foreground">ConfigMap</h6>
+                            <div className="grid grid-cols-2 gap-3">
+                              <div>
+                                <label className="block text-xs font-medium text-foreground mb-1">Name</label>
+                                <input
+                                  type="text"
+                                  value={volume.configMap.name || ""}
+                                  onChange={(e) => {
+                                    const updated = [...(config.volumes || [])];
+                                    updated[idx] = { ...volume, configMap: { ...volume.configMap, name: e.target.value || undefined } };
+                                    onConfigChange("volumes", updated);
+                                  }}
+                                  placeholder="configmap-name"
+                                  className="input-field text-sm"
+                                />
+                              </div>
+                              <div>
+                                <label className="block text-xs font-medium text-foreground mb-1">Default Mode</label>
+                                <input
+                                  type="number"
+                                  value={volume.configMap.defaultMode || ""}
+                                  onChange={(e) => {
+                                    const updated = [...(config.volumes || [])];
+                                    updated[idx] = { ...volume, configMap: { ...volume.configMap, defaultMode: e.target.value ? parseInt(e.target.value) : undefined } };
+                                    onConfigChange("volumes", updated);
+                                  }}
+                                  placeholder="420"
+                                  className="input-field text-sm"
+                                />
+                              </div>
+                            </div>
+
+                            {/* ConfigMap Items */}
+                            <div>
+                              <div className="flex items-center justify-between mb-2">
+                                <label className="block text-xs font-medium text-foreground">Items</label>
+                                <button
+                                  onClick={() => {
+                                    const updated = [...(config.volumes || [])];
+                                    const items = [...(volume.configMap?.items || [])];
+                                    items.push({ key: "", path: "" });
+                                    updated[idx] = { ...volume, configMap: { ...volume.configMap, items } };
+                                    onConfigChange("volumes", updated);
+                                  }}
+                                  className="text-primary hover:opacity-70 text-xs"
+                                >
+                                  + Add Item
+                                </button>
+                              </div>
+                              <div className="space-y-2">
+                                {(volume.configMap?.items || []).map((item, iIdx) => (
+                                  <div key={iIdx} className="p-2 bg-muted/30 border border-border/50 rounded space-y-2">
+                                    <div className="grid grid-cols-3 gap-2">
+                                      <input
+                                        type="text"
+                                        value={item.key || ""}
+                                        onChange={(e) => {
+                                          const updated = [...(config.volumes || [])];
+                                          const items = [...(volume.configMap?.items || [])];
+                                          items[iIdx] = { ...item, key: e.target.value || undefined };
+                                          updated[idx] = { ...volume, configMap: { ...volume.configMap, items } };
+                                          onConfigChange("volumes", updated);
+                                        }}
+                                        placeholder="key"
+                                        className="input-field text-xs"
+                                      />
+                                      <input
+                                        type="text"
+                                        value={item.path || ""}
+                                        onChange={(e) => {
+                                          const updated = [...(config.volumes || [])];
+                                          const items = [...(volume.configMap?.items || [])];
+                                          items[iIdx] = { ...item, path: e.target.value || undefined };
+                                          updated[idx] = { ...volume, configMap: { ...volume.configMap, items } };
+                                          onConfigChange("volumes", updated);
+                                        }}
+                                        placeholder="path"
+                                        className="input-field text-xs"
+                                      />
+                                      <input
+                                        type="number"
+                                        value={item.mode || ""}
+                                        onChange={(e) => {
+                                          const updated = [...(config.volumes || [])];
+                                          const items = [...(volume.configMap?.items || [])];
+                                          items[iIdx] = { ...item, mode: e.target.value ? parseInt(e.target.value) : undefined };
+                                          updated[idx] = { ...volume, configMap: { ...volume.configMap, items } };
+                                          onConfigChange("volumes", updated);
+                                        }}
+                                        placeholder="mode"
+                                        className="input-field text-xs"
+                                      />
+                                    </div>
+                                    <button
+                                      onClick={() => {
+                                        const updated = [...(config.volumes || [])];
+                                        const items = (volume.configMap?.items || []).filter((_, i) => i !== iIdx);
+                                        updated[idx] = { ...volume, configMap: { ...volume.configMap, items: items.length > 0 ? items : undefined } };
+                                        onConfigChange("volumes", updated);
+                                      }}
+                                      className="w-full text-xs text-destructive hover:bg-destructive/10 py-1 rounded"
+                                    >
+                                      Remove
+                                    </button>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Empty Directory */}
+                        {volume.emptyDir && (
+                          <div className="border-t border-border pt-3 space-y-3">
+                            <h6 className="text-xs font-semibold text-foreground">Empty Directory</h6>
+                            <div className="grid grid-cols-2 gap-3">
+                              <div>
+                                <label className="block text-xs font-medium text-foreground mb-1">Medium</label>
+                                <select
+                                  value={volume.emptyDir.medium || ""}
+                                  onChange={(e) => {
+                                    const updated = [...(config.volumes || [])];
+                                    updated[idx] = { ...volume, emptyDir: { ...volume.emptyDir, medium: e.target.value || undefined } };
+                                    onConfigChange("volumes", updated);
+                                  }}
+                                  className="input-field text-sm"
+                                >
+                                  <option value="">Default</option>
+                                  <option value="Memory">Memory</option>
+                                </select>
+                              </div>
+                              <div>
+                                <label className="block text-xs font-medium text-foreground mb-1">Size Limit</label>
+                                <input
+                                  type="text"
+                                  value={volume.emptyDir.sizeLimit || ""}
+                                  onChange={(e) => {
+                                    const updated = [...(config.volumes || [])];
+                                    updated[idx] = { ...volume, emptyDir: { ...volume.emptyDir, sizeLimit: e.target.value || undefined } };
+                                    onConfigChange("volumes", updated);
+                                  }}
+                                  placeholder="1Gi"
+                                  className="input-field text-sm"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Host Path */}
+                        {volume.hostPath && (
+                          <div className="border-t border-border pt-3 space-y-3">
+                            <h6 className="text-xs font-semibold text-foreground">Host Path</h6>
+                            <div className="grid grid-cols-2 gap-3">
+                              <div>
+                                <label className="block text-xs font-medium text-foreground mb-1">Path</label>
+                                <input
+                                  type="text"
+                                  value={volume.hostPath.path || ""}
+                                  onChange={(e) => {
+                                    const updated = [...(config.volumes || [])];
+                                    updated[idx] = { ...volume, hostPath: { ...volume.hostPath, path: e.target.value || undefined } };
+                                    onConfigChange("volumes", updated);
+                                  }}
+                                  placeholder="/var/log"
+                                  className="input-field text-sm"
+                                />
+                              </div>
+                              <div>
+                                <label className="block text-xs font-medium text-foreground mb-1">Type</label>
+                                <select
+                                  value={volume.hostPath.type || ""}
+                                  onChange={(e) => {
+                                    const updated = [...(config.volumes || [])];
+                                    updated[idx] = { ...volume, hostPath: { ...volume.hostPath, type: e.target.value || undefined } };
+                                    onConfigChange("volumes", updated);
+                                  }}
+                                  className="input-field text-sm"
+                                >
+                                  <option value="">Select Type</option>
+                                  <option value="Directory">Directory</option>
+                                  <option value="File">File</option>
+                                  <option value="Socket">Socket</option>
+                                  <option value="CharDevice">CharDevice</option>
+                                  <option value="BlockDevice">BlockDevice</option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Persistent Volume Claim */}
+                        {volume.persistentVolumeClaim && (
+                          <div className="border-t border-border pt-3 space-y-3">
+                            <h6 className="text-xs font-semibold text-foreground">Persistent Volume Claim</h6>
+                            <div className="grid grid-cols-2 gap-3">
+                              <div>
+                                <label className="block text-xs font-medium text-foreground mb-1">Claim Name</label>
+                                <input
+                                  type="text"
+                                  value={volume.persistentVolumeClaim.claimName || ""}
+                                  onChange={(e) => {
+                                    const updated = [...(config.volumes || [])];
+                                    updated[idx] = { ...volume, persistentVolumeClaim: { ...volume.persistentVolumeClaim, claimName: e.target.value || undefined } };
+                                    onConfigChange("volumes", updated);
+                                  }}
+                                  placeholder="pvc-name"
+                                  className="input-field text-sm"
+                                />
+                              </div>
+                              <div className="flex items-end">
+                                <label className="flex items-center gap-2 cursor-pointer">
+                                  <input
+                                    type="checkbox"
+                                    checked={volume.persistentVolumeClaim.readOnly || false}
+                                    onChange={(e) => {
+                                      const updated = [...(config.volumes || [])];
+                                      updated[idx] = { ...volume, persistentVolumeClaim: { ...volume.persistentVolumeClaim, readOnly: e.target.checked ? true : undefined } };
+                                      onConfigChange("volumes", updated);
+                                    }}
+                                    className="w-4 h-4 rounded border-border bg-input cursor-pointer"
+                                  />
+                                  <span className="text-xs font-medium text-foreground">Read-Only</span>
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Secret */}
+                        {volume.secret && (
+                          <div className="border-t border-border pt-3 space-y-3">
+                            <h6 className="text-xs font-semibold text-foreground">Secret</h6>
+                            <div className="grid grid-cols-2 gap-3">
+                              <div>
+                                <label className="block text-xs font-medium text-foreground mb-1">Secret Name</label>
+                                <input
+                                  type="text"
+                                  value={volume.secret.secretName || ""}
+                                  onChange={(e) => {
+                                    const updated = [...(config.volumes || [])];
+                                    updated[idx] = { ...volume, secret: { ...volume.secret, secretName: e.target.value || undefined } };
+                                    onConfigChange("volumes", updated);
+                                  }}
+                                  placeholder="secret-name"
+                                  className="input-field text-sm"
+                                />
+                              </div>
+                              <div>
+                                <label className="block text-xs font-medium text-foreground mb-1">Default Mode</label>
+                                <input
+                                  type="number"
+                                  value={volume.secret.defaultMode || ""}
+                                  onChange={(e) => {
+                                    const updated = [...(config.volumes || [])];
+                                    updated[idx] = { ...volume, secret: { ...volume.secret, defaultMode: e.target.value ? parseInt(e.target.value) : undefined } };
+                                    onConfigChange("volumes", updated);
+                                  }}
+                                  placeholder="420"
+                                  className="input-field text-sm"
+                                />
+                              </div>
+                            </div>
+
+                            {/* Secret Items */}
+                            <div>
+                              <div className="flex items-center justify-between mb-2">
+                                <label className="block text-xs font-medium text-foreground">Items</label>
+                                <button
+                                  onClick={() => {
+                                    const updated = [...(config.volumes || [])];
+                                    const items = [...(volume.secret?.items || [])];
+                                    items.push({ key: "", path: "" });
+                                    updated[idx] = { ...volume, secret: { ...volume.secret, items } };
+                                    onConfigChange("volumes", updated);
+                                  }}
+                                  className="text-primary hover:opacity-70 text-xs"
+                                >
+                                  + Add Item
+                                </button>
+                              </div>
+                              <div className="space-y-2">
+                                {(volume.secret?.items || []).map((item, iIdx) => (
+                                  <div key={iIdx} className="p-2 bg-muted/30 border border-border/50 rounded space-y-2">
+                                    <div className="grid grid-cols-3 gap-2">
+                                      <input
+                                        type="text"
+                                        value={item.key || ""}
+                                        onChange={(e) => {
+                                          const updated = [...(config.volumes || [])];
+                                          const items = [...(volume.secret?.items || [])];
+                                          items[iIdx] = { ...item, key: e.target.value || undefined };
+                                          updated[idx] = { ...volume, secret: { ...volume.secret, items } };
+                                          onConfigChange("volumes", updated);
+                                        }}
+                                        placeholder="key"
+                                        className="input-field text-xs"
+                                      />
+                                      <input
+                                        type="text"
+                                        value={item.path || ""}
+                                        onChange={(e) => {
+                                          const updated = [...(config.volumes || [])];
+                                          const items = [...(volume.secret?.items || [])];
+                                          items[iIdx] = { ...item, path: e.target.value || undefined };
+                                          updated[idx] = { ...volume, secret: { ...volume.secret, items } };
+                                          onConfigChange("volumes", updated);
+                                        }}
+                                        placeholder="path"
+                                        className="input-field text-xs"
+                                      />
+                                      <input
+                                        type="number"
+                                        value={item.mode || ""}
+                                        onChange={(e) => {
+                                          const updated = [...(config.volumes || [])];
+                                          const items = [...(volume.secret?.items || [])];
+                                          items[iIdx] = { ...item, mode: e.target.value ? parseInt(e.target.value) : undefined };
+                                          updated[idx] = { ...volume, secret: { ...volume.secret, items } };
+                                          onConfigChange("volumes", updated);
+                                        }}
+                                        placeholder="mode"
+                                        className="input-field text-xs"
+                                      />
+                                    </div>
+                                    <button
+                                      onClick={() => {
+                                        const updated = [...(config.volumes || [])];
+                                        const items = (volume.secret?.items || []).filter((_, i) => i !== iIdx);
+                                        updated[idx] = { ...volume, secret: { ...volume.secret, items: items.length > 0 ? items : undefined } };
+                                        onConfigChange("volumes", updated);
+                                      }}
+                                      className="w-full text-xs text-destructive hover:bg-destructive/10 py-1 rounded"
+                                    >
+                                      Remove
+                                    </button>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Ephemeral */}
+                        {volume.ephemeral && (
+                          <div className="border-t border-border pt-3 space-y-3">
+                            <h6 className="text-xs font-semibold text-foreground">Ephemeral - Volume Claim Template</h6>
+                            <p className="text-xs text-foreground/50">Advanced ephemeral volume configuration available. Please configure via YAML for full template support.</p>
+                          </div>
+                        )}
+
+                        <button
+                          onClick={() => {
+                            onConfigChange(
+                              "volumes",
+                              config.volumes?.filter((_, i) => i !== idx)
+                            );
+                          }}
+                          className="w-full text-xs text-destructive hover:bg-destructive/10 py-1.5 rounded transition-colors"
+                        >
+                          Remove Volume
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               ) : (
                 section.fields.map((field) => (
                   <div key={String(field.key)}>
