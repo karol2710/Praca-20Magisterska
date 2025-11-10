@@ -792,6 +792,7 @@ const sections: ConfigSection[] = [
   { id: "io", title: "I/O", description: "STDIN and TTY settings" },
   { id: "termination", title: "Termination", description: "Termination behavior" },
   { id: "security", title: "Security Context", description: "Security policies and permissions" },
+  { id: "volumeDevices", title: "Volume Devices", description: "Mounted block devices" },
   { id: "advanced", title: "Advanced", description: "Resize policy and restart policy" },
 ];
 
