@@ -713,6 +713,21 @@ export default function DeploymentConfiguration({ config, onConfigChange }: Depl
               </div>
             </div>
           )}
+
+          {/* Template Section Content */}
+          {expandedSections.has(section.id) && section.id === "template" && (
+            <div className="px-4 py-4 border-t border-border bg-muted/10 space-y-4">
+              <PodConfiguration
+                config={config.template || {}}
+                onConfigChange={(key, value) => {
+                  onConfigChange("template", {
+                    ...config.template,
+                    [key]: value,
+                  });
+                }}
+              />
+            </div>
+          )}
         </div>
       ))}
     </div>
