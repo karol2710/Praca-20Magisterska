@@ -360,6 +360,345 @@ export default function DeploymentConfiguration({ config, onConfigChange }: Depl
               </div>
             </div>
           )}
+
+          {/* Spec Section */}
+          {section.id === "spec" && (
+            <div className="px-4 py-4 border-t border-border bg-muted/10 space-y-4">
+              {/* Min Ready Seconds */}
+              <div>
+                <label htmlFor="minReadySeconds" className="block text-sm font-medium text-foreground mb-2">
+                  Min Ready Seconds
+                </label>
+                <input
+                  id="minReadySeconds"
+                  type="number"
+                  value={config.spec?.minReadySeconds || ""}
+                  onChange={(e) =>
+                    onConfigChange("spec", {
+                      ...config.spec,
+                      minReadySeconds: e.target.value ? parseInt(e.target.value) : undefined,
+                    })
+                  }
+                  placeholder="0"
+                  className="input-field"
+                  min="0"
+                />
+                <p className="text-xs text-foreground/50 mt-1">Minimum number of seconds for which a newly created pod should be ready</p>
+              </div>
+
+              {/* Progress Deadline Seconds */}
+              <div className="border-t border-border pt-4">
+                <label htmlFor="progressDeadlineSeconds" className="block text-sm font-medium text-foreground mb-2">
+                  Progress Deadline (seconds)
+                </label>
+                <input
+                  id="progressDeadlineSeconds"
+                  type="number"
+                  value={config.spec?.progressDeadlineSeconds || ""}
+                  onChange={(e) =>
+                    onConfigChange("spec", {
+                      ...config.spec,
+                      progressDeadlineSeconds: e.target.value ? parseInt(e.target.value) : undefined,
+                    })
+                  }
+                  placeholder="600"
+                  className="input-field"
+                  min="0"
+                />
+                <p className="text-xs text-foreground/50 mt-1">Maximum time in seconds for a deployment to make progress</p>
+              </div>
+
+              {/* Revision History Limit */}
+              <div className="border-t border-border pt-4">
+                <label htmlFor="revisionHistoryLimit" className="block text-sm font-medium text-foreground mb-2">
+                  Revision History Limit
+                </label>
+                <input
+                  id="revisionHistoryLimit"
+                  type="number"
+                  value={config.spec?.revisionHistoryLimit || ""}
+                  onChange={(e) =>
+                    onConfigChange("spec", {
+                      ...config.spec,
+                      revisionHistoryLimit: e.target.value ? parseInt(e.target.value) : undefined,
+                    })
+                  }
+                  placeholder="10"
+                  className="input-field"
+                  min="0"
+                />
+                <p className="text-xs text-foreground/50 mt-1">The number of old ReplicaSets to retain to allow rollback</p>
+              </div>
+
+              {/* Selector */}
+              <div className="border-t border-border pt-4">
+                <h5 className="text-sm font-medium text-foreground mb-3">Selector</h5>
+
+                {/* Match Labels */}
+                <div className="mb-3">
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="block text-xs font-medium text-foreground">Match Labels</label>
+                    <button
+                      onClick={() => {
+                        const selector = { ...config.spec?.selector };
+                        const labels = { ...selector.matchLabels, "": "" };
+                        onConfigChange("spec", { ...config.spec, selector: { ...selector, matchLabels: labels } });
+                      }}
+                      className="text-primary hover:opacity-70 text-xs"
+                    >
+                      + Add
+                    </button>
+                  </div>
+                  <div className="space-y-1">
+                    {Object.entries(config.spec?.selector?.matchLabels || {}).map(([key, val], lIdx) => (
+                      <div key={lIdx} className="flex gap-1">
+                        <input
+                          type="text"
+                          value={key}
+                          onChange={(e) => {
+                            const selector = { ...config.spec?.selector };
+                            const labels = { ...selector.matchLabels };
+                            delete labels[key];
+                            labels[e.target.value] = val;
+                            onConfigChange("spec", { ...config.spec, selector: { ...selector, matchLabels: labels } });
+                          }}
+                          placeholder="key"
+                          className="input-field text-xs flex-1"
+                        />
+                        <input
+                          type="text"
+                          value={val}
+                          onChange={(e) => {
+                            const selector = { ...config.spec?.selector };
+                            const labels = { ...selector.matchLabels };
+                            labels[key] = e.target.value;
+                            onConfigChange("spec", { ...config.spec, selector: { ...selector, matchLabels: labels } });
+                          }}
+                          placeholder="value"
+                          className="input-field text-xs flex-1"
+                        />
+                        <button
+                          onClick={() => {
+                            const selector = { ...config.spec?.selector };
+                            const labels = { ...selector.matchLabels };
+                            delete labels[key];
+                            onConfigChange("spec", { ...config.spec, selector: { ...selector, matchLabels: Object.keys(labels).length > 0 ? labels : undefined } });
+                          }}
+                          className="px-2 py-1 text-destructive hover:bg-destructive/10 rounded text-xs"
+                        >
+                          ×
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Match Expressions */}
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="block text-xs font-medium text-foreground">Match Expressions</label>
+                    <button
+                      onClick={() => {
+                        const selector = { ...config.spec?.selector };
+                        const expressions = [...(selector.matchExpressions || []), { key: "", operator: "In", values: [] }];
+                        onConfigChange("spec", { ...config.spec, selector: { ...selector, matchExpressions: expressions } });
+                      }}
+                      className="text-primary hover:opacity-70 text-xs"
+                    >
+                      + Add
+                    </button>
+                  </div>
+                  <div className="space-y-2">
+                    {(config.spec?.selector?.matchExpressions || []).map((expr, eIdx) => (
+                      <div key={eIdx} className="p-2 bg-muted/5 rounded border border-border/30 space-y-1">
+                        <div className="grid grid-cols-2 gap-1">
+                          <div>
+                            <label className="block text-xs font-medium text-foreground mb-0.5">Key</label>
+                            <input
+                              type="text"
+                              value={expr.key}
+                              onChange={(e) => {
+                                const selector = { ...config.spec?.selector };
+                                const expressions = [...(selector.matchExpressions || [])];
+                                expressions[eIdx] = { ...expr, key: e.target.value };
+                                onConfigChange("spec", { ...config.spec, selector: { ...selector, matchExpressions: expressions } });
+                              }}
+                              placeholder="app"
+                              className="input-field text-xs"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-medium text-foreground mb-0.5">Operator</label>
+                            <select
+                              value={expr.operator}
+                              onChange={(e) => {
+                                const selector = { ...config.spec?.selector };
+                                const expressions = [...(selector.matchExpressions || [])];
+                                expressions[eIdx] = { ...expr, operator: e.target.value };
+                                onConfigChange("spec", { ...config.spec, selector: { ...selector, matchExpressions: expressions } });
+                              }}
+                              className="input-field text-xs"
+                            >
+                              <option value="In">In</option>
+                              <option value="NotIn">NotIn</option>
+                              <option value="Exists">Exists</option>
+                              <option value="DoesNotExist">DoesNotExist</option>
+                              <option value="Gt">Gt</option>
+                              <option value="Lt">Lt</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div>
+                          <label className="block text-xs font-medium text-foreground mb-0.5">Values</label>
+                          <div className="space-y-1">
+                            {(expr.values || []).map((val, vIdx) => (
+                              <div key={vIdx} className="flex gap-1">
+                                <input
+                                  type="text"
+                                  value={val}
+                                  onChange={(e) => {
+                                    const selector = { ...config.spec?.selector };
+                                    const expressions = [...(selector.matchExpressions || [])];
+                                    const values = [...(expr.values || [])];
+                                    values[vIdx] = e.target.value;
+                                    expressions[eIdx] = { ...expr, values };
+                                    onConfigChange("spec", { ...config.spec, selector: { ...selector, matchExpressions: expressions } });
+                                  }}
+                                  placeholder="value"
+                                  className="input-field text-xs flex-1"
+                                />
+                                <button
+                                  onClick={() => {
+                                    const selector = { ...config.spec?.selector };
+                                    const expressions = [...(selector.matchExpressions || [])];
+                                    const values = (expr.values || []).filter((_, i) => i !== vIdx);
+                                    expressions[eIdx] = { ...expr, values };
+                                    onConfigChange("spec", { ...config.spec, selector: { ...selector, matchExpressions: expressions } });
+                                  }}
+                                  className="px-2 py-1 text-destructive hover:bg-destructive/10 rounded text-xs"
+                                >
+                                  ×
+                                </button>
+                              </div>
+                            ))}
+                            <button
+                              onClick={() => {
+                                const selector = { ...config.spec?.selector };
+                                const expressions = [...(selector.matchExpressions || [])];
+                                const values = [...(expr.values || []), ""];
+                                expressions[eIdx] = { ...expr, values };
+                                onConfigChange("spec", { ...config.spec, selector: { ...selector, matchExpressions: expressions } });
+                              }}
+                              className="text-primary hover:opacity-70 text-xs"
+                            >
+                              + Add Value
+                            </button>
+                          </div>
+                        </div>
+                        <button
+                          onClick={() => {
+                            const selector = { ...config.spec?.selector };
+                            const expressions = (selector.matchExpressions || []).filter((_, i) => i !== eIdx);
+                            onConfigChange("spec", { ...config.spec, selector: { ...selector, matchExpressions: expressions.length > 0 ? expressions : undefined } });
+                          }}
+                          className="w-full text-xs text-destructive hover:bg-destructive/10 py-0.5 rounded"
+                        >
+                          Remove Expression
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Strategy */}
+              <div className="border-t border-border pt-4">
+                <h5 className="text-sm font-medium text-foreground mb-3">Strategy</h5>
+
+                {/* Strategy Type */}
+                <div className="mb-3">
+                  <label htmlFor="strategyType" className="block text-xs font-medium text-foreground mb-1">
+                    Type
+                  </label>
+                  <select
+                    id="strategyType"
+                    value={config.spec?.strategy?.type || ""}
+                    onChange={(e) =>
+                      onConfigChange("spec", {
+                        ...config.spec,
+                        strategy: { ...config.spec?.strategy, type: e.target.value || undefined },
+                      })
+                    }
+                    className="input-field"
+                  >
+                    <option value="">Select strategy type</option>
+                    <option value="RollingUpdate">RollingUpdate</option>
+                    <option value="Recreate">Recreate</option>
+                  </select>
+                  <p className="text-xs text-foreground/50 mt-1">Strategy for replacing old pods with new ones</p>
+                </div>
+
+                {/* Rolling Update */}
+                {config.spec?.strategy?.type === "RollingUpdate" && (
+                  <div className="p-3 bg-muted/5 rounded border border-border/30 space-y-2">
+                    <h6 className="text-xs font-medium text-foreground">Rolling Update</h6>
+
+                    <div>
+                      <label htmlFor="maxSurge" className="block text-xs font-medium text-foreground mb-1">
+                        Max Surge
+                      </label>
+                      <input
+                        id="maxSurge"
+                        type="text"
+                        value={config.spec?.strategy?.rollingUpdate?.maxSurge || ""}
+                        onChange={(e) =>
+                          onConfigChange("spec", {
+                            ...config.spec,
+                            strategy: {
+                              ...config.spec?.strategy,
+                              rollingUpdate: {
+                                ...config.spec?.strategy?.rollingUpdate,
+                                maxSurge: e.target.value || undefined,
+                              },
+                            },
+                          })
+                        }
+                        placeholder="25% or 1"
+                        className="input-field text-xs"
+                      />
+                      <p className="text-xs text-foreground/50 mt-0.5">Maximum number/percentage of pods that can be created over the desired number</p>
+                    </div>
+
+                    <div>
+                      <label htmlFor="maxUnavailable" className="block text-xs font-medium text-foreground mb-1">
+                        Max Unavailable
+                      </label>
+                      <input
+                        id="maxUnavailable"
+                        type="text"
+                        value={config.spec?.strategy?.rollingUpdate?.maxUnavailable || ""}
+                        onChange={(e) =>
+                          onConfigChange("spec", {
+                            ...config.spec,
+                            strategy: {
+                              ...config.spec?.strategy,
+                              rollingUpdate: {
+                                ...config.spec?.strategy?.rollingUpdate,
+                                maxUnavailable: e.target.value || undefined,
+                              },
+                            },
+                          })
+                        }
+                        placeholder="25% or 0"
+                        className="input-field text-xs"
+                      />
+                      <p className="text-xs text-foreground/50 mt-0.5">Maximum number/percentage of pods that can be unavailable during the update</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       ))}
     </div>
