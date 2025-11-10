@@ -1756,7 +1756,7 @@ export default function ContainerConfiguration({
 
       case "advanced":
         return (
-          <div className="space-y-4">
+          <div className="space-y-6">
             <div>
               <label className="block text-sm font-medium text-foreground mb-2">Restart Policy</label>
               <select
@@ -1768,6 +1768,72 @@ export default function ContainerConfiguration({
                 <option value="OnFailure">OnFailure</option>
                 <option value="Never">Never</option>
               </select>
+            </div>
+
+            <div>
+              <div className="flex items-center justify-between mb-3">
+                <label className="block text-sm font-medium text-foreground">Resize Policy</label>
+                <button
+                  onClick={() => {
+                    const policies = container.resizePolicy || [];
+                    onConfigChange("resizePolicy", [...policies, { resourceName: "", type: "" }]);
+                  }}
+                  className="text-primary hover:opacity-70 text-sm"
+                >
+                  + Add Policy
+                </button>
+              </div>
+              <div className="space-y-3">
+                {container.resizePolicy?.map((policy, idx) => (
+                  <div key={idx} className="p-4 bg-muted/20 border border-border rounded-lg space-y-3">
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-xs font-medium text-foreground mb-1">Resource Name</label>
+                        <select
+                          value={policy.resourceName || ""}
+                          onChange={(e) => {
+                            const updated = [...(container.resizePolicy || [])];
+                            updated[idx] = { ...policy, resourceName: e.target.value };
+                            onConfigChange("resizePolicy", updated);
+                          }}
+                          className="input-field text-sm"
+                        >
+                          <option value="">Select Resource</option>
+                          <option value="cpu">CPU</option>
+                          <option value="memory">Memory</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-xs font-medium text-foreground mb-1">Policy Type</label>
+                        <select
+                          value={policy.type || ""}
+                          onChange={(e) => {
+                            const updated = [...(container.resizePolicy || [])];
+                            updated[idx] = { ...policy, type: e.target.value };
+                            onConfigChange("resizePolicy", updated);
+                          }}
+                          className="input-field text-sm"
+                        >
+                          <option value="">Select Policy</option>
+                          <option value="NotRequired">NotRequired</option>
+                          <option value="RestartContainer">RestartContainer</option>
+                        </select>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => {
+                        onConfigChange(
+                          "resizePolicy",
+                          container.resizePolicy?.filter((_, i) => i !== idx)
+                        );
+                      }}
+                      className="w-full text-xs text-destructive hover:bg-destructive/10 py-1.5 rounded transition-colors"
+                    >
+                      Remove Policy
+                    </button>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         );
