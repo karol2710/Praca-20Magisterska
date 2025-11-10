@@ -317,6 +317,12 @@ const configSections: ConfigSection[] = [
     fields: [],
   },
   {
+    id: "volumes",
+    title: "Volumes",
+    description: "Pod volumes configuration",
+    fields: [],
+  },
+  {
     id: "storage",
     title: "Storage & Images",
     description: "Volumes and image pull settings",
