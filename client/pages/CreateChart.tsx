@@ -121,6 +121,8 @@ interface WorkloadConfig extends PodConfig {
   deploymentOwnerReferences?: OwnerReference[];
   // Deployment Spec
   deploymentSpec?: DeploymentSpec;
+  // Deployment Template (Pod)
+  deploymentTemplate?: PodConfig;
 }
 
 interface Workload {
