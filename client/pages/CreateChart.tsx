@@ -624,40 +624,46 @@ export default function CreateChart() {
 
                     {activeWorkload.containers.length > 0 ? (
                       <div className="space-y-3">
-                        {activeWorkload.containers.map((container) => (
-                          <div
-                            key={container.id}
-                            className={`p-4 bg-muted/20 border-2 rounded-lg transition-all cursor-pointer ${
-                              editingContainerId === container.id && editingWorkloadId === activeWorkload.id
-                                ? "border-primary bg-primary/5"
-                                : "border-border hover:border-primary/30"
-                            }`}
-                          >
+                        {activeWorkload.containers.map((container) => {
+                          const isValid = isContainerConfigValid(container);
+                          return (
                             <div
-                              onClick={() => {
-                                setEditingContainerId(container.id);
-                                setEditingWorkloadId(activeWorkload.id);
-                              }}
-                              className="flex items-center justify-between"
+                              key={container.id}
+                              className={`p-4 bg-muted/20 border-2 rounded-lg transition-all cursor-pointer ${
+                                editingContainerId === container.id && editingWorkloadId === activeWorkload.id
+                                  ? "border-primary bg-primary/5"
+                                  : "border-border hover:border-primary/30"
+                              }`}
                             >
-                              <div>
-                                <p className="font-semibold text-foreground">
-                                  {container.name || "(unnamed)"}
-                                </p>
-                                <p className="text-sm text-foreground/60">{container.image || "No image"}</p>
-                              </div>
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  deleteContainer(activeWorkload.id, container.id);
+                              <div
+                                onClick={() => {
+                                  setEditingContainerId(container.id);
+                                  setEditingWorkloadId(activeWorkload.id);
                                 }}
-                                className="text-destructive hover:bg-destructive/10 p-1 rounded hover:opacity-75 transition-opacity"
+                                className="flex items-center justify-between"
                               >
-                                <X className="w-5 h-5" />
-                              </button>
+                                <div>
+                                  <p className="font-semibold text-foreground">
+                                    {container.name || "(unnamed)"}
+                                  </p>
+                                  <p className="text-sm text-foreground/60">{container.image || "No image"}</p>
+                                  {!isValid && (
+                                    <p className="text-sm text-destructive font-medium mt-1">Minimal config not set</p>
+                                  )}
+                                </div>
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    deleteContainer(activeWorkload.id, container.id);
+                                  }}
+                                  className="text-destructive hover:bg-destructive/10 p-1 rounded hover:opacity-75 transition-opacity"
+                                >
+                                  <X className="w-5 h-5" />
+                                </button>
+                              </div>
                             </div>
-                          </div>
-                        ))}
+                          );
+                        })}
                       </div>
                     ) : (
                       <p className="text-foreground/60 text-sm py-4">No containers added yet</p>
