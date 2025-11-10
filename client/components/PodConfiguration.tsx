@@ -307,6 +307,183 @@ export default function PodConfiguration({ config, onConfigChange }: PodConfigur
                   affinity={config.affinity || {}}
                   onAffinityChange={(affinity) => onConfigChange("affinity", affinity)}
                 />
+              ) : section.id === "dns" ? (
+                <div className="space-y-6">
+                  {/* Name Servers */}
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <label className="block text-sm font-medium text-foreground">Name Servers</label>
+                      <button
+                        onClick={() => {
+                          const nameServers = config.dnsConfig?.nameServers || [];
+                          onConfigChange("dnsConfig", {
+                            ...config.dnsConfig,
+                            nameServers: [...nameServers, ""],
+                          });
+                        }}
+                        className="text-primary hover:opacity-70 text-xs"
+                      >
+                        + Add
+                      </button>
+                    </div>
+                    <div className="space-y-2">
+                      {(config.dnsConfig?.nameServers || []).map((server, idx) => (
+                        <div key={idx} className="flex gap-2">
+                          <input
+                            type="text"
+                            value={server}
+                            onChange={(e) => {
+                              const updated = [...(config.dnsConfig?.nameServers || [])];
+                              updated[idx] = e.target.value;
+                              onConfigChange("dnsConfig", {
+                                ...config.dnsConfig,
+                                nameServers: updated,
+                              });
+                            }}
+                            placeholder="8.8.8.8"
+                            className="input-field flex-1"
+                          />
+                          <button
+                            onClick={() => {
+                              const updated = (config.dnsConfig?.nameServers || []).filter((_, i) => i !== idx);
+                              onConfigChange("dnsConfig", {
+                                ...config.dnsConfig,
+                                nameServers: updated.length > 0 ? updated : undefined,
+                              });
+                            }}
+                            className="px-3 py-2 text-destructive hover:bg-destructive/10 rounded"
+                          >
+                            ×
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Searches */}
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <label className="block text-sm font-medium text-foreground">Searches</label>
+                      <button
+                        onClick={() => {
+                          const searches = config.dnsConfig?.searches || [];
+                          onConfigChange("dnsConfig", {
+                            ...config.dnsConfig,
+                            searches: [...searches, ""],
+                          });
+                        }}
+                        className="text-primary hover:opacity-70 text-xs"
+                      >
+                        + Add
+                      </button>
+                    </div>
+                    <div className="space-y-2">
+                      {(config.dnsConfig?.searches || []).map((search, idx) => (
+                        <div key={idx} className="flex gap-2">
+                          <input
+                            type="text"
+                            value={search}
+                            onChange={(e) => {
+                              const updated = [...(config.dnsConfig?.searches || [])];
+                              updated[idx] = e.target.value;
+                              onConfigChange("dnsConfig", {
+                                ...config.dnsConfig,
+                                searches: updated,
+                              });
+                            }}
+                            placeholder="default.svc.cluster.local"
+                            className="input-field flex-1"
+                          />
+                          <button
+                            onClick={() => {
+                              const updated = (config.dnsConfig?.searches || []).filter((_, i) => i !== idx);
+                              onConfigChange("dnsConfig", {
+                                ...config.dnsConfig,
+                                searches: updated.length > 0 ? updated : undefined,
+                              });
+                            }}
+                            className="px-3 py-2 text-destructive hover:bg-destructive/10 rounded"
+                          >
+                            ×
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Options */}
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <label className="block text-sm font-medium text-foreground">Options</label>
+                      <button
+                        onClick={() => {
+                          const options = config.dnsConfig?.options || [];
+                          onConfigChange("dnsConfig", {
+                            ...config.dnsConfig,
+                            options: [...options, { name: "", value: "" }],
+                          });
+                        }}
+                        className="text-primary hover:opacity-70 text-xs"
+                      >
+                        + Add
+                      </button>
+                    </div>
+                    <div className="space-y-3">
+                      {(config.dnsConfig?.options || []).map((option, idx) => (
+                        <div key={idx} className="p-3 bg-muted/20 border border-border rounded-lg space-y-2">
+                          <div className="grid grid-cols-2 gap-2">
+                            <div>
+                              <label className="block text-xs font-medium text-foreground mb-1">Name</label>
+                              <input
+                                type="text"
+                                value={option.name}
+                                onChange={(e) => {
+                                  const updated = [...(config.dnsConfig?.options || [])];
+                                  updated[idx] = { ...option, name: e.target.value };
+                                  onConfigChange("dnsConfig", {
+                                    ...config.dnsConfig,
+                                    options: updated,
+                                  });
+                                }}
+                                placeholder="ndots"
+                                className="input-field text-sm"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-xs font-medium text-foreground mb-1">Value</label>
+                              <input
+                                type="text"
+                                value={option.value || ""}
+                                onChange={(e) => {
+                                  const updated = [...(config.dnsConfig?.options || [])];
+                                  updated[idx] = { ...option, value: e.target.value || undefined };
+                                  onConfigChange("dnsConfig", {
+                                    ...config.dnsConfig,
+                                    options: updated,
+                                  });
+                                }}
+                                placeholder="2"
+                                className="input-field text-sm"
+                              />
+                            </div>
+                          </div>
+                          <button
+                            onClick={() => {
+                              const updated = (config.dnsConfig?.options || []).filter((_, i) => i !== idx);
+                              onConfigChange("dnsConfig", {
+                                ...config.dnsConfig,
+                                options: updated.length > 0 ? updated : undefined,
+                              });
+                            }}
+                            className="w-full text-xs text-destructive hover:bg-destructive/10 py-1.5 rounded transition-colors"
+                          >
+                            Remove Option
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
               ) : (
                 section.fields.map((field) => (
                   <div key={String(field.key)}>
