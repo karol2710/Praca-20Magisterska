@@ -144,6 +144,12 @@ const configSections: ConfigSection[] = [
     fields: [],
   },
   {
+    id: "hostAliases",
+    title: "Host Aliases",
+    description: "Static host entries for DNS resolution",
+    fields: [],
+  },
+  {
     id: "storage",
     title: "Storage & Images",
     description: "Volumes and image pull settings",
