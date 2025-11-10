@@ -24,6 +24,15 @@ interface InitContainer extends ContainerConfig {
   id: string;
 }
 
+interface OwnerReference {
+  apiVersion?: string;
+  blockOwnerDeletion?: boolean;
+  controller?: boolean;
+  kind?: string;
+  name?: string;
+  uid?: string;
+}
+
 interface PodConfig {
   // Metadata
   labels?: Record<string, string>;
