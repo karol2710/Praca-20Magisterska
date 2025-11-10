@@ -144,15 +144,13 @@ export default function CreateChart() {
   };
 
   const addContainer = () => {
-    if (!newContainerImage.trim() || !activeWorkloadId) return;
-    const activeWorkload = workloads.find((w) => w.id === activeWorkloadId);
-    if (!activeWorkload) return;
+    if (!activeWorkloadId) return;
 
     const newContainer: Container = {
       id: Date.now().toString(),
-      image: newContainerImage,
-      port: parseInt(newContainerPort) || 8080,
-      env: {},
+      name: "",
+      image: "",
+      imagePullPolicy: "IfNotPresent",
     };
 
     setWorkloads(
@@ -162,8 +160,28 @@ export default function CreateChart() {
           : w
       )
     );
-    setNewContainerImage("");
-    setNewContainerPort("8080");
+    setEditingContainerId(newContainer.id);
+    setEditingWorkloadId(activeWorkloadId);
+  };
+
+  const updateContainerConfig = (
+    workloadId: string,
+    containerId: string,
+    key: keyof ContainerConfig,
+    value: any
+  ) => {
+    setWorkloads(
+      workloads.map((w) =>
+        w.id === workloadId
+          ? {
+              ...w,
+              containers: w.containers.map((c) =>
+                c.id === containerId ? { ...c, [key]: value } : c
+              ),
+            }
+          : w
+      )
+    );
   };
 
   const deleteContainer = (workloadId: string, containerId: string) => {
@@ -174,6 +192,10 @@ export default function CreateChart() {
           : w
       )
     );
+    if (editingContainerId === containerId) {
+      setEditingContainerId("");
+      setEditingWorkloadId("");
+    }
   };
 
   const updateWorkloadConfig = (workloadId: string, key: keyof WorkloadConfig, value: any) => {
