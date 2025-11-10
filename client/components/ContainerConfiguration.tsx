@@ -659,7 +659,7 @@ export default function ContainerConfiguration({
 
             <div>
               <div className="flex items-center justify-between mb-3">
-                <label className="block text-sm font-medium text-foreground">Environment From</label>
+                <label className="block text-sm font-medium text-foreground">Environment From File</label>
                 <button
                   onClick={() => {
                     const envFrom = container.envFrom || [];
@@ -667,34 +667,69 @@ export default function ContainerConfiguration({
                   }}
                   className="text-primary hover:opacity-70 text-sm"
                 >
-                  + Add
+                  + Add Source
                 </button>
               </div>
-              <div className="space-y-2">
+              <div className="space-y-3">
                 {container.envFrom?.map((ef, idx) => (
-                  <div key={idx} className="flex gap-2 items-end">
-                    <input
-                      type="text"
-                      value={ef.configMapRef || ""}
-                      onChange={(e) => {
-                        const updated = [...(container.envFrom || [])];
-                        updated[idx] = { ...ef, configMapRef: e.target.value || undefined };
-                        onConfigChange("envFrom", updated);
-                      }}
-                      placeholder="ConfigMap name"
-                      className="input-field flex-1"
-                    />
-                    <input
-                      type="text"
-                      value={ef.secretRef || ""}
-                      onChange={(e) => {
-                        const updated = [...(container.envFrom || [])];
-                        updated[idx] = { ...ef, secretRef: e.target.value || undefined };
-                        onConfigChange("envFrom", updated);
-                      }}
-                      placeholder="Secret name"
-                      className="input-field flex-1"
-                    />
+                  <div key={idx} className="p-4 bg-muted/20 border border-border rounded-lg space-y-3">
+                    {/* ConfigMap Reference */}
+                    <div>
+                      <label className="block text-xs font-medium text-foreground mb-2">ConfigMap Reference</label>
+                      <input
+                        type="text"
+                        value={ef.configMapRef?.name || ""}
+                        onChange={(e) => {
+                          const updated = [...(container.envFrom || [])];
+                          updated[idx] = {
+                            ...ef,
+                            configMapRef: e.target.value ? { name: e.target.value } : undefined,
+                          };
+                          onConfigChange("envFrom", updated);
+                        }}
+                        placeholder="configmap-name"
+                        className="input-field text-sm"
+                      />
+                      <p className="text-xs text-foreground/50 mt-1">Name of the ConfigMap to load</p>
+                    </div>
+
+                    {/* Prefix */}
+                    <div>
+                      <label className="block text-xs font-medium text-foreground mb-2">Prefix</label>
+                      <input
+                        type="text"
+                        value={ef.prefix || ""}
+                        onChange={(e) => {
+                          const updated = [...(container.envFrom || [])];
+                          updated[idx] = { ...ef, prefix: e.target.value || undefined };
+                          onConfigChange("envFrom", updated);
+                        }}
+                        placeholder="MYAPP_"
+                        className="input-field text-sm"
+                      />
+                      <p className="text-xs text-foreground/50 mt-1">Optional prefix for all environment variables</p>
+                    </div>
+
+                    {/* Secret Reference */}
+                    <div>
+                      <label className="block text-xs font-medium text-foreground mb-2">Secret Reference</label>
+                      <input
+                        type="text"
+                        value={ef.secretRef?.name || ""}
+                        onChange={(e) => {
+                          const updated = [...(container.envFrom || [])];
+                          updated[idx] = {
+                            ...ef,
+                            secretRef: e.target.value ? { name: e.target.value } : undefined,
+                          };
+                          onConfigChange("envFrom", updated);
+                        }}
+                        placeholder="secret-name"
+                        className="input-field text-sm"
+                      />
+                      <p className="text-xs text-foreground/50 mt-1">Name of the Secret to load</p>
+                    </div>
+
                     <button
                       onClick={() => {
                         onConfigChange(
@@ -702,9 +737,9 @@ export default function ContainerConfiguration({
                           container.envFrom?.filter((_, i) => i !== idx)
                         );
                       }}
-                      className="px-3 py-2 text-destructive hover:bg-destructive/10 rounded"
+                      className="w-full text-xs text-destructive hover:bg-destructive/10 py-1.5 rounded transition-colors"
                     >
-                      ×
+                      Remove Source
                     </button>
                   </div>
                 ))}
