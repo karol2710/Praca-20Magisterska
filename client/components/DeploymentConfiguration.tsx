@@ -40,6 +40,13 @@ interface DeploymentSpec {
   strategy?: DeploymentStrategy;
 }
 
+interface PodConfig {
+  labels?: Record<string, string>;
+  annotations?: Record<string, string>;
+  namespace?: string;
+  [key: string]: any;
+}
+
 interface DeploymentConfig {
   annotations?: Record<string, string>;
   deletionGracePeriodSeconds?: number;
@@ -47,6 +54,7 @@ interface DeploymentConfig {
   namespace?: string;
   ownerReferences?: OwnerReference[];
   spec?: DeploymentSpec;
+  template?: PodConfig;
 }
 
 interface DeploymentConfigurationProps {
