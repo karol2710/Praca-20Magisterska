@@ -163,15 +163,6 @@ function LifecycleHookEditor({ title, hook, onHookChange }: LifecycleHookEditorP
         <label className="flex items-center gap-2 text-sm cursor-pointer">
           <input
             type="radio"
-            checked={hookType === "tcpSocket"}
-            onChange={() => setHookType("tcpSocket")}
-            className="w-3 h-3 cursor-pointer"
-          />
-          <span className="text-foreground">TCP Socket</span>
-        </label>
-        <label className="flex items-center gap-2 text-sm cursor-pointer">
-          <input
-            type="radio"
             checked={hookType === "sleep"}
             onChange={() => setHookType("sleep")}
             className="w-3 h-3 cursor-pointer"
