@@ -124,6 +124,16 @@ interface WorkloadConfig extends PodConfig {
   deploymentSpec?: DeploymentSpec;
   // Deployment Template (Pod)
   deploymentTemplate?: PodConfig;
+  // ReplicaSet Metadata
+  replicaSetNamespace?: string;
+  replicaSetLabels?: Record<string, string>;
+  replicaSetAnnotations?: Record<string, string>;
+  replicaSetDeletionGracePeriodSeconds?: number;
+  replicaSetOwnerReferences?: OwnerReference[];
+  // ReplicaSet Spec
+  replicaSetSpec?: DeploymentSpec;
+  // ReplicaSet Template (Pod)
+  replicaSetTemplate?: PodConfig;
 }
 
 interface Workload {
