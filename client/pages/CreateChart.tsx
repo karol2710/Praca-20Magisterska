@@ -840,6 +840,33 @@ export default function CreateChart() {
                         />
                       </div>
                     )}
+
+                    {activeWorkload.type === "ReplicaSet" && (
+                      <div className="space-y-4">
+                        <p className="text-foreground/60 text-sm font-medium mb-4">ReplicaSet Configuration</p>
+                        <ReplicaSetConfiguration
+                          config={{
+                            namespace: activeWorkload.config.replicaSetNamespace,
+                            labels: activeWorkload.config.replicaSetLabels,
+                            annotations: activeWorkload.config.replicaSetAnnotations,
+                            deletionGracePeriodSeconds: activeWorkload.config.replicaSetDeletionGracePeriodSeconds,
+                            ownerReferences: activeWorkload.config.replicaSetOwnerReferences,
+                            spec: activeWorkload.config.replicaSetSpec,
+                            template: activeWorkload.config.replicaSetTemplate,
+                          }}
+                          onConfigChange={(key, value) => {
+                            if (key === "spec") {
+                              updateWorkloadConfig(activeWorkload.id, "replicaSetSpec", value);
+                            } else if (key === "template") {
+                              updateWorkloadConfig(activeWorkload.id, "replicaSetTemplate", value);
+                            } else {
+                              const configKey: keyof WorkloadConfig = `replicaSet${key.charAt(0).toUpperCase() + key.slice(1)}` as any;
+                              updateWorkloadConfig(activeWorkload.id, configKey, value);
+                            }
+                          }}
+                        />
+                      </div>
+                    )}
                   </div>
 
                   {/* Init Containers Section */}
