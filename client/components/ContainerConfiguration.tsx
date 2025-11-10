@@ -20,8 +20,18 @@ export interface ContainerConfig {
   
   // Resources
   resources?: {
-    limits?: { cpu?: string; memory?: string };
-    requests?: { cpu?: string; memory?: string };
+    limits?: {
+      cpu?: string;
+      memory?: string;
+      storage?: string;
+      ephemeralStorage?: string;
+    };
+    requests?: {
+      cpu?: string;
+      memory?: string;
+      storage?: string;
+      ephemeralStorage?: string;
+    };
   };
   
   // Probes
