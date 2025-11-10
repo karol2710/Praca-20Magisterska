@@ -785,6 +785,7 @@ const sections: ConfigSection[] = [
   { id: "lifecycle", title: "Lifecycle", description: "PostStart and preStop hooks" },
   { id: "io", title: "I/O", description: "STDIN and TTY settings" },
   { id: "termination", title: "Termination", description: "Termination behavior" },
+  { id: "security", title: "Security Context", description: "Security policies and permissions" },
   { id: "advanced", title: "Advanced", description: "Resize policy and restart policy" },
 ];
 
