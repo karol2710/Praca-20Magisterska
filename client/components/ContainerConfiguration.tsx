@@ -433,67 +433,144 @@ export default function ContainerConfiguration({
 
       case "resources":
         return (
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-2">CPU Limit</label>
-                <input
-                  type="text"
-                  value={container.resources?.limits?.cpu || ""}
-                  onChange={(e) => {
-                    onConfigChange("resources", {
-                      ...container.resources,
-                      limits: { ...container.resources?.limits, cpu: e.target.value },
-                    });
-                  }}
-                  placeholder="500m"
-                  className="input-field"
-                />
+          <div className="space-y-6">
+            <div>
+              <h5 className="font-semibold text-foreground mb-4">Limits</h5>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-2">CPU</label>
+                  <input
+                    type="text"
+                    value={container.resources?.limits?.cpu || ""}
+                    onChange={(e) => {
+                      onConfigChange("resources", {
+                        ...container.resources,
+                        limits: { ...container.resources?.limits, cpu: e.target.value || undefined },
+                      });
+                    }}
+                    placeholder="500m"
+                    className="input-field"
+                  />
+                  <p className="text-xs text-foreground/50 mt-1">e.g., 100m, 1, 2.5</p>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-2">Memory</label>
+                  <input
+                    type="text"
+                    value={container.resources?.limits?.memory || ""}
+                    onChange={(e) => {
+                      onConfigChange("resources", {
+                        ...container.resources,
+                        limits: { ...container.resources?.limits, memory: e.target.value || undefined },
+                      });
+                    }}
+                    placeholder="512Mi"
+                    className="input-field"
+                  />
+                  <p className="text-xs text-foreground/50 mt-1">e.g., 128Mi, 1Gi, 1024Mi</p>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-2">Storage</label>
+                  <input
+                    type="text"
+                    value={container.resources?.limits?.storage || ""}
+                    onChange={(e) => {
+                      onConfigChange("resources", {
+                        ...container.resources,
+                        limits: { ...container.resources?.limits, storage: e.target.value || undefined },
+                      });
+                    }}
+                    placeholder="10Gi"
+                    className="input-field"
+                  />
+                  <p className="text-xs text-foreground/50 mt-1">e.g., 1Gi, 100Mi, 10Gi</p>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-2">Ephemeral Storage</label>
+                  <input
+                    type="text"
+                    value={container.resources?.limits?.ephemeralStorage || ""}
+                    onChange={(e) => {
+                      onConfigChange("resources", {
+                        ...container.resources,
+                        limits: { ...container.resources?.limits, ephemeralStorage: e.target.value || undefined },
+                      });
+                    }}
+                    placeholder="2Gi"
+                    className="input-field"
+                  />
+                  <p className="text-xs text-foreground/50 mt-1">e.g., 1Gi, 500Mi, 2Gi</p>
+                </div>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-2">Memory Limit</label>
-                <input
-                  type="text"
-                  value={container.resources?.limits?.memory || ""}
-                  onChange={(e) => {
-                    onConfigChange("resources", {
-                      ...container.resources,
-                      limits: { ...container.resources?.limits, memory: e.target.value },
-                    });
-                  }}
-                  placeholder="512Mi"
-                  className="input-field"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-2">CPU Request</label>
-                <input
-                  type="text"
-                  value={container.resources?.requests?.cpu || ""}
-                  onChange={(e) => {
-                    onConfigChange("resources", {
-                      ...container.resources,
-                      requests: { ...container.resources?.requests, cpu: e.target.value },
-                    });
-                  }}
-                  placeholder="250m"
-                  className="input-field"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-2">Memory Request</label>
-                <input
-                  type="text"
-                  value={container.resources?.requests?.memory || ""}
-                  onChange={(e) => {
-                    onConfigChange("resources", {
-                      ...container.resources,
-                      requests: { ...container.resources?.requests, memory: e.target.value },
-                    });
-                  }}
-                  placeholder="256Mi"
-                  className="input-field"
-                />
+            </div>
+
+            <div>
+              <h5 className="font-semibold text-foreground mb-4">Requests</h5>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-2">CPU</label>
+                  <input
+                    type="text"
+                    value={container.resources?.requests?.cpu || ""}
+                    onChange={(e) => {
+                      onConfigChange("resources", {
+                        ...container.resources,
+                        requests: { ...container.resources?.requests, cpu: e.target.value || undefined },
+                      });
+                    }}
+                    placeholder="250m"
+                    className="input-field"
+                  />
+                  <p className="text-xs text-foreground/50 mt-1">e.g., 100m, 1, 2.5</p>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-2">Memory</label>
+                  <input
+                    type="text"
+                    value={container.resources?.requests?.memory || ""}
+                    onChange={(e) => {
+                      onConfigChange("resources", {
+                        ...container.resources,
+                        requests: { ...container.resources?.requests, memory: e.target.value || undefined },
+                      });
+                    }}
+                    placeholder="256Mi"
+                    className="input-field"
+                  />
+                  <p className="text-xs text-foreground/50 mt-1">e.g., 128Mi, 1Gi, 1024Mi</p>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-2">Storage</label>
+                  <input
+                    type="text"
+                    value={container.resources?.requests?.storage || ""}
+                    onChange={(e) => {
+                      onConfigChange("resources", {
+                        ...container.resources,
+                        requests: { ...container.resources?.requests, storage: e.target.value || undefined },
+                      });
+                    }}
+                    placeholder="5Gi"
+                    className="input-field"
+                  />
+                  <p className="text-xs text-foreground/50 mt-1">e.g., 1Gi, 100Mi, 10Gi</p>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-2">Ephemeral Storage</label>
+                  <input
+                    type="text"
+                    value={container.resources?.requests?.ephemeralStorage || ""}
+                    onChange={(e) => {
+                      onConfigChange("resources", {
+                        ...container.resources,
+                        requests: { ...container.resources?.requests, ephemeralStorage: e.target.value || undefined },
+                      });
+                    }}
+                    placeholder="1Gi"
+                    className="input-field"
+                  />
+                  <p className="text-xs text-foreground/50 mt-1">e.g., 1Gi, 500Mi, 2Gi</p>
+                </div>
               </div>
             </div>
           </div>
