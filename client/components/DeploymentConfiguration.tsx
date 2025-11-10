@@ -79,6 +79,11 @@ const configSections: ConfigSection[] = [
     title: "Spec",
     description: "Configure deployment specification including strategy, selector, and timing parameters",
   },
+  {
+    id: "template",
+    title: "Template",
+    description: "Configure the Pod template that the deployment will use",
+  },
 ];
 
 export default function DeploymentConfiguration({ config, onConfigChange }: DeploymentConfigurationProps) {
