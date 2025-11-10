@@ -208,6 +208,71 @@ export default function CreateChart() {
     }
   };
 
+  const addEphemeralContainer = () => {
+    if (!activeWorkloadId) return;
+
+    const newEphemeralContainer: EphemeralContainer = {
+      id: Date.now().toString(),
+      name: "",
+      image: "",
+      imagePullPolicy: "IfNotPresent",
+      targetContainerName: "",
+    };
+
+    setWorkloads(
+      workloads.map((w) =>
+        w.id === activeWorkloadId
+          ? { ...w, config: { ...w.config, ephemeralContainers: [...(w.config.ephemeralContainers || []), newEphemeralContainer] } }
+          : w
+      )
+    );
+    setEditingEphemeralContainerId(newEphemeralContainer.id);
+    setEditingEphemeralWorkloadId(activeWorkloadId);
+  };
+
+  const updateEphemeralContainerConfig = (
+    workloadId: string,
+    containerId: string,
+    key: keyof ContainerConfig | "targetContainerName",
+    value: any
+  ) => {
+    setWorkloads(
+      workloads.map((w) =>
+        w.id === workloadId
+          ? {
+              ...w,
+              config: {
+                ...w.config,
+                ephemeralContainers: (w.config.ephemeralContainers || []).map((c) =>
+                  c.id === containerId ? { ...c, [key]: value } : c
+                ),
+              },
+            }
+          : w
+      )
+    );
+  };
+
+  const deleteEphemeralContainer = (workloadId: string, containerId: string) => {
+    setWorkloads(
+      workloads.map((w) =>
+        w.id === workloadId
+          ? {
+              ...w,
+              config: {
+                ...w.config,
+                ephemeralContainers: (w.config.ephemeralContainers || []).filter((c) => c.id !== containerId),
+              },
+            }
+          : w
+      )
+    );
+    if (editingEphemeralContainerId === containerId) {
+      setEditingEphemeralContainerId("");
+      setEditingEphemeralWorkloadId("");
+    }
+  };
+
   const updateWorkloadConfig = (workloadId: string, key: keyof WorkloadConfig, value: any) => {
     setWorkloads(
       workloads.map((w) =>
