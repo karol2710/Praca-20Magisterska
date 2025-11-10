@@ -176,10 +176,10 @@ export default function ContainerConfiguration({
                 + Add Port
               </button>
             </div>
-            <div className="space-y-2">
+            <div className="space-y-3">
               {container.ports?.map((port, idx) => (
-                <div key={idx} className="p-3 bg-muted/20 border border-border rounded-lg space-y-2">
-                  <div className="grid grid-cols-3 gap-2">
+                <div key={idx} className="p-4 bg-muted/20 border border-border rounded-lg space-y-3">
+                  <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
                     <div>
                       <label className="block text-xs font-medium text-foreground mb-1">Name</label>
                       <input
@@ -187,7 +187,7 @@ export default function ContainerConfiguration({
                         value={port.name || ""}
                         onChange={(e) => {
                           const updated = [...(container.ports || [])];
-                          updated[idx] = { ...port, name: e.target.value };
+                          updated[idx] = { ...port, name: e.target.value || undefined };
                           onConfigChange("ports", updated);
                         }}
                         placeholder="http"
@@ -195,7 +195,7 @@ export default function ContainerConfiguration({
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-medium text-foreground mb-1">Port</label>
+                      <label className="block text-xs font-medium text-foreground mb-1">Container Port*</label>
                       <input
                         type="number"
                         value={port.containerPort}
@@ -204,6 +204,35 @@ export default function ContainerConfiguration({
                           updated[idx] = { ...port, containerPort: parseInt(e.target.value) || 8080 };
                           onConfigChange("ports", updated);
                         }}
+                        placeholder="8080"
+                        className="input-field text-sm"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-foreground mb-1">Host Port</label>
+                      <input
+                        type="number"
+                        value={port.hostPort || ""}
+                        onChange={(e) => {
+                          const updated = [...(container.ports || [])];
+                          updated[idx] = { ...port, hostPort: e.target.value ? parseInt(e.target.value) : undefined };
+                          onConfigChange("ports", updated);
+                        }}
+                        placeholder="8080"
+                        className="input-field text-sm"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-foreground mb-1">Host IP</label>
+                      <input
+                        type="text"
+                        value={port.hostIP || ""}
+                        onChange={(e) => {
+                          const updated = [...(container.ports || [])];
+                          updated[idx] = { ...port, hostIP: e.target.value || undefined };
+                          onConfigChange("ports", updated);
+                        }}
+                        placeholder="0.0.0.0"
                         className="input-field text-sm"
                       />
                     </div>
@@ -218,9 +247,9 @@ export default function ContainerConfiguration({
                         }}
                         className="input-field text-sm"
                       >
-                        <option>TCP</option>
-                        <option>UDP</option>
-                        <option>SCTP</option>
+                        <option value="TCP">TCP</option>
+                        <option value="UDP">UDP</option>
+                        <option value="SCTP">SCTP</option>
                       </select>
                     </div>
                   </div>
@@ -231,9 +260,9 @@ export default function ContainerConfiguration({
                         container.ports?.filter((_, i) => i !== idx)
                       );
                     }}
-                    className="w-full text-xs text-destructive hover:bg-destructive/10 py-1 rounded"
+                    className="w-full text-xs text-destructive hover:bg-destructive/10 py-1.5 rounded transition-colors"
                   >
-                    Remove
+                    Remove Port
                   </button>
                 </div>
               ))}
