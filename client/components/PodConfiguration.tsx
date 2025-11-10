@@ -29,6 +29,14 @@ interface PodSecurityContext {
   }[];
 }
 
+interface Toleration {
+  key?: string;
+  operator?: string;
+  value?: string;
+  effect?: string;
+  tolerationSeconds?: number;
+}
+
 interface PodConfig {
   labels?: Record<string, string>;
   annotations?: Record<string, string>;
