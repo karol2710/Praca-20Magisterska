@@ -905,6 +905,32 @@ export default function CreateChart() {
                     </div>
                   )}
 
+                  {/* Init Container Configuration */}
+                  {editingInitContainerId && editingInitWorkloadId === activeWorkload.id && (
+                    <div className="mb-8 p-6 bg-muted/30 rounded-lg border border-border">
+                      <div className="flex items-center justify-between mb-4">
+                        <h3 className="font-semibold text-foreground">
+                          Configure Init Container: {(activeWorkload.config.initContainers || []).find((c) => c.id === editingInitContainerId)?.name || "(unnamed)"}
+                        </h3>
+                        <button
+                          onClick={() => {
+                            setEditingInitContainerId("");
+                            setEditingInitWorkloadId("");
+                          }}
+                          className="text-foreground/60 hover:text-foreground"
+                        >
+                          <X className="w-5 h-5" />
+                        </button>
+                      </div>
+                      <ContainerConfiguration
+                        container={(activeWorkload.config.initContainers || []).find((c) => c.id === editingInitContainerId) || {}}
+                        onConfigChange={(key, value) =>
+                          updateInitContainerConfig(activeWorkload.id, editingInitContainerId, key, value)
+                        }
+                      />
+                    </div>
+                  )}
+
                   {/* Ephemeral Containers Section */}
                   <div className="mb-8">
                     <div className="flex items-center justify-between mb-4">
