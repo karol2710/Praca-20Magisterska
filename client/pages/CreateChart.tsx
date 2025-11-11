@@ -6,6 +6,7 @@ import DeploymentConfiguration from "@/components/DeploymentConfiguration";
 import ReplicaSetConfiguration from "@/components/ReplicaSetConfiguration";
 import StatefulSetConfiguration from "@/components/StatefulSetConfiguration";
 import DaemonSetConfiguration from "@/components/DaemonSetConfiguration";
+import JobConfiguration from "@/components/JobConfiguration";
 import { Upload, Plus, X, Zap } from "lucide-react";
 
 type ChartMode = "standard" | "advanced";
