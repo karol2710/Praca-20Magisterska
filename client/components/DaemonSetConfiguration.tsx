@@ -30,6 +30,7 @@ interface PodConfig {
 }
 
 interface RollingUpdateStrategy {
+  maxSurge?: string;
   maxUnavailable?: string;
 }
 
