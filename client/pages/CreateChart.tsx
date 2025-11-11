@@ -878,6 +878,33 @@ export default function CreateChart() {
                         />
                       </div>
                     )}
+
+                    {activeWorkload.type === "StatefulSet" && (
+                      <div className="space-y-4">
+                        <p className="text-foreground/60 text-sm font-medium mb-4">StatefulSet Configuration</p>
+                        <StatefulSetConfiguration
+                          config={{
+                            namespace: activeWorkload.config.statefulSetNamespace,
+                            labels: activeWorkload.config.statefulSetLabels,
+                            annotations: activeWorkload.config.statefulSetAnnotations,
+                            deletionGracePeriodSeconds: activeWorkload.config.statefulSetDeletionGracePeriodSeconds,
+                            ownerReferences: activeWorkload.config.statefulSetOwnerReferences,
+                            spec: activeWorkload.config.statefulSetSpec,
+                            template: activeWorkload.config.statefulSetTemplate,
+                          }}
+                          onConfigChange={(key, value) => {
+                            if (key === "spec") {
+                              updateWorkloadConfig(activeWorkload.id, "statefulSetSpec", value);
+                            } else if (key === "template") {
+                              updateWorkloadConfig(activeWorkload.id, "statefulSetTemplate", value);
+                            } else {
+                              const configKey: keyof WorkloadConfig = `statefulSet${key.charAt(0).toUpperCase() + key.slice(1)}` as any;
+                              updateWorkloadConfig(activeWorkload.id, configKey, value);
+                            }
+                          }}
+                        />
+                      </div>
+                    )}
                   </div>
 
                   {/* Init Containers Section */}
