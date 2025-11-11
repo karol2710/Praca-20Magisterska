@@ -144,6 +144,16 @@ interface WorkloadConfig extends PodConfig {
   statefulSetSpec?: any;
   // StatefulSet Template (Pod)
   statefulSetTemplate?: PodConfig;
+  // DaemonSet Metadata
+  daemonSetNamespace?: string;
+  daemonSetLabels?: Record<string, string>;
+  daemonSetAnnotations?: Record<string, string>;
+  daemonSetDeletionGracePeriodSeconds?: number;
+  daemonSetOwnerReferences?: OwnerReference[];
+  // DaemonSet Spec
+  daemonSetSpec?: any;
+  // DaemonSet Template (Pod)
+  daemonSetTemplate?: PodConfig;
 }
 
 interface Workload {
