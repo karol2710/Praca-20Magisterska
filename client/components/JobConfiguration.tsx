@@ -29,16 +29,21 @@ interface PodConfig {
   [key: string]: any;
 }
 
-interface PodFailurePolicy {
-  rules?: Array<{
-    action?: string;
-    onExitCodes?: {
-      containerName?: string;
-      operator?: string;
-      values?: number[];
-    };
-    onReason?: string;
+interface PodFailurePolicyRule {
+  action?: string;
+  onExitCodes?: {
+    containerName?: string;
+    operator?: string;
+    values?: number[];
+  };
+  onPodConditions?: Array<{
+    status?: string;
+    type?: string;
   }>;
+}
+
+interface PodFailurePolicy {
+  rules?: PodFailurePolicyRule[];
 }
 
 interface JobSpec {
