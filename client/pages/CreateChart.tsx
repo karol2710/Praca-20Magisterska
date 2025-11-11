@@ -756,49 +756,6 @@ export default function CreateChart() {
                       </div>
                     )}
 
-                    {activeWorkload.type === "Job" && (
-                      <>
-                        <div>
-                          <label htmlFor="parallelism" className="block text-sm font-medium text-foreground mb-2">
-                            Parallelism
-                          </label>
-                          <input
-                            id="parallelism"
-                            type="number"
-                            min="1"
-                            value={activeWorkload.config.parallelism || 1}
-                            onChange={(e) => updateWorkloadConfig(activeWorkload.id, "parallelism", parseInt(e.target.value) || 1)}
-                            className="input-field"
-                          />
-                        </div>
-                        <div>
-                          <label htmlFor="completions" className="block text-sm font-medium text-foreground mb-2">
-                            Completions
-                          </label>
-                          <input
-                            id="completions"
-                            type="number"
-                            min="1"
-                            value={activeWorkload.config.completions || 1}
-                            onChange={(e) => updateWorkloadConfig(activeWorkload.id, "completions", parseInt(e.target.value) || 1)}
-                            className="input-field"
-                          />
-                        </div>
-                        <div>
-                          <label htmlFor="backoffLimit" className="block text-sm font-medium text-foreground mb-2">
-                            Backoff Limit
-                          </label>
-                          <input
-                            id="backoffLimit"
-                            type="number"
-                            min="0"
-                            value={activeWorkload.config.backoffLimit || 3}
-                            onChange={(e) => updateWorkloadConfig(activeWorkload.id, "backoffLimit", parseInt(e.target.value) || 3)}
-                            className="input-field"
-                          />
-                        </div>
-                      </>
-                    )}
 
                     {activeWorkload.type === "Pod" && (
                       <div className="space-y-4">
