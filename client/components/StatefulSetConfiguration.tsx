@@ -33,12 +33,33 @@ interface VolumeClaimTemplate {
   metadata?: {
     name?: string;
     namespace?: string;
+    deletionGracePeriodSeconds?: number;
+    annotations?: Record<string, string>;
+    labels?: Record<string, string>;
   };
   spec?: {
     accessModes?: string[];
     storageClassName?: string;
+    volumeName?: string;
+    volumeMode?: string;
+    volumeAttributesClassName?: string;
     resources?: {
       requests?: Record<string, string>;
+    };
+    dataSource?: {
+      apiGroup?: string;
+      kind?: string;
+      name?: string;
+    };
+    dataSourceRef?: {
+      apiGroup?: string;
+      kind?: string;
+      name?: string;
+      namespace?: string;
+    };
+    selector?: {
+      matchLabels?: Record<string, string>;
+      matchExpressions?: LabelSelectorRequirement[];
     };
   };
 }
@@ -150,7 +171,7 @@ export default function StatefulSetConfiguration({ config, onConfigChange }: Sta
                 }}
                 className="text-primary hover:opacity-70"
               >
-                ×
+                ��
               </button>
             </div>
           ))}
