@@ -108,8 +108,6 @@ interface DeploymentSpec {
 }
 
 interface WorkloadConfig extends PodConfig {
-  replicas?: number;
-  serviceName?: string;
   schedule?: string;
   parallelism?: number;
   completions?: number;
