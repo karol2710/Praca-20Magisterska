@@ -36,6 +36,7 @@ interface VolumeClaimTemplate {
     deletionGracePeriodSeconds?: number;
     annotations?: Record<string, string>;
     labels?: Record<string, string>;
+    ownerReferences?: OwnerReference[];
   };
   spec?: {
     accessModes?: string[];
@@ -44,6 +45,7 @@ interface VolumeClaimTemplate {
     volumeMode?: string;
     volumeAttributesClassName?: string;
     resources?: {
+      limits?: Record<string, string>;
       requests?: Record<string, string>;
     };
     dataSource?: {
