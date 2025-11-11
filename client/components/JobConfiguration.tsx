@@ -794,11 +794,310 @@ export default function JobConfiguration({ config, onConfigChange }: JobConfigur
 
               {/* Pod Failure Policy */}
               <div className="border-t border-border pt-4">
-                <label className="block text-sm font-medium text-foreground mb-2">Pod Failure Policy</label>
-                <p className="text-xs text-foreground/50 mb-3">Rules for handling pod failures (advanced configuration)</p>
-                <p className="text-xs text-foreground/60 p-3 bg-muted/20 rounded border border-border text-center">
-                  Pod Failure Policy configuration is available through advanced YAML editing
-                </p>
+                <div className="flex items-center justify-between mb-4">
+                  <label className="block text-sm font-medium text-foreground">Pod Failure Policy</label>
+                  <button
+                    onClick={() => {
+                      const rules = [...(config.spec?.podFailurePolicy?.rules || [])];
+                      rules.push({
+                        action: "Ignore",
+                        onExitCodes: undefined,
+                        onPodConditions: undefined,
+                      });
+                      onConfigChange("spec", {
+                        ...config.spec,
+                        podFailurePolicy: { rules },
+                      });
+                    }}
+                    className="text-primary hover:opacity-70 text-sm"
+                  >
+                    + Add Rule
+                  </button>
+                </div>
+                <p className="text-xs text-foreground/50 mb-4">Rules for handling pod failures</p>
+
+                {(config.spec?.podFailurePolicy?.rules || []).length > 0 ? (
+                  <div className="space-y-4">
+                    {(config.spec?.podFailurePolicy?.rules || []).map((rule, rIdx) => (
+                      <div key={rIdx} className="p-4 bg-muted/20 border border-border rounded-lg space-y-4">
+                        {/* Action */}
+                        <div>
+                          <label htmlFor={`action-${rIdx}`} className="block text-xs font-medium text-foreground mb-1">
+                            Action*
+                          </label>
+                          <select
+                            id={`action-${rIdx}`}
+                            value={rule.action || ""}
+                            onChange={(e) => {
+                              const rules = [...(config.spec?.podFailurePolicy?.rules || [])];
+                              rules[rIdx] = { ...rule, action: e.target.value || undefined };
+                              onConfigChange("spec", {
+                                ...config.spec,
+                                podFailurePolicy: { rules },
+                              });
+                            }}
+                            className="input-field text-xs"
+                          >
+                            <option value="">Select action</option>
+                            <option value="Ignore">Ignore</option>
+                            <option value="Count">Count</option>
+                            <option value="FailJob">FailJob</option>
+                          </select>
+                        </div>
+
+                        {/* On Exit Codes */}
+                        <div className="bg-muted/10 rounded-lg p-3 space-y-3">
+                          <h6 className="text-xs font-medium text-foreground">On Exit Codes</h6>
+
+                          <div>
+                            <label htmlFor={`containerName-${rIdx}`} className="block text-xs font-medium text-foreground mb-1">
+                              Container Name
+                            </label>
+                            <input
+                              id={`containerName-${rIdx}`}
+                              type="text"
+                              value={rule.onExitCodes?.containerName || ""}
+                              onChange={(e) => {
+                                const rules = [...(config.spec?.podFailurePolicy?.rules || [])];
+                                rules[rIdx] = {
+                                  ...rule,
+                                  onExitCodes: {
+                                    ...rule.onExitCodes,
+                                    containerName: e.target.value || undefined,
+                                  },
+                                };
+                                onConfigChange("spec", {
+                                  ...config.spec,
+                                  podFailurePolicy: { rules },
+                                });
+                              }}
+                              placeholder="container-name"
+                              className="input-field text-xs"
+                            />
+                          </div>
+
+                          <div>
+                            <label htmlFor={`operator-${rIdx}`} className="block text-xs font-medium text-foreground mb-1">
+                              Operator
+                            </label>
+                            <select
+                              id={`operator-${rIdx}`}
+                              value={rule.onExitCodes?.operator || ""}
+                              onChange={(e) => {
+                                const rules = [...(config.spec?.podFailurePolicy?.rules || [])];
+                                rules[rIdx] = {
+                                  ...rule,
+                                  onExitCodes: {
+                                    ...rule.onExitCodes,
+                                    operator: e.target.value || undefined,
+                                  },
+                                };
+                                onConfigChange("spec", {
+                                  ...config.spec,
+                                  podFailurePolicy: { rules },
+                                });
+                              }}
+                              className="input-field text-xs"
+                            >
+                              <option value="">Select operator</option>
+                              <option value="In">In</option>
+                              <option value="NotIn">NotIn</option>
+                            </select>
+                          </div>
+
+                          <div>
+                            <div className="flex items-center justify-between mb-1">
+                              <label className="block text-xs font-medium text-foreground">Exit Code Values</label>
+                              <button
+                                onClick={() => {
+                                  const rules = [...(config.spec?.podFailurePolicy?.rules || [])];
+                                  const values = [...(rule.onExitCodes?.values || []), 0];
+                                  rules[rIdx] = {
+                                    ...rule,
+                                    onExitCodes: {
+                                      ...rule.onExitCodes,
+                                      values,
+                                    },
+                                  };
+                                  onConfigChange("spec", {
+                                    ...config.spec,
+                                    podFailurePolicy: { rules },
+                                  });
+                                }}
+                                className="text-primary hover:opacity-70 text-xs"
+                              >
+                                + Add
+                              </button>
+                            </div>
+                            <div className="space-y-1">
+                              {(rule.onExitCodes?.values || []).map((val, vIdx) => (
+                                <div key={vIdx} className="flex gap-1">
+                                  <input
+                                    type="number"
+                                    value={val}
+                                    onChange={(e) => {
+                                      const rules = [...(config.spec?.podFailurePolicy?.rules || [])];
+                                      const values = [...(rule.onExitCodes?.values || [])];
+                                      values[vIdx] = parseInt(e.target.value) || 0;
+                                      rules[rIdx] = {
+                                        ...rule,
+                                        onExitCodes: {
+                                          ...rule.onExitCodes,
+                                          values,
+                                        },
+                                      };
+                                      onConfigChange("spec", {
+                                        ...config.spec,
+                                        podFailurePolicy: { rules },
+                                      });
+                                    }}
+                                    placeholder="0"
+                                    className="input-field text-xs flex-1"
+                                  />
+                                  <button
+                                    onClick={() => {
+                                      const rules = [...(config.spec?.podFailurePolicy?.rules || [])];
+                                      const values = (rule.onExitCodes?.values || []).filter((_, i) => i !== vIdx);
+                                      rules[rIdx] = {
+                                        ...rule,
+                                        onExitCodes: {
+                                          ...rule.onExitCodes,
+                                          values,
+                                        },
+                                      };
+                                      onConfigChange("spec", {
+                                        ...config.spec,
+                                        podFailurePolicy: { rules },
+                                      });
+                                    }}
+                                    className="px-2 py-1 text-destructive hover:bg-destructive/10 rounded text-xs"
+                                  >
+                                    ×
+                                  </button>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* On Pod Conditions */}
+                        <div className="bg-muted/10 rounded-lg p-3 space-y-3">
+                          <h6 className="text-xs font-medium text-foreground">On Pod Conditions</h6>
+
+                          {(rule.onPodConditions || []).length > 0 ? (
+                            <div className="space-y-2">
+                              {(rule.onPodConditions || []).map((condition, cIdx) => (
+                                <div key={cIdx} className="p-2 bg-muted/20 border border-border rounded space-y-2">
+                                  <div className="grid grid-cols-2 gap-2">
+                                    <div>
+                                      <label className="block text-xs font-medium text-foreground mb-0.5">Type*</label>
+                                      <input
+                                        type="text"
+                                        value={condition.type || ""}
+                                        onChange={(e) => {
+                                          const rules = [...(config.spec?.podFailurePolicy?.rules || [])];
+                                          const conditions = [...(rule.onPodConditions || [])];
+                                          conditions[cIdx] = { ...condition, type: e.target.value || undefined };
+                                          rules[rIdx] = { ...rule, onPodConditions: conditions };
+                                          onConfigChange("spec", {
+                                            ...config.spec,
+                                            podFailurePolicy: { rules },
+                                          });
+                                        }}
+                                        placeholder="Ready"
+                                        className="input-field text-xs"
+                                      />
+                                    </div>
+                                    <div>
+                                      <label className="block text-xs font-medium text-foreground mb-0.5">Status*</label>
+                                      <select
+                                        value={condition.status || ""}
+                                        onChange={(e) => {
+                                          const rules = [...(config.spec?.podFailurePolicy?.rules || [])];
+                                          const conditions = [...(rule.onPodConditions || [])];
+                                          conditions[cIdx] = { ...condition, status: e.target.value || undefined };
+                                          rules[rIdx] = { ...rule, onPodConditions: conditions };
+                                          onConfigChange("spec", {
+                                            ...config.spec,
+                                            podFailurePolicy: { rules },
+                                          });
+                                        }}
+                                        className="input-field text-xs"
+                                      >
+                                        <option value="">Select status</option>
+                                        <option value="True">True</option>
+                                        <option value="False">False</option>
+                                      </select>
+                                    </div>
+                                  </div>
+                                  <button
+                                    onClick={() => {
+                                      const rules = [...(config.spec?.podFailurePolicy?.rules || [])];
+                                      const conditions = (rule.onPodConditions || []).filter((_, i) => i !== cIdx);
+                                      rules[rIdx] = { ...rule, onPodConditions: conditions };
+                                      onConfigChange("spec", {
+                                        ...config.spec,
+                                        podFailurePolicy: { rules },
+                                      });
+                                    }}
+                                    className="w-full text-xs text-destructive hover:bg-destructive/10 py-0.5 rounded transition-colors flex items-center justify-center gap-1"
+                                  >
+                                    <X className="w-3 h-3" />
+                                    Remove
+                                  </button>
+                                </div>
+                              ))}
+                              <button
+                                onClick={() => {
+                                  const rules = [...(config.spec?.podFailurePolicy?.rules || [])];
+                                  const conditions = [...(rule.onPodConditions || []), { type: "", status: "" }];
+                                  rules[rIdx] = { ...rule, onPodConditions: conditions };
+                                  onConfigChange("spec", {
+                                    ...config.spec,
+                                    podFailurePolicy: { rules },
+                                  });
+                                }}
+                                className="w-full text-xs text-primary hover:bg-primary/10 py-1 rounded transition-colors"
+                              >
+                                + Add Condition
+                              </button>
+                            </div>
+                          ) : (
+                            <button
+                              onClick={() => {
+                                const rules = [...(config.spec?.podFailurePolicy?.rules || [])];
+                                rules[rIdx] = { ...rule, onPodConditions: [{ type: "", status: "" }] };
+                                onConfigChange("spec", {
+                                  ...config.spec,
+                                  podFailurePolicy: { rules },
+                                });
+                              }}
+                              className="w-full text-xs text-primary hover:bg-primary/10 py-1 rounded transition-colors"
+                            >
+                              + Add Condition
+                            </button>
+                          )}
+                        </div>
+
+                        <button
+                          onClick={() => {
+                            const rules = (config.spec?.podFailurePolicy?.rules || []).filter((_, i) => i !== rIdx);
+                            onConfigChange("spec", {
+                              ...config.spec,
+                              podFailurePolicy: { rules },
+                            });
+                          }}
+                          className="w-full text-xs text-destructive hover:bg-destructive/10 py-1.5 rounded transition-colors flex items-center justify-center gap-1"
+                        >
+                          <X className="w-4 h-4" />
+                          Remove Rule
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-foreground/60 text-sm py-2 text-center">No rules added yet</p>
+                )}
               </div>
             </div>
           )}
