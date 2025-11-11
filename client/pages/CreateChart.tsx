@@ -195,9 +195,6 @@ export default function CreateChart() {
     if (!newWorkloadName.trim()) return;
 
     const defaultConfig: WorkloadConfig = {};
-    if (["Deployment", "ReplicaSet", "StatefulSet"].includes(selectedWorkloadType)) {
-      defaultConfig.replicas = 1;
-    }
     if (selectedWorkloadType === "StatefulSet") {
       defaultConfig.serviceName = "default";
     }
