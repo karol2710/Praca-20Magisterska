@@ -5,6 +5,7 @@ import ContainerConfiguration, { ContainerConfig } from "@/components/ContainerC
 import DeploymentConfiguration from "@/components/DeploymentConfiguration";
 import ReplicaSetConfiguration from "@/components/ReplicaSetConfiguration";
 import StatefulSetConfiguration from "@/components/StatefulSetConfiguration";
+import DaemonSetConfiguration from "@/components/DaemonSetConfiguration";
 import { Upload, Plus, X, Zap } from "lucide-react";
 
 type ChartMode = "standard" | "advanced";
