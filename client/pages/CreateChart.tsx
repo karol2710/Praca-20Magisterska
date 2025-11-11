@@ -748,23 +748,6 @@ export default function CreateChart() {
                   <div className="space-y-4 mb-8 p-6 bg-muted/30 rounded-lg border border-border">
                     <h3 className="font-semibold text-foreground mb-4">Configuration</h3>
 
-                    {activeWorkload.type === "CronJob" && (
-                      <div>
-                        <label htmlFor="schedule" className="block text-sm font-medium text-foreground mb-2">
-                          Cron Schedule
-                        </label>
-                        <input
-                          id="schedule"
-                          type="text"
-                          value={activeWorkload.config.schedule || ""}
-                          onChange={(e) => updateWorkloadConfig(activeWorkload.id, "schedule", e.target.value)}
-                          placeholder="0 0 * * *"
-                          className="input-field"
-                        />
-                        <p className="text-xs text-foreground/50 mt-1">Format: minute hour day month weekday</p>
-                      </div>
-                    )}
-
 
                     {activeWorkload.type === "Pod" && (
                       <div className="space-y-4">
