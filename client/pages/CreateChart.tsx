@@ -166,6 +166,14 @@ interface WorkloadConfig extends PodConfig {
   jobSpec?: any;
   // Job Template (Pod)
   jobTemplate?: PodConfig;
+  // CronJob Metadata
+  cronJobNamespace?: string;
+  cronJobLabels?: Record<string, string>;
+  cronJobAnnotations?: Record<string, string>;
+  cronJobDeletionGracePeriodSeconds?: number;
+  cronJobOwnerReferences?: OwnerReference[];
+  // CronJob Spec
+  cronJobSpec?: any;
 }
 
 interface Workload {
