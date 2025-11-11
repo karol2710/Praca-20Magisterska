@@ -717,38 +717,6 @@ export default function CreateChart() {
                   <div className="space-y-4 mb-8 p-6 bg-muted/30 rounded-lg border border-border">
                     <h3 className="font-semibold text-foreground mb-4">Configuration</h3>
 
-                    {["Deployment", "ReplicaSet", "StatefulSet"].includes(activeWorkload.type) && (
-                      <div>
-                        <label htmlFor="replicas" className="block text-sm font-medium text-foreground mb-2">
-                          Replicas
-                        </label>
-                        <input
-                          id="replicas"
-                          type="number"
-                          min="1"
-                          value={activeWorkload.config.replicas || 1}
-                          onChange={(e) => updateWorkloadConfig(activeWorkload.id, "replicas", parseInt(e.target.value) || 1)}
-                          className="input-field"
-                        />
-                      </div>
-                    )}
-
-                    {activeWorkload.type === "StatefulSet" && (
-                      <div>
-                        <label htmlFor="serviceName" className="block text-sm font-medium text-foreground mb-2">
-                          Service Name
-                        </label>
-                        <input
-                          id="serviceName"
-                          type="text"
-                          value={activeWorkload.config.serviceName || ""}
-                          onChange={(e) => updateWorkloadConfig(activeWorkload.id, "serviceName", e.target.value)}
-                          placeholder="headless-service"
-                          className="input-field"
-                        />
-                      </div>
-                    )}
-
                     {activeWorkload.type === "CronJob" && (
                       <div>
                         <label htmlFor="schedule" className="block text-sm font-medium text-foreground mb-2">
