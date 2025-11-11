@@ -910,6 +910,30 @@ export default function CreateChart() {
                         />
                       </div>
                     )}
+
+                    {activeWorkload.type === "CronJob" && (
+                      <div className="space-y-4">
+                        <p className="text-foreground/60 text-sm font-medium mb-4">CronJob Configuration</p>
+                        <CronJobConfiguration
+                          config={{
+                            namespace: activeWorkload.config.cronJobNamespace,
+                            labels: activeWorkload.config.cronJobLabels,
+                            annotations: activeWorkload.config.cronJobAnnotations,
+                            deletionGracePeriodSeconds: activeWorkload.config.cronJobDeletionGracePeriodSeconds,
+                            ownerReferences: activeWorkload.config.cronJobOwnerReferences,
+                            spec: activeWorkload.config.cronJobSpec,
+                          }}
+                          onConfigChange={(key, value) => {
+                            if (key === "spec") {
+                              updateWorkloadConfig(activeWorkload.id, "cronJobSpec", value);
+                            } else {
+                              const configKey: keyof WorkloadConfig = `cronJob${key.charAt(0).toUpperCase() + key.slice(1)}` as any;
+                              updateWorkloadConfig(activeWorkload.id, configKey, value);
+                            }
+                          }}
+                        />
+                      </div>
+                    )}
                   </div>
 
                   {/* Init Containers Section */}
