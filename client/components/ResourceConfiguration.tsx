@@ -537,6 +537,318 @@ export default function ResourceConfiguration({ config, onConfigChange }: Resour
             </div>
           )}
 
+          {/* HTTPRoute Spec Section */}
+          {expandedSections.has(section.id) && section.id === "spec" && config.type === "HTTPRoute" && (
+            <div className="px-4 py-4 border-t border-border bg-muted/10 space-y-4">
+              {/* Parent References */}
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <label className="block text-sm font-medium text-foreground">Parent References</label>
+                  <button
+                    onClick={() => {
+                      const parentRefs = (config.spec as HTTPRouteSpec)?.parentReferences || [];
+                      onConfigChange("spec", {
+                        ...(config.spec as HTTPRouteSpec || {}),
+                        parentReferences: [
+                          ...parentRefs,
+                          { name: "", namespace: "", kind: "", group: "" },
+                        ],
+                      });
+                    }}
+                    className="text-primary hover:opacity-70 text-sm"
+                  >
+                    + Add Reference
+                  </button>
+                </div>
+
+                {((config.spec as HTTPRouteSpec)?.parentReferences && (config.spec as HTTPRouteSpec).parentReferences.length > 0) ? (
+                  <div className="space-y-3">
+                    {((config.spec as HTTPRouteSpec)?.parentReferences || []).map((ref, idx) => (
+                      <div key={idx} className="p-4 bg-muted/20 border border-border rounded-lg space-y-3">
+                        <div className="grid grid-cols-2 gap-3">
+                          <div>
+                            <label className="block text-xs font-medium text-foreground mb-1">Name*</label>
+                            <input
+                              type="text"
+                              value={ref.name || ""}
+                              onChange={(e) => {
+                                const updated = [...((config.spec as HTTPRouteSpec)?.parentReferences || [])];
+                                updated[idx] = { ...ref, name: e.target.value || undefined };
+                                onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), parentReferences: updated });
+                              }}
+                              placeholder="gateway-name"
+                              className="input-field text-sm"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-medium text-foreground mb-1">Namespace</label>
+                            <input
+                              type="text"
+                              value={ref.namespace || ""}
+                              onChange={(e) => {
+                                const updated = [...((config.spec as HTTPRouteSpec)?.parentReferences || [])];
+                                updated[idx] = { ...ref, namespace: e.target.value || undefined };
+                                onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), parentReferences: updated });
+                              }}
+                              placeholder="default"
+                              className="input-field text-sm"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-medium text-foreground mb-1">Kind</label>
+                            <input
+                              type="text"
+                              value={ref.kind || ""}
+                              onChange={(e) => {
+                                const updated = [...((config.spec as HTTPRouteSpec)?.parentReferences || [])];
+                                updated[idx] = { ...ref, kind: e.target.value || undefined };
+                                onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), parentReferences: updated });
+                              }}
+                              placeholder="Gateway"
+                              className="input-field text-sm"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-medium text-foreground mb-1">Group</label>
+                            <input
+                              type="text"
+                              value={ref.group || ""}
+                              onChange={(e) => {
+                                const updated = [...((config.spec as HTTPRouteSpec)?.parentReferences || [])];
+                                updated[idx] = { ...ref, group: e.target.value || undefined };
+                                onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), parentReferences: updated });
+                              }}
+                              placeholder="gateway.networking.k8s.io"
+                              className="input-field text-sm"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-medium text-foreground mb-1">Section Name</label>
+                            <input
+                              type="text"
+                              value={ref.sectionName || ""}
+                              onChange={(e) => {
+                                const updated = [...((config.spec as HTTPRouteSpec)?.parentReferences || [])];
+                                updated[idx] = { ...ref, sectionName: e.target.value || undefined };
+                                onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), parentReferences: updated });
+                              }}
+                              placeholder="http"
+                              className="input-field text-sm"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-medium text-foreground mb-1">Port</label>
+                            <input
+                              type="number"
+                              value={ref.port || ""}
+                              onChange={(e) => {
+                                const updated = [...((config.spec as HTTPRouteSpec)?.parentReferences || [])];
+                                updated[idx] = {
+                                  ...ref,
+                                  port: e.target.value ? parseInt(e.target.value) : undefined,
+                                };
+                                onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), parentReferences: updated });
+                              }}
+                              placeholder="80"
+                              className="input-field text-sm"
+                            />
+                          </div>
+                        </div>
+                        <button
+                          onClick={() => {
+                            const updated = ((config.spec as HTTPRouteSpec)?.parentReferences || []).filter((_, i) => i !== idx);
+                            onConfigChange("spec", {
+                              ...(config.spec as HTTPRouteSpec || {}),
+                              parentReferences: updated.length > 0 ? updated : undefined,
+                            });
+                          }}
+                          className="w-full text-xs text-destructive hover:bg-destructive/10 py-1.5 rounded transition-colors"
+                        >
+                          Remove Reference
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-foreground/60 text-sm py-2">No parent references defined</p>
+                )}
+              </div>
+
+              {/* Hostnames */}
+              <div className="border-t border-border pt-4">
+                <label className="block text-sm font-medium text-foreground mb-2">Hostnames</label>
+                <div className="space-y-2">
+                  <div className="flex flex-wrap gap-2">
+                    {((config.spec as HTTPRouteSpec)?.hostnames || []).map((hostname, idx) => (
+                      <div
+                        key={idx}
+                        className="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm flex items-center gap-2"
+                      >
+                        {hostname}
+                        <button
+                          onClick={() => {
+                            const updated = ((config.spec as HTTPRouteSpec)?.hostnames || []).filter((_, i) => i !== idx);
+                            onConfigChange("spec", {
+                              ...(config.spec as HTTPRouteSpec || {}),
+                              hostnames: updated.length > 0 ? updated : undefined,
+                            });
+                          }}
+                          className="text-primary hover:opacity-70"
+                        >
+                          ×
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                  <input
+                    type="text"
+                    placeholder="example.com (press Enter to add)"
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        const input = e.currentTarget;
+                        const newHostname = input.value.trim();
+                        if (newHostname) {
+                          const updated = [...((config.spec as HTTPRouteSpec)?.hostnames || []), newHostname];
+                          onConfigChange("spec", {
+                            ...(config.spec as HTTPRouteSpec || {}),
+                            hostnames: updated,
+                          });
+                          input.value = "";
+                        }
+                      }
+                    }}
+                    className="input-field"
+                  />
+                  <p className="text-xs text-foreground/50">Hostnames that HTTPRoute should match</p>
+                </div>
+              </div>
+
+              {/* Rules */}
+              <div className="border-t border-border pt-4">
+                <div className="flex items-center justify-between mb-3">
+                  <label className="block text-sm font-medium text-foreground">Rules</label>
+                  <button
+                    onClick={() => {
+                      const rules = ((config.spec as HTTPRouteSpec)?.rules || []);
+                      onConfigChange("spec", {
+                        ...(config.spec as HTTPRouteSpec || {}),
+                        rules: [...rules, { matches: [], backendRefs: [], filters: [] }],
+                      });
+                    }}
+                    className="text-primary hover:opacity-70 text-sm"
+                  >
+                    + Add Rule
+                  </button>
+                </div>
+
+                {((config.spec as HTTPRouteSpec)?.rules && (config.spec as HTTPRouteSpec).rules.length > 0) ? (
+                  <div className="space-y-3">
+                    {((config.spec as HTTPRouteSpec)?.rules || []).map((rule, rIdx) => (
+                      <div key={rIdx} className="p-4 bg-muted/20 border border-border rounded-lg space-y-3">
+                        <h4 className="font-semibold text-foreground text-sm">Rule {rIdx + 1}</h4>
+
+                        {/* Backend Refs */}
+                        <div className="border-t border-border/50 pt-3">
+                          <div className="flex items-center justify-between mb-2">
+                            <label className="block text-xs font-medium text-foreground">Backend References</label>
+                            <button
+                              onClick={() => {
+                                const updated = [...((config.spec as HTTPRouteSpec)?.rules || [])];
+                                updated[rIdx] = {
+                                  ...rule,
+                                  backendRefs: [...(rule.backendRefs || []), { name: "" }],
+                                };
+                                onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                              }}
+                              className="text-primary hover:opacity-70 text-xs"
+                            >
+                              + Add Backend
+                            </button>
+                          </div>
+                          <div className="space-y-2">
+                            {(rule.backendRefs || []).map((backend, bIdx) => (
+                              <div key={bIdx} className="flex gap-2 items-center bg-muted/10 p-2 rounded">
+                                <input
+                                  type="text"
+                                  value={backend.name || ""}
+                                  onChange={(e) => {
+                                    const updated = [...((config.spec as HTTPRouteSpec)?.rules || [])];
+                                    const backends = [...(updated[rIdx]?.backendRefs || [])];
+                                    backends[bIdx] = { ...backend, name: e.target.value || undefined };
+                                    updated[rIdx] = { ...rule, backendRefs: backends };
+                                    onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                  }}
+                                  placeholder="service-name"
+                                  className="input-field text-xs flex-1"
+                                />
+                                <input
+                                  type="text"
+                                  value={backend.namespace || ""}
+                                  onChange={(e) => {
+                                    const updated = [...((config.spec as HTTPRouteSpec)?.rules || [])];
+                                    const backends = [...(updated[rIdx]?.backendRefs || [])];
+                                    backends[bIdx] = { ...backend, namespace: e.target.value || undefined };
+                                    updated[rIdx] = { ...rule, backendRefs: backends };
+                                    onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                  }}
+                                  placeholder="default"
+                                  className="input-field text-xs flex-1"
+                                />
+                                <input
+                                  type="number"
+                                  value={backend.port || ""}
+                                  onChange={(e) => {
+                                    const updated = [...((config.spec as HTTPRouteSpec)?.rules || [])];
+                                    const backends = [...(updated[rIdx]?.backendRefs || [])];
+                                    backends[bIdx] = {
+                                      ...backend,
+                                      port: e.target.value ? parseInt(e.target.value) : undefined,
+                                    };
+                                    updated[rIdx] = { ...rule, backendRefs: backends };
+                                    onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                  }}
+                                  placeholder="80"
+                                  className="input-field text-xs flex-1"
+                                />
+                                <button
+                                  onClick={() => {
+                                    const updated = [...((config.spec as HTTPRouteSpec)?.rules || [])];
+                                    const backends = (updated[rIdx]?.backendRefs || []).filter((_, i) => i !== bIdx);
+                                    updated[rIdx] = { ...rule, backendRefs: backends.length > 0 ? backends : [] };
+                                    onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                  }}
+                                  className="text-destructive hover:opacity-70 text-xs"
+                                >
+                                  ×
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Remove Rule Button */}
+                        <button
+                          onClick={() => {
+                            const updated = ((config.spec as HTTPRouteSpec)?.rules || []).filter((_, i) => i !== rIdx);
+                            onConfigChange("spec", {
+                              ...(config.spec as HTTPRouteSpec || {}),
+                              rules: updated.length > 0 ? updated : undefined,
+                            });
+                          }}
+                          className="w-full text-xs text-destructive hover:bg-destructive/10 py-1.5 rounded transition-colors"
+                        >
+                          Remove Rule
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-foreground/60 text-sm py-2">No rules defined</p>
+                )}
+              </div>
+            </div>
+          )}
+
           {/* Service Spec Section */}
           {expandedSections.has(section.id) && section.id === "spec" && config.type === "Service" && (
             <div className="px-4 py-4 border-t border-border bg-muted/10 space-y-4">
