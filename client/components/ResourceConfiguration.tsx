@@ -32,6 +32,32 @@ interface ServiceSpec {
   trafficDistribution?: string;
 }
 
+interface HTTPRouteParentReference {
+  name?: string;
+  namespace?: string;
+  kind?: string;
+  group?: string;
+  sectionName?: string;
+  port?: number;
+}
+
+interface HTTPRouteRule {
+  matches?: {
+    path?: { type?: string; value?: string };
+    headers?: { name?: string; value?: string }[];
+    queryParams?: { name?: string; value?: string }[];
+    method?: string;
+  }[];
+  backendRefs?: { name?: string; namespace?: string; port?: number }[];
+  filters?: { type?: string; requestHeaderModifier?: { set?: Record<string, string>; add?: Record<string, string>; remove?: string[] } }[];
+}
+
+interface HTTPRouteSpec {
+  parentReferences?: HTTPRouteParentReference[];
+  hostnames?: string[];
+  rules?: HTTPRouteRule[];
+}
+
 interface ResourceConfig {
   id: string;
   name?: string;
@@ -42,7 +68,7 @@ interface ResourceConfig {
   deletionGracePeriodSeconds?: number;
   ownerReferences?: OwnerReference[];
   data?: Record<string, any>;
-  spec?: ServiceSpec;
+  spec?: ServiceSpec | HTTPRouteSpec;
 }
 
 interface ResourceConfigurationProps {
