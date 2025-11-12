@@ -1382,6 +1382,20 @@ export default function CreateChart() {
               </div>
             )}
 
+            {/* Configure Resource */}
+            {activeResource && (
+              <div className="space-y-8">
+                {/* Resource Configuration */}
+                <div className="bg-card border border-border rounded-xl p-8 max-w-3xl">
+                  <h2 className="text-xl font-bold text-foreground mb-6">Configure "{activeResource.name}" ({activeResource.type})</h2>
+                  <ResourceConfiguration
+                    config={activeResource}
+                    onConfigChange={updateResourceConfig}
+                  />
+                </div>
+              </div>
+            )}
+
             {/* Submit Button */}
             {workloads.length > 0 && (
               <div className="max-w-3xl">
