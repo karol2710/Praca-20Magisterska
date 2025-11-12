@@ -661,7 +661,7 @@ export default function ResourceConfiguration({ config, onConfigChange }: Resour
                     onClick={() => {
                       const ports = config.spec?.ports || [];
                       onConfigChange("spec", {
-                        ...config.spec,
+                        ...(config.spec || {}),
                         ports: [...ports, { port: 80, protocol: "TCP" }],
                       });
                     }}
