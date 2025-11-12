@@ -524,7 +524,7 @@ export default function ResourceConfiguration({ config, onConfigChange }: Resour
                   value={config.spec?.type || "ClusterIP"}
                   onChange={(e) => {
                     const newType = e.target.value as "ClusterIP" | "NodePort" | "ExternalName";
-                    const updatedSpec = { ...config.spec, type: newType };
+                    const updatedSpec = { ...(config.spec || {}), type: newType };
                     if (newType === "ExternalName") {
                       updatedSpec.clusterIP = undefined;
                       updatedSpec.clusterIPs = undefined;
@@ -552,7 +552,7 @@ export default function ResourceConfiguration({ config, onConfigChange }: Resour
                     value={config.spec?.clusterIP || ""}
                     onChange={(e) => {
                       onConfigChange("spec", {
-                        ...config.spec,
+                        ...(config.spec || {}),
                         clusterIP: e.target.value || undefined,
                       });
                     }}
@@ -643,7 +643,7 @@ export default function ResourceConfiguration({ config, onConfigChange }: Resour
                   value={config.spec?.ipFamilyPolicy || ""}
                   onChange={(e) => {
                     onConfigChange("spec", {
-                      ...config.spec,
+                      ...(config.spec || {}),
                       ipFamilyPolicy: e.target.value || undefined,
                     });
                   }}
@@ -795,7 +795,7 @@ export default function ResourceConfiguration({ config, onConfigChange }: Resour
                     checked={config.spec?.publishNotReadyAddresses || false}
                     onChange={(e) => {
                       onConfigChange("spec", {
-                        ...config.spec,
+                        ...(config.spec || {}),
                         publishNotReadyAddresses: e.target.checked || undefined,
                       });
                     }}
@@ -828,7 +828,7 @@ export default function ResourceConfiguration({ config, onConfigChange }: Resour
                   value={config.spec?.sessionAffinity || "None"}
                   onChange={(e) => {
                     onConfigChange("spec", {
-                      ...config.spec,
+                      ...(config.spec || {}),
                       sessionAffinity: e.target.value as "ClientIP" | "None",
                     });
                   }}
@@ -851,7 +851,7 @@ export default function ResourceConfiguration({ config, onConfigChange }: Resour
                   value={config.spec?.trafficDistribution || ""}
                   onChange={(e) => {
                     onConfigChange("spec", {
-                      ...config.spec,
+                      ...(config.spec || {}),
                       trafficDistribution: e.target.value || undefined,
                     });
                   }}
