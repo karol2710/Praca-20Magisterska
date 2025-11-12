@@ -257,9 +257,19 @@ export default function CreateChart() {
   const updateResourceConfig = (key: string, value: any) => {
     if (activeResource) {
       setResources(
-        resources.map((r) =>
-          r.id === activeResource.id ? { ...r, data: { ...r.data, [key]: value } } : r
-        )
+        resources.map((r) => {
+          if (r.id !== activeResource.id) return r;
+
+          // Handle metadata fields at top level
+          const metadataFields = ["name", "namespace", "labels", "annotations", "deletionGracePeriodSeconds", "ownerReferences"];
+
+          if (metadataFields.includes(key)) {
+            return { ...r, [key]: value };
+          }
+
+          // Handle spec and other fields in data
+          return { ...r, data: { ...r.data, [key]: value } };
+        })
       );
     }
   };
