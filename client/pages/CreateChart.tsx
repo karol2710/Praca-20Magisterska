@@ -1394,7 +1394,16 @@ export default function CreateChart() {
               <div className="space-y-8">
                 {/* Resource Configuration */}
                 <div className="bg-card border border-border rounded-xl p-8 max-w-3xl">
-                  <h2 className="text-xl font-bold text-foreground mb-6">Configure "{activeResource.name}" ({activeResource.type})</h2>
+                  <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-xl font-bold text-foreground">Configure "{activeResource.name}" ({activeResource.type})</h2>
+                    <button
+                      onClick={() => setActiveResourceId("")}
+                      className="text-destructive hover:bg-destructive/10 p-1 rounded hover:opacity-75 transition-opacity"
+                      title="Close configuration"
+                    >
+                      <X className="w-6 h-6" />
+                    </button>
+                  </div>
                   <ResourceConfiguration
                     config={activeResource}
                     onConfigChange={updateResourceConfig}
