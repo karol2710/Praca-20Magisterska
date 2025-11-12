@@ -3830,12 +3830,516 @@ export default function ResourceConfiguration({ config, onConfigChange }: Resour
                 </div>
               </div>
 
-              {/* Rules Placeholder */}
+              {/* Rules */}
               <div className="border-t border-border pt-4">
-                <label className="block text-sm font-medium text-foreground mb-3">Rules</label>
-                <div className="bg-muted/30 border border-border/50 rounded-lg p-4 text-center">
-                  <p className="text-sm text-foreground/60">Rules configuration for GRPCRoute (to be specified)</p>
+                <div className="flex items-center justify-between mb-3">
+                  <label className="block text-sm font-medium text-foreground">Rules</label>
+                  <button
+                    onClick={() => {
+                      const rules = ((config.spec as GRPCRouteSpec)?.rules || []);
+                      onConfigChange("spec", {
+                        ...(config.spec as GRPCRouteSpec || {}),
+                        rules: [...rules, { matches: [], filters: [], backendRefs: [] }],
+                      });
+                    }}
+                    className="text-primary hover:opacity-70 text-sm"
+                  >
+                    + Add Rule
+                  </button>
                 </div>
+
+                {((config.spec as GRPCRouteSpec)?.rules && (config.spec as GRPCRouteSpec).rules.length > 0) ? (
+                  <div className="space-y-3">
+                    {((config.spec as GRPCRouteSpec)?.rules || []).map((rule, rIdx) => (
+                      <div key={rIdx} className="p-4 bg-muted/20 border border-border rounded-lg space-y-4">
+                        <h4 className="font-semibold text-foreground text-sm">Rule {rIdx + 1}</h4>
+
+                        {/* Section Name */}
+                        <div className="border-t border-border/50 pt-3">
+                          <label className="block text-xs font-medium text-foreground mb-2">Section Name</label>
+                          <input
+                            type="text"
+                            value={rule.sectionName || ""}
+                            onChange={(e) => {
+                              const updated = [...((config.spec as GRPCRouteSpec)?.rules || [])];
+                              updated[rIdx] = { ...rule, sectionName: e.target.value || undefined };
+                              onConfigChange("spec", { ...(config.spec as GRPCRouteSpec || {}), rules: updated });
+                            }}
+                            placeholder="grpc"
+                            className="input-field text-sm"
+                          />
+                        </div>
+
+                        {/* Matches */}
+                        <div className="border-t border-border/50 pt-3">
+                          <div className="flex items-center justify-between mb-2">
+                            <label className="block text-xs font-medium text-foreground">Matches</label>
+                            <button
+                              onClick={() => {
+                                const updated = [...((config.spec as GRPCRouteSpec)?.rules || [])];
+                                updated[rIdx] = {
+                                  ...rule,
+                                  matches: [...(rule.matches || []), { method: {} }],
+                                };
+                                onConfigChange("spec", { ...(config.spec as GRPCRouteSpec || {}), rules: updated });
+                              }}
+                              className="text-primary hover:opacity-70 text-xs"
+                            >
+                              + Add Match
+                            </button>
+                          </div>
+                          <div className="space-y-3">
+                            {(rule.matches || []).map((match, mIdx) => (
+                              <div key={mIdx} className="p-3 bg-muted/10 border border-border/30 rounded-lg space-y-3">
+                                <div>
+                                  <p className="text-xs font-medium text-foreground mb-2">Method</p>
+                                  <div className="grid grid-cols-3 gap-2">
+                                    <div>
+                                      <label className="block text-xs font-medium text-foreground mb-1">Type</label>
+                                      <input
+                                        type="text"
+                                        value={match.method?.type || ""}
+                                        onChange={(e) => {
+                                          const updated = [...((config.spec as GRPCRouteSpec)?.rules || [])];
+                                          const matches = [...(updated[rIdx]?.matches || [])];
+                                          matches[mIdx] = {
+                                            ...match,
+                                            method: { ...match.method, type: e.target.value || undefined },
+                                          };
+                                          updated[rIdx] = { ...rule, matches };
+                                          onConfigChange("spec", { ...(config.spec as GRPCRouteSpec || {}), rules: updated });
+                                        }}
+                                        placeholder="Exact"
+                                        className="input-field text-xs"
+                                      />
+                                    </div>
+                                    <div>
+                                      <label className="block text-xs font-medium text-foreground mb-1">Service</label>
+                                      <input
+                                        type="text"
+                                        value={match.method?.service || ""}
+                                        onChange={(e) => {
+                                          const updated = [...((config.spec as GRPCRouteSpec)?.rules || [])];
+                                          const matches = [...(updated[rIdx]?.matches || [])];
+                                          matches[mIdx] = {
+                                            ...match,
+                                            method: { ...match.method, service: e.target.value || undefined },
+                                          };
+                                          updated[rIdx] = { ...rule, matches };
+                                          onConfigChange("spec", { ...(config.spec as GRPCRouteSpec || {}), rules: updated });
+                                        }}
+                                        placeholder="com.example.MyService"
+                                        className="input-field text-xs"
+                                      />
+                                    </div>
+                                    <div>
+                                      <label className="block text-xs font-medium text-foreground mb-1">Method</label>
+                                      <input
+                                        type="text"
+                                        value={match.method?.method || ""}
+                                        onChange={(e) => {
+                                          const updated = [...((config.spec as GRPCRouteSpec)?.rules || [])];
+                                          const matches = [...(updated[rIdx]?.matches || [])];
+                                          matches[mIdx] = {
+                                            ...match,
+                                            method: { ...match.method, method: e.target.value || undefined },
+                                          };
+                                          updated[rIdx] = { ...rule, matches };
+                                          onConfigChange("spec", { ...(config.spec as GRPCRouteSpec || {}), rules: updated });
+                                        }}
+                                        placeholder="MyMethod"
+                                        className="input-field text-xs"
+                                      />
+                                    </div>
+                                  </div>
+                                </div>
+
+                                {/* Headers */}
+                                <div className="border-t border-border/30 pt-2">
+                                  <div className="flex items-center justify-between mb-2">
+                                    <label className="block text-xs font-medium text-foreground">Headers</label>
+                                    <button
+                                      onClick={() => {
+                                        const updated = [...((config.spec as GRPCRouteSpec)?.rules || [])];
+                                        const matches = [...(updated[rIdx]?.matches || [])];
+                                        matches[mIdx] = {
+                                          ...match,
+                                          headers: [...(match.headers || []), { type: "", name: "", value: "" }],
+                                        };
+                                        updated[rIdx] = { ...rule, matches };
+                                        onConfigChange("spec", { ...(config.spec as GRPCRouteSpec || {}), rules: updated });
+                                      }}
+                                      className="text-primary hover:opacity-70 text-xs"
+                                    >
+                                      + Add
+                                    </button>
+                                  </div>
+                                  {(match.headers || []).map((header, hIdx) => (
+                                    <div key={hIdx} className="flex gap-2 items-center mb-2">
+                                      <input
+                                        type="text"
+                                        value={header.type || ""}
+                                        onChange={(e) => {
+                                          const updated = [...((config.spec as GRPCRouteSpec)?.rules || [])];
+                                          const matches = [...(updated[rIdx]?.matches || [])];
+                                          const headers = [...(matches[mIdx]?.headers || [])];
+                                          headers[hIdx] = { ...header, type: e.target.value || undefined };
+                                          matches[mIdx] = { ...match, headers };
+                                          updated[rIdx] = { ...rule, matches };
+                                          onConfigChange("spec", { ...(config.spec as GRPCRouteSpec || {}), rules: updated });
+                                        }}
+                                        placeholder="Exact"
+                                        className="input-field text-xs flex-1"
+                                      />
+                                      <input
+                                        type="text"
+                                        value={header.name || ""}
+                                        onChange={(e) => {
+                                          const updated = [...((config.spec as GRPCRouteSpec)?.rules || [])];
+                                          const matches = [...(updated[rIdx]?.matches || [])];
+                                          const headers = [...(matches[mIdx]?.headers || [])];
+                                          headers[hIdx] = { ...header, name: e.target.value || undefined };
+                                          matches[mIdx] = { ...match, headers };
+                                          updated[rIdx] = { ...rule, matches };
+                                          onConfigChange("spec", { ...(config.spec as GRPCRouteSpec || {}), rules: updated });
+                                        }}
+                                        placeholder="Header name"
+                                        className="input-field text-xs flex-1"
+                                      />
+                                      <input
+                                        type="text"
+                                        value={header.value || ""}
+                                        onChange={(e) => {
+                                          const updated = [...((config.spec as GRPCRouteSpec)?.rules || [])];
+                                          const matches = [...(updated[rIdx]?.matches || [])];
+                                          const headers = [...(matches[mIdx]?.headers || [])];
+                                          headers[hIdx] = { ...header, value: e.target.value || undefined };
+                                          matches[mIdx] = { ...match, headers };
+                                          updated[rIdx] = { ...rule, matches };
+                                          onConfigChange("spec", { ...(config.spec as GRPCRouteSpec || {}), rules: updated });
+                                        }}
+                                        placeholder="Header value"
+                                        className="input-field text-xs flex-1"
+                                      />
+                                      <button
+                                        onClick={() => {
+                                          const updated = [...((config.spec as GRPCRouteSpec)?.rules || [])];
+                                          const matches = [...(updated[rIdx]?.matches || [])];
+                                          const headers = (matches[mIdx]?.headers || []).filter((_, i) => i !== hIdx);
+                                          matches[mIdx] = {
+                                            ...match,
+                                            headers: headers.length > 0 ? headers : undefined,
+                                          };
+                                          updated[rIdx] = { ...rule, matches };
+                                          onConfigChange("spec", { ...(config.spec as GRPCRouteSpec || {}), rules: updated });
+                                        }}
+                                        className="text-destructive hover:opacity-70 text-xs"
+                                      >
+                                        ×
+                                      </button>
+                                    </div>
+                                  ))}
+                                </div>
+
+                                <button
+                                  onClick={() => {
+                                    const updated = [...((config.spec as GRPCRouteSpec)?.rules || [])];
+                                    const matches = (updated[rIdx]?.matches || []).filter((_, i) => i !== mIdx);
+                                    updated[rIdx] = { ...rule, matches: matches.length > 0 ? matches : undefined };
+                                    onConfigChange("spec", { ...(config.spec as GRPCRouteSpec || {}), rules: updated });
+                                  }}
+                                  className="w-full text-xs text-destructive hover:bg-destructive/10 py-1 rounded transition-colors"
+                                >
+                                  Remove Match
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Filters */}
+                        <div className="border-t border-border/50 pt-3">
+                          <div className="flex items-center justify-between mb-2">
+                            <label className="block text-xs font-medium text-foreground">Filters</label>
+                            <button
+                              onClick={() => {
+                                const updated = [...((config.spec as GRPCRouteSpec)?.rules || [])];
+                                updated[rIdx] = {
+                                  ...rule,
+                                  filters: [...(rule.filters || []), { type: "RequestHeaderModifier" }],
+                                };
+                                onConfigChange("spec", { ...(config.spec as GRPCRouteSpec || {}), rules: updated });
+                              }}
+                              className="text-primary hover:opacity-70 text-xs"
+                            >
+                              + Add Filter
+                            </button>
+                          </div>
+                          <div className="space-y-3">
+                            {(rule.filters || []).map((filter, fIdx) => (
+                              <div key={fIdx} className="p-3 bg-muted/10 border border-border/30 rounded-lg space-y-3">
+                                <div>
+                                  <label className="block text-xs font-medium text-foreground mb-1">Filter Type</label>
+                                  <select
+                                    value={filter.type || "RequestHeaderModifier"}
+                                    onChange={(e) => {
+                                      const updated = [...((config.spec as GRPCRouteSpec)?.rules || [])];
+                                      const filters = [...(updated[rIdx]?.filters || [])];
+                                      filters[fIdx] = { type: e.target.value as GRPCRouteFilter["type"] };
+                                      updated[rIdx] = { ...rule, filters };
+                                      onConfigChange("spec", { ...(config.spec as GRPCRouteSpec || {}), rules: updated });
+                                    }}
+                                    className="input-field text-xs"
+                                  >
+                                    <option value="RequestHeaderModifier">Request Header Modifier</option>
+                                    <option value="ResponseHeaderModifier">Response Header Modifier</option>
+                                    <option value="RequestMirror">Request Mirror</option>
+                                  </select>
+                                </div>
+
+                                {filter.type === "RequestHeaderModifier" && (
+                                  <div className="text-xs text-foreground/60">Header modifier configuration (simplified for display)</div>
+                                )}
+                                {filter.type === "ResponseHeaderModifier" && (
+                                  <div className="text-xs text-foreground/60">Response header modifier configuration (simplified for display)</div>
+                                )}
+                                {filter.type === "RequestMirror" && (
+                                  <div className="text-xs text-foreground/60">Request mirror configuration (simplified for display)</div>
+                                )}
+
+                                <button
+                                  onClick={() => {
+                                    const updated = [...((config.spec as GRPCRouteSpec)?.rules || [])];
+                                    const filters = (updated[rIdx]?.filters || []).filter((_, i) => i !== fIdx);
+                                    updated[rIdx] = { ...rule, filters: filters.length > 0 ? filters : undefined };
+                                    onConfigChange("spec", { ...(config.spec as GRPCRouteSpec || {}), rules: updated });
+                                  }}
+                                  className="w-full text-xs text-destructive hover:bg-destructive/10 py-1 rounded transition-colors"
+                                >
+                                  Remove Filter
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Backend References */}
+                        <div className="border-t border-border/50 pt-3">
+                          <div className="flex items-center justify-between mb-2">
+                            <label className="block text-xs font-medium text-foreground">Backend References</label>
+                            <button
+                              onClick={() => {
+                                const updated = [...((config.spec as GRPCRouteSpec)?.rules || [])];
+                                updated[rIdx] = {
+                                  ...rule,
+                                  backendRefs: [...(rule.backendRefs || []), { name: "" }],
+                                };
+                                onConfigChange("spec", { ...(config.spec as GRPCRouteSpec || {}), rules: updated });
+                              }}
+                              className="text-primary hover:opacity-70 text-xs"
+                            >
+                              + Add Backend
+                            </button>
+                          </div>
+                          <div className="space-y-3">
+                            {(rule.backendRefs || []).map((backend, bIdx) => (
+                              <div key={bIdx} className="p-3 bg-muted/10 border border-border/30 rounded-lg space-y-3">
+                                <div className="grid grid-cols-3 gap-3">
+                                  <div>
+                                    <label className="block text-xs font-medium text-foreground mb-1">Name</label>
+                                    <input
+                                      type="text"
+                                      value={backend.name || ""}
+                                      onChange={(e) => {
+                                        const updated = [...((config.spec as GRPCRouteSpec)?.rules || [])];
+                                        const backends = [...(updated[rIdx]?.backendRefs || [])];
+                                        backends[bIdx] = { ...backend, name: e.target.value || undefined };
+                                        updated[rIdx] = { ...rule, backendRefs: backends };
+                                        onConfigChange("spec", { ...(config.spec as GRPCRouteSpec || {}), rules: updated });
+                                      }}
+                                      placeholder="service-name"
+                                      className="input-field text-xs"
+                                    />
+                                  </div>
+                                  <div>
+                                    <label className="block text-xs font-medium text-foreground mb-1">Namespace</label>
+                                    <input
+                                      type="text"
+                                      value={backend.namespace || ""}
+                                      onChange={(e) => {
+                                        const updated = [...((config.spec as GRPCRouteSpec)?.rules || [])];
+                                        const backends = [...(updated[rIdx]?.backendRefs || [])];
+                                        backends[bIdx] = { ...backend, namespace: e.target.value || undefined };
+                                        updated[rIdx] = { ...rule, backendRefs: backends };
+                                        onConfigChange("spec", { ...(config.spec as GRPCRouteSpec || {}), rules: updated });
+                                      }}
+                                      placeholder="default"
+                                      className="input-field text-xs"
+                                    />
+                                  </div>
+                                  <div>
+                                    <label className="block text-xs font-medium text-foreground mb-1">Port</label>
+                                    <input
+                                      type="number"
+                                      value={backend.port || ""}
+                                      onChange={(e) => {
+                                        const updated = [...((config.spec as GRPCRouteSpec)?.rules || [])];
+                                        const backends = [...(updated[rIdx]?.backendRefs || [])];
+                                        backends[bIdx] = {
+                                          ...backend,
+                                          port: e.target.value ? parseInt(e.target.value) : undefined,
+                                        };
+                                        updated[rIdx] = { ...rule, backendRefs: backends };
+                                        onConfigChange("spec", { ...(config.spec as GRPCRouteSpec || {}), rules: updated });
+                                      }}
+                                      placeholder="50051"
+                                      className="input-field text-xs"
+                                    />
+                                  </div>
+                                  <div>
+                                    <label className="block text-xs font-medium text-foreground mb-1">Weight</label>
+                                    <input
+                                      type="number"
+                                      value={backend.weight || ""}
+                                      onChange={(e) => {
+                                        const updated = [...((config.spec as GRPCRouteSpec)?.rules || [])];
+                                        const backends = [...(updated[rIdx]?.backendRefs || [])];
+                                        backends[bIdx] = {
+                                          ...backend,
+                                          weight: e.target.value ? parseInt(e.target.value) : undefined,
+                                        };
+                                        updated[rIdx] = { ...rule, backendRefs: backends };
+                                        onConfigChange("spec", { ...(config.spec as GRPCRouteSpec || {}), rules: updated });
+                                      }}
+                                      placeholder="100"
+                                      className="input-field text-xs"
+                                    />
+                                  </div>
+                                  <div>
+                                    <label className="block text-xs font-medium text-foreground mb-1">Group</label>
+                                    <input
+                                      type="text"
+                                      value={backend.group || ""}
+                                      onChange={(e) => {
+                                        const updated = [...((config.spec as GRPCRouteSpec)?.rules || [])];
+                                        const backends = [...(updated[rIdx]?.backendRefs || [])];
+                                        backends[bIdx] = { ...backend, group: e.target.value || undefined };
+                                        updated[rIdx] = { ...rule, backendRefs: backends };
+                                        onConfigChange("spec", { ...(config.spec as GRPCRouteSpec || {}), rules: updated });
+                                      }}
+                                      placeholder="core"
+                                      className="input-field text-xs"
+                                    />
+                                  </div>
+                                  <div>
+                                    <label className="block text-xs font-medium text-foreground mb-1">Kind</label>
+                                    <input
+                                      type="text"
+                                      value={backend.kind || ""}
+                                      onChange={(e) => {
+                                        const updated = [...((config.spec as GRPCRouteSpec)?.rules || [])];
+                                        const backends = [...(updated[rIdx]?.backendRefs || [])];
+                                        backends[bIdx] = { ...backend, kind: e.target.value || undefined };
+                                        updated[rIdx] = { ...rule, backendRefs: backends };
+                                        onConfigChange("spec", { ...(config.spec as GRPCRouteSpec || {}), rules: updated });
+                                      }}
+                                      placeholder="Service"
+                                      className="input-field text-xs"
+                                    />
+                                  </div>
+                                </div>
+
+                                {/* Backend Filters */}
+                                <div className="border-t border-border/30 pt-2">
+                                  <div className="flex items-center justify-between mb-2">
+                                    <label className="block text-xs font-medium text-foreground">Filters</label>
+                                    <button
+                                      onClick={() => {
+                                        const updated = [...((config.spec as GRPCRouteSpec)?.rules || [])];
+                                        const backends = [...(updated[rIdx]?.backendRefs || [])];
+                                        backends[bIdx] = {
+                                          ...backend,
+                                          filters: [...(backend.filters || []), { type: "RequestHeaderModifier" }],
+                                        };
+                                        updated[rIdx] = { ...rule, backendRefs: backends };
+                                        onConfigChange("spec", { ...(config.spec as GRPCRouteSpec || {}), rules: updated });
+                                      }}
+                                      className="text-primary hover:opacity-70 text-xs"
+                                    >
+                                      + Add Filter
+                                    </button>
+                                  </div>
+                                  {(backend.filters || []).map((bFilter, bfIdx) => (
+                                    <div key={bfIdx} className="p-2 bg-muted/5 border border-border/20 rounded mb-2">
+                                      <select
+                                        value={bFilter.type || "RequestHeaderModifier"}
+                                        onChange={(e) => {
+                                          const updated = [...((config.spec as GRPCRouteSpec)?.rules || [])];
+                                          const backends = [...(updated[rIdx]?.backendRefs || [])];
+                                          const filters = [...(backends[bIdx]?.filters || [])];
+                                          filters[bfIdx] = { type: e.target.value as GRPCRouteFilter["type"] };
+                                          backends[bIdx] = { ...backend, filters };
+                                          updated[rIdx] = { ...rule, backendRefs: backends };
+                                          onConfigChange("spec", { ...(config.spec as GRPCRouteSpec || {}), rules: updated });
+                                        }}
+                                        className="input-field text-xs mb-2"
+                                      >
+                                        <option value="RequestHeaderModifier">Request Header Modifier</option>
+                                        <option value="ResponseHeaderModifier">Response Header Modifier</option>
+                                        <option value="RequestMirror">Request Mirror</option>
+                                      </select>
+                                      <button
+                                        onClick={() => {
+                                          const updated = [...((config.spec as GRPCRouteSpec)?.rules || [])];
+                                          const backends = [...(updated[rIdx]?.backendRefs || [])];
+                                          const filters = (backends[bIdx]?.filters || []).filter((_, i) => i !== bfIdx);
+                                          backends[bIdx] = { ...backend, filters: filters.length > 0 ? filters : undefined };
+                                          updated[rIdx] = { ...rule, backendRefs: backends };
+                                          onConfigChange("spec", { ...(config.spec as GRPCRouteSpec || {}), rules: updated });
+                                        }}
+                                        className="w-full text-xs text-destructive hover:bg-destructive/10 py-1 rounded transition-colors"
+                                      >
+                                        Remove Filter
+                                      </button>
+                                    </div>
+                                  ))}
+                                </div>
+
+                                <button
+                                  onClick={() => {
+                                    const updated = [...((config.spec as GRPCRouteSpec)?.rules || [])];
+                                    const backends = (updated[rIdx]?.backendRefs || []).filter((_, i) => i !== bIdx);
+                                    updated[rIdx] = { ...rule, backendRefs: backends.length > 0 ? backends : undefined };
+                                    onConfigChange("spec", { ...(config.spec as GRPCRouteSpec || {}), rules: updated });
+                                  }}
+                                  className="w-full text-xs text-destructive hover:bg-destructive/10 py-1 rounded transition-colors"
+                                >
+                                  Remove Backend
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Remove Rule Button */}
+                        <button
+                          onClick={() => {
+                            const updated = ((config.spec as GRPCRouteSpec)?.rules || []).filter((_, i) => i !== rIdx);
+                            onConfigChange("spec", {
+                              ...(config.spec as GRPCRouteSpec || {}),
+                              rules: updated.length > 0 ? updated : undefined,
+                            });
+                          }}
+                          className="w-full text-xs text-destructive hover:bg-destructive/10 py-1.5 rounded transition-colors border-t border-border/50"
+                        >
+                          Remove Rule
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-foreground/60 text-sm py-2">No rules defined</p>
+                )}
               </div>
             </div>
           )}
