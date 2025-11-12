@@ -1267,7 +1267,16 @@ export default function CreateChart() {
                         </button>
                       </div>
                       <ResourceConfiguration
-                        config={{ id: activeResource.id, name: activeResource.name, type: activeResource.type }}
+                        config={{
+                          id: activeResource.id,
+                          name: activeResource.name,
+                          type: activeResource.type,
+                          namespace: activeResource.namespace,
+                          labels: activeResource.labels,
+                          annotations: activeResource.annotations,
+                          deletionGracePeriodSeconds: activeResource.deletionGracePeriodSeconds,
+                          ownerReferences: activeResource.ownerReferences,
+                        }}
                         onConfigChange={updateResourceConfig}
                       />
                     </div>
