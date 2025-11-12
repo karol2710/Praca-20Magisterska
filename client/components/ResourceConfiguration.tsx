@@ -1582,62 +1582,94 @@ export default function ResourceConfiguration({ config, onConfigChange }: Resour
                                 {/* Request Mirror */}
                                 {filter.type === "RequestMirror" && (
                                   <div className="space-y-3 border-t border-border/30 pt-2">
-                                    <div className="grid grid-cols-3 gap-2">
-                                      <div>
-                                        <label className="block text-xs font-medium text-foreground mb-1">Service Name</label>
-                                        <input
-                                          type="text"
-                                          value={filter.requestMirror?.backendRef?.name || ""}
-                                          onChange={(e) => {
-                                            const updated = [...((config.spec as HTTPRouteSpec)?.rules || [])];
-                                            const filters = [...(updated[rIdx]?.filters || [])];
-                                            filters[fIdx] = {
-                                              ...filter,
-                                              requestMirror: {
-                                                ...filter.requestMirror,
-                                                backendRef: {
-                                                  ...filter.requestMirror?.backendRef,
-                                                  name: e.target.value || undefined,
+                                    <div>
+                                      <p className="text-xs text-foreground/60 mb-2">Backend Reference (required)</p>
+                                      <div className="grid grid-cols-3 gap-2 mb-3">
+                                        <div>
+                                          <label className="block text-xs font-medium text-foreground mb-1">Service Name</label>
+                                          <input
+                                            type="text"
+                                            value={filter.requestMirror?.backendRef?.name || ""}
+                                            onChange={(e) => {
+                                              const updated = [...((config.spec as HTTPRouteSpec)?.rules || [])];
+                                              const filters = [...(updated[rIdx]?.filters || [])];
+                                              filters[fIdx] = {
+                                                ...filter,
+                                                requestMirror: {
+                                                  ...filter.requestMirror,
+                                                  backendRef: {
+                                                    ...filter.requestMirror?.backendRef,
+                                                    name: e.target.value || undefined,
+                                                  },
                                                 },
-                                              },
-                                            };
-                                            updated[rIdx] = { ...rule, filters };
-                                            onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
-                                          }}
-                                          placeholder="service-name"
-                                          className="input-field text-xs"
-                                        />
-                                      </div>
-                                      <div>
-                                        <label className="block text-xs font-medium text-foreground mb-1">Namespace</label>
-                                        <input
-                                          type="text"
-                                          value={filter.requestMirror?.backendRef?.namespace || ""}
-                                          onChange={(e) => {
-                                            const updated = [...((config.spec as HTTPRouteSpec)?.rules || [])];
-                                            const filters = [...(updated[rIdx]?.filters || [])];
-                                            filters[fIdx] = {
-                                              ...filter,
-                                              requestMirror: {
-                                                ...filter.requestMirror,
-                                                backendRef: {
-                                                  ...filter.requestMirror?.backendRef,
-                                                  namespace: e.target.value || undefined,
+                                              };
+                                              updated[rIdx] = { ...rule, filters };
+                                              onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                            }}
+                                            placeholder="service-name"
+                                            className="input-field text-xs"
+                                          />
+                                        </div>
+                                        <div>
+                                          <label className="block text-xs font-medium text-foreground mb-1">Namespace</label>
+                                          <input
+                                            type="text"
+                                            value={filter.requestMirror?.backendRef?.namespace || ""}
+                                            onChange={(e) => {
+                                              const updated = [...((config.spec as HTTPRouteSpec)?.rules || [])];
+                                              const filters = [...(updated[rIdx]?.filters || [])];
+                                              filters[fIdx] = {
+                                                ...filter,
+                                                requestMirror: {
+                                                  ...filter.requestMirror,
+                                                  backendRef: {
+                                                    ...filter.requestMirror?.backendRef,
+                                                    namespace: e.target.value || undefined,
+                                                  },
                                                 },
-                                              },
-                                            };
-                                            updated[rIdx] = { ...rule, filters };
-                                            onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
-                                          }}
-                                          placeholder="default"
-                                          className="input-field text-xs"
-                                        />
+                                              };
+                                              updated[rIdx] = { ...rule, filters };
+                                              onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                            }}
+                                            placeholder="default"
+                                            className="input-field text-xs"
+                                          />
+                                        </div>
+                                        <div>
+                                          <label className="block text-xs font-medium text-foreground mb-1">Port</label>
+                                          <input
+                                            type="number"
+                                            value={filter.requestMirror?.backendRef?.port || ""}
+                                            onChange={(e) => {
+                                              const updated = [...((config.spec as HTTPRouteSpec)?.rules || [])];
+                                              const filters = [...(updated[rIdx]?.filters || [])];
+                                              filters[fIdx] = {
+                                                ...filter,
+                                                requestMirror: {
+                                                  ...filter.requestMirror,
+                                                  backendRef: {
+                                                    ...filter.requestMirror?.backendRef,
+                                                    port: e.target.value ? parseInt(e.target.value) : undefined,
+                                                  },
+                                                },
+                                              };
+                                              updated[rIdx] = { ...rule, filters };
+                                              onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                            }}
+                                            placeholder="80"
+                                            className="input-field text-xs"
+                                          />
+                                        </div>
                                       </div>
+                                    </div>
+
+                                    <div className="border-t border-border/30 pt-2">
+                                      <p className="text-xs text-foreground/60 mb-2">Traffic Mirror Percentage (optional - only one of Percent or Fraction can be specified)</p>
                                       <div>
-                                        <label className="block text-xs font-medium text-foreground mb-1">Port</label>
+                                        <label className="block text-xs font-medium text-foreground mb-1">Percent (0-100)</label>
                                         <input
                                           type="number"
-                                          value={filter.requestMirror?.backendRef?.port || ""}
+                                          value={filter.requestMirror?.percent || ""}
                                           onChange={(e) => {
                                             const updated = [...((config.spec as HTTPRouteSpec)?.rules || [])];
                                             const filters = [...(updated[rIdx]?.filters || [])];
@@ -1645,18 +1677,77 @@ export default function ResourceConfiguration({ config, onConfigChange }: Resour
                                               ...filter,
                                               requestMirror: {
                                                 ...filter.requestMirror,
-                                                backendRef: {
-                                                  ...filter.requestMirror?.backendRef,
-                                                  port: e.target.value ? parseInt(e.target.value) : undefined,
-                                                },
+                                                percent: e.target.value ? parseInt(e.target.value) : undefined,
                                               },
                                             };
                                             updated[rIdx] = { ...rule, filters };
                                             onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
                                           }}
-                                          placeholder="80"
+                                          placeholder="50"
+                                          min="0"
+                                          max="100"
                                           className="input-field text-xs"
                                         />
+                                        <p className="text-xs text-foreground/50 mt-1">Percentage of traffic to mirror (0-100)</p>
+                                      </div>
+                                    </div>
+
+                                    <div className="border-t border-border/30 pt-2">
+                                      <label className="block text-xs font-medium text-foreground mb-2">Fraction (optional)</label>
+                                      <div className="grid grid-cols-2 gap-2">
+                                        <div>
+                                          <label className="block text-xs font-medium text-foreground mb-1">Numerator</label>
+                                          <input
+                                            type="number"
+                                            value={filter.requestMirror?.fraction?.numerator || ""}
+                                            onChange={(e) => {
+                                              const updated = [...((config.spec as HTTPRouteSpec)?.rules || [])];
+                                              const filters = [...(updated[rIdx]?.filters || [])];
+                                              filters[fIdx] = {
+                                                ...filter,
+                                                requestMirror: {
+                                                  ...filter.requestMirror,
+                                                  fraction: {
+                                                    ...filter.requestMirror?.fraction,
+                                                    numerator: e.target.value ? parseInt(e.target.value) : undefined,
+                                                  },
+                                                },
+                                              };
+                                              updated[rIdx] = { ...rule, filters };
+                                              onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                            }}
+                                            placeholder="1"
+                                            min="0"
+                                            className="input-field text-xs"
+                                          />
+                                          <p className="text-xs text-foreground/50 mt-1">Numerator of fraction</p>
+                                        </div>
+                                        <div>
+                                          <label className="block text-xs font-medium text-foreground mb-1">Denominator</label>
+                                          <input
+                                            type="text"
+                                            value={filter.requestMirror?.fraction?.denominator || ""}
+                                            onChange={(e) => {
+                                              const updated = [...((config.spec as HTTPRouteSpec)?.rules || [])];
+                                              const filters = [...(updated[rIdx]?.filters || [])];
+                                              filters[fIdx] = {
+                                                ...filter,
+                                                requestMirror: {
+                                                  ...filter.requestMirror,
+                                                  fraction: {
+                                                    ...filter.requestMirror?.fraction,
+                                                    denominator: e.target.value || undefined,
+                                                  },
+                                                },
+                                              };
+                                              updated[rIdx] = { ...rule, filters };
+                                              onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                            }}
+                                            placeholder="2"
+                                            className="input-field text-xs"
+                                          />
+                                          <p className="text-xs text-foreground/50 mt-1">Denominator of fraction</p>
+                                        </div>
                                       </div>
                                     </div>
                                   </div>
