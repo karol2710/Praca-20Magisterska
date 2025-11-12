@@ -1,6 +1,28 @@
 import { useState } from "react";
 import { ChevronDown, X } from "lucide-react";
 
+interface ServicePort {
+  name?: string;
+  port: number;
+  targetPort?: number | string;
+  protocol?: "TCP" | "UDP" | "SCTP";
+  nodePort?: number;
+  appProtocol?: string;
+}
+
+interface ServiceSpec {
+  type?: "ClusterIP" | "NodePort" | "ExternalName";
+  clusterIP?: string;
+  clusterIPs?: string[];
+  externalName?: string;
+  ipFamilyPolicy?: string;
+  ports?: ServicePort[];
+  publishNotReadyAddresses?: boolean;
+  selector?: Record<string, string>;
+  sessionAffinity?: "ClientIP" | "None";
+  trafficDistribution?: string;
+}
+
 interface ResourceConfig {
   id: string;
   name?: string;
@@ -9,6 +31,7 @@ interface ResourceConfig {
   labels?: Record<string, string>;
   annotations?: Record<string, string>;
   data?: Record<string, any>;
+  spec?: ServiceSpec;
 }
 
 interface ResourceConfigurationProps {
