@@ -1318,6 +1318,7 @@ export default function CreateChart() {
                           annotations: activeResource.annotations,
                           deletionGracePeriodSeconds: activeResource.deletionGracePeriodSeconds,
                           ownerReferences: activeResource.ownerReferences,
+                          spec: activeResource.spec,
                         }}
                         onConfigChange={updateResourceConfig}
                       />
