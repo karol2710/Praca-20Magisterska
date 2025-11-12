@@ -87,10 +87,51 @@ interface HTTPRouteSpec {
   timeouts?: HTTPRouteTimeout;
 }
 
+interface GRPCRouteMethod {
+  type?: string;
+  service?: string;
+  method?: string;
+}
+
+interface GRPCRouteHeader {
+  type?: string;
+  name?: string;
+  value?: string;
+}
+
+interface GRPCRouteMatch {
+  method?: GRPCRouteMethod;
+  headers?: GRPCRouteHeader[];
+}
+
+interface GRPCRouteFilter {
+  type: "RequestHeaderModifier" | "ResponseHeaderModifier" | "RequestMirror";
+  requestHeaderModifier?: { set?: Record<string, string>; add?: Record<string, string>; remove?: string[] };
+  responseHeaderModifier?: { set?: Record<string, string>; add?: Record<string, string>; remove?: string[] };
+  requestMirror?: { backendRef: { name?: string; namespace?: string; port?: number }; percent?: number; fraction?: { numerator?: number; denominator?: string } };
+}
+
+interface GRPCRouteBackendRef {
+  name?: string;
+  namespace?: string;
+  port?: number;
+  weight?: number;
+  group?: string;
+  kind?: string;
+  filters?: GRPCRouteFilter[];
+}
+
+interface GRPCRouteRule {
+  sectionName?: string;
+  matches?: GRPCRouteMatch[];
+  filters?: GRPCRouteFilter[];
+  backendRefs?: GRPCRouteBackendRef[];
+}
+
 interface GRPCRouteSpec {
   parentReferences?: HTTPRouteParentReference[];
   hostnames?: string[];
-  rules?: Record<string, any>[];
+  rules?: GRPCRouteRule[];
 }
 
 interface ResourceConfig {
