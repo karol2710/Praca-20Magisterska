@@ -1,6 +1,15 @@
 import { useState } from "react";
 import { ChevronDown, X } from "lucide-react";
 
+interface OwnerReference {
+  apiVersion?: string;
+  blockOwnerDeletion?: boolean;
+  controller?: boolean;
+  kind?: string;
+  name?: string;
+  uid?: string;
+}
+
 interface ServicePort {
   name?: string;
   port: number;
@@ -30,6 +39,8 @@ interface ResourceConfig {
   namespace?: string;
   labels?: Record<string, string>;
   annotations?: Record<string, string>;
+  deletionGracePeriodSeconds?: number;
+  ownerReferences?: OwnerReference[];
   data?: Record<string, any>;
   spec?: ServiceSpec;
 }
