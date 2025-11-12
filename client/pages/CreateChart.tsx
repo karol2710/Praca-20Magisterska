@@ -182,6 +182,28 @@ interface OwnerReference {
   uid?: string;
 }
 
+interface ServicePort {
+  name?: string;
+  port: number;
+  targetPort?: number | string;
+  protocol?: "TCP" | "UDP" | "SCTP";
+  nodePort?: number;
+  appProtocol?: string;
+}
+
+interface ServiceSpec {
+  type?: "ClusterIP" | "NodePort" | "ExternalName";
+  clusterIP?: string;
+  clusterIPs?: string[];
+  externalName?: string;
+  ipFamilyPolicy?: string;
+  ports?: ServicePort[];
+  publishNotReadyAddresses?: boolean;
+  selector?: Record<string, string>;
+  sessionAffinity?: "ClientIP" | "None";
+  trafficDistribution?: string;
+}
+
 interface Resource {
   id: string;
   name: string;
@@ -191,6 +213,7 @@ interface Resource {
   annotations?: Record<string, string>;
   deletionGracePeriodSeconds?: number;
   ownerReferences?: OwnerReference[];
+  spec?: ServiceSpec;
   data?: Record<string, any>;
 }
 
