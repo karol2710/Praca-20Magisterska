@@ -787,6 +787,94 @@ export default function CreateChart() {
               )}
             </div>
 
+            {/* Create Resource */}
+            <div className="bg-card border border-border rounded-xl p-8 max-w-3xl">
+              <h2 className="text-xl font-bold text-foreground mb-6">Create Resource</h2>
+              <div className="space-y-4 mb-6">
+                {/* Resource Type Selection */}
+                <div>
+                  <label className="block text-sm font-semibold text-foreground mb-3">Resource Type</label>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                    {resourceTypes.map((type) => (
+                      <button
+                        key={type}
+                        onClick={() => setSelectedResourceType(type)}
+                        className={`p-3 rounded-lg border-2 text-sm font-medium transition-all ${
+                          selectedResourceType === type
+                            ? "border-primary bg-primary/10 text-primary"
+                            : "border-border text-foreground hover:border-primary/50"
+                        }`}
+                      >
+                        {type}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Resource Name */}
+                <div>
+                  <label htmlFor="resourceName" className="block text-sm font-semibold text-foreground mb-2">
+                    Resource Name
+                  </label>
+                  <input
+                    id="resourceName"
+                    type="text"
+                    value={newResourceName}
+                    onChange={(e) => setNewResourceName(e.target.value)}
+                    placeholder="e.g., my-service, app-config"
+                    className="input-field"
+                  />
+                </div>
+
+                {/* Add Resource Button */}
+                <button
+                  onClick={addResource}
+                  className="btn-primary w-full"
+                >
+                  <Plus className="w-5 h-5 inline mr-2" />
+                  Create {selectedResourceType}
+                </button>
+              </div>
+
+              {/* Resources List */}
+              {resources.length > 0 && (
+                <div className="space-y-2">
+                  {resources.map((resource) => (
+                    <div
+                      key={resource.id}
+                      onClick={() => setActiveResourceId(resource.id)}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          setActiveResourceId(resource.id);
+                        }
+                      }}
+                      className={`w-full p-4 rounded-lg border-2 text-left transition-all flex items-center justify-between cursor-pointer ${
+                        activeResourceId === resource.id
+                          ? "border-primary bg-primary/5"
+                          : "border-border hover:border-primary/30"
+                      }`}
+                    >
+                      <div>
+                        <p className="font-semibold text-foreground">{resource.name || "Unnamed"}</p>
+                        <p className="text-sm text-foreground/60">{resource.type}</p>
+                      </div>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          deleteResource(resource.id);
+                        }}
+                        className="text-destructive hover:bg-destructive/10 p-1 rounded hover:opacity-75 transition-opacity"
+                      >
+                        <X className="w-5 h-5" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
             {/* Configure Workload */}
             {activeWorkload && (
               <div className="space-y-8">
