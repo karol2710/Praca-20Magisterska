@@ -14,6 +14,7 @@ import { Upload, Plus, X, Zap } from "lucide-react";
 type ChartMode = "standard" | "advanced";
 type InputType = "file" | "repo";
 type WorkloadType = "Pod" | "Deployment" | "ReplicaSet" | "StatefulSet" | "DaemonSet" | "Job" | "CronJob";
+type ResourceType = "Service" | "HTTPRoute" | "GRPCRoute" | "Gateway" | "NetworkPolicy" | "StorageClass" | "PersistentVolume" | "PersistentVolumeClaim" | "VolumeAttributesClass" | "ConfigMap" | "Secret" | "LimitRange" | "RuntimeClass";
 type RestartPolicy = "Always" | "OnFailure" | "Never";
 type DNSPolicy = "ClusterFirstWithHostNet" | "ClusterFirst" | "Default" | "None";
 
