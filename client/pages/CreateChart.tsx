@@ -421,37 +421,43 @@ export default function CreateChart() {
             <p className="text-lg text-foreground/60">Choose between Standard or Advanced configuration</p>
           </div>
 
-          {mode === "standard" ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-12">
-              <div
-                onClick={() => setMode("standard")}
-                className="p-8 bg-card border-2 border-primary rounded-xl cursor-pointer hover:bg-primary/5 transition-colors"
-              >
-                <h2 className="text-xl font-bold text-foreground mb-2">Standard</h2>
-                <p className="text-sm text-foreground/60 mb-4">Simple and Quick</p>
-                <ul className="space-y-2 text-sm text-foreground/60">
-                  <li>✓ Pre-configured templates</li>
-                  <li>✓ Best practices built-in</li>
-                  <li>✓ Quick setup</li>
-                  <li>✓ Suitable for common use cases</li>
-                </ul>
-              </div>
-
-              <div
-                onClick={() => setMode("advanced")}
-                className="p-8 bg-card border-2 border-border rounded-xl cursor-pointer hover:border-primary/50 hover:bg-muted/5 transition-all"
-              >
-                <h2 className="text-xl font-bold text-foreground mb-2">Advanced</h2>
-                <p className="text-sm text-foreground/60 mb-4">Full Customization</p>
-                <ul className="space-y-2 text-sm text-foreground/60">
-                  <li>✓ Create multiple workloads</li>
-                  <li>✓ Define resources</li>
-                  <li>✓ Full control over configuration</li>
-                  <li>✓ Complex deployments</li>
-                </ul>
-              </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-12">
+            <div
+              onClick={() => setMode("standard")}
+              className={`p-8 bg-card border-2 rounded-xl cursor-pointer transition-all ${
+                mode === "standard"
+                  ? "border-primary"
+                  : "border-border hover:border-primary/50 hover:bg-muted/5"
+              }`}
+            >
+              <h2 className="text-xl font-bold text-foreground mb-2">Standard</h2>
+              <p className="text-sm text-foreground/60 mb-4">Simple and Quick</p>
+              <ul className="space-y-2 text-sm text-foreground/60">
+                <li>✓ Pre-configured templates</li>
+                <li>✓ Best practices built-in</li>
+                <li>✓ Quick setup</li>
+                <li>✓ Suitable for common use cases</li>
+              </ul>
             </div>
-          ) : null}
+
+            <div
+              onClick={() => setMode("advanced")}
+              className={`p-8 bg-card border-2 rounded-xl cursor-pointer transition-all ${
+                mode === "advanced"
+                  ? "border-primary"
+                  : "border-border hover:border-primary/50 hover:bg-muted/5"
+              }`}
+            >
+              <h2 className="text-xl font-bold text-foreground mb-2">Advanced</h2>
+              <p className="text-sm text-foreground/60 mb-4">Full Customization</p>
+              <ul className="space-y-2 text-sm text-foreground/60">
+                <li>✓ Create multiple workloads</li>
+                <li>✓ Define resources</li>
+                <li>✓ Full control over configuration</li>
+                <li>✓ Complex deployments</li>
+              </ul>
+            </div>
+          </div>
 
           {mode === "standard" && (
             <form onSubmit={handleStandardSubmit} className="max-w-2xl mx-auto space-y-6 bg-card border border-border rounded-xl p-8">
