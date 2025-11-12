@@ -239,7 +239,7 @@ interface Resource {
   annotations?: Record<string, string>;
   deletionGracePeriodSeconds?: number;
   ownerReferences?: OwnerReference[];
-  spec?: ServiceSpec;
+  spec?: ServiceSpec | HTTPRouteSpec;
   data?: Record<string, any>;
 }
 
