@@ -1361,7 +1361,7 @@ export default function CreateChart() {
                     disabled={isCreating}
                     className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {isCreating ? "Creating Advanced Chart..." : "Create Advanced Chart"}
+                    {isCreating ? "Deploying Advanced Configuration..." : "Deploy Advanced Configuration"}
                   </button>
                 </div>
               )}
