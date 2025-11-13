@@ -496,7 +496,7 @@ export default function CreateChart() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center mb-12">
             <h1 className="text-4xl font-bold text-foreground mb-4">Deploy Configuration</h1>
-            <p className="text-lg text-foreground/60">Choose between Standard or Advanced configuration</p>
+            <p className="text-lg text-foreground/60">Choose between Standard or Advanced deployment approach</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-12">
