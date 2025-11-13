@@ -6482,46 +6482,57 @@ export default function ResourceConfiguration({ config, onConfigChange }: Resour
                           </div>
                           <div className="space-y-2">
                             {(rule.ports || []).map((port, portIdx) => (
-                              <div key={portIdx} className="flex gap-2 items-center bg-background/50 p-2 rounded">
-                                <input
-                                  type="text"
-                                  value={port.protocol || ""}
-                                  onChange={(e) => {
-                                    const updated = [...((config.spec as NetworkPolicySpec)?.ingress || [])];
-                                    const ports = [...(rule.ports || [])];
-                                    ports[portIdx] = { ...port, protocol: e.target.value || undefined };
-                                    updated[ruleIdx] = { ...rule, ports };
-                                    onConfigChange("spec", { ...(config.spec as NetworkPolicySpec || {}), ingress: updated });
-                                  }}
-                                  placeholder="TCP"
-                                  className="input-field text-xs flex-1"
-                                />
-                                <input
-                                  type="number"
-                                  value={port.port || ""}
-                                  onChange={(e) => {
-                                    const updated = [...((config.spec as NetworkPolicySpec)?.ingress || [])];
-                                    const ports = [...(rule.ports || [])];
-                                    ports[portIdx] = { ...port, port: e.target.value ? parseInt(e.target.value) : undefined };
-                                    updated[ruleIdx] = { ...rule, ports };
-                                    onConfigChange("spec", { ...(config.spec as NetworkPolicySpec || {}), ingress: updated });
-                                  }}
-                                  placeholder="80"
-                                  className="input-field text-xs flex-1"
-                                />
-                                <input
-                                  type="number"
-                                  value={port.endPort || ""}
-                                  onChange={(e) => {
-                                    const updated = [...((config.spec as NetworkPolicySpec)?.ingress || [])];
-                                    const ports = [...(rule.ports || [])];
-                                    ports[portIdx] = { ...port, endPort: e.target.value ? parseInt(e.target.value) : undefined };
-                                    updated[ruleIdx] = { ...rule, ports };
-                                    onConfigChange("spec", { ...(config.spec as NetworkPolicySpec || {}), ingress: updated });
-                                  }}
-                                  placeholder="443"
-                                  className="input-field text-xs flex-1"
-                                />
+                              <div key={portIdx} className="p-2 bg-background/50 rounded space-y-2">
+                                <div className="grid grid-cols-3 gap-2">
+                                  <div>
+                                    <label className="block text-xs font-medium text-foreground mb-1">Protocol</label>
+                                    <input
+                                      type="text"
+                                      value={port.protocol || ""}
+                                      onChange={(e) => {
+                                        const updated = [...((config.spec as NetworkPolicySpec)?.ingress || [])];
+                                        const ports = [...(rule.ports || [])];
+                                        ports[portIdx] = { ...port, protocol: e.target.value || undefined };
+                                        updated[ruleIdx] = { ...rule, ports };
+                                        onConfigChange("spec", { ...(config.spec as NetworkPolicySpec || {}), ingress: updated });
+                                      }}
+                                      placeholder="TCP"
+                                      className="input-field text-xs"
+                                    />
+                                  </div>
+                                  <div>
+                                    <label className="block text-xs font-medium text-foreground mb-1">Port</label>
+                                    <input
+                                      type="number"
+                                      value={port.port || ""}
+                                      onChange={(e) => {
+                                        const updated = [...((config.spec as NetworkPolicySpec)?.ingress || [])];
+                                        const ports = [...(rule.ports || [])];
+                                        ports[portIdx] = { ...port, port: e.target.value ? parseInt(e.target.value) : undefined };
+                                        updated[ruleIdx] = { ...rule, ports };
+                                        onConfigChange("spec", { ...(config.spec as NetworkPolicySpec || {}), ingress: updated });
+                                      }}
+                                      placeholder="80"
+                                      className="input-field text-xs"
+                                    />
+                                  </div>
+                                  <div>
+                                    <label className="block text-xs font-medium text-foreground mb-1">EndPort</label>
+                                    <input
+                                      type="number"
+                                      value={port.endPort || ""}
+                                      onChange={(e) => {
+                                        const updated = [...((config.spec as NetworkPolicySpec)?.ingress || [])];
+                                        const ports = [...(rule.ports || [])];
+                                        ports[portIdx] = { ...port, endPort: e.target.value ? parseInt(e.target.value) : undefined };
+                                        updated[ruleIdx] = { ...rule, ports };
+                                        onConfigChange("spec", { ...(config.spec as NetworkPolicySpec || {}), ingress: updated });
+                                      }}
+                                      placeholder="443"
+                                      className="input-field text-xs"
+                                    />
+                                  </div>
+                                </div>
                                 <button
                                   onClick={() => {
                                     const updated = [...((config.spec as NetworkPolicySpec)?.ingress || [])];
@@ -6529,9 +6540,9 @@ export default function ResourceConfiguration({ config, onConfigChange }: Resour
                                     updated[ruleIdx] = { ...rule, ports: ports.length > 0 ? ports : undefined };
                                     onConfigChange("spec", { ...(config.spec as NetworkPolicySpec || {}), ingress: updated });
                                   }}
-                                  className="text-destructive hover:opacity-70"
+                                  className="w-full text-xs text-destructive hover:bg-destructive/10 py-1 rounded transition-colors"
                                 >
-                                  <X className="w-4 h-4" />
+                                  Remove Port
                                 </button>
                               </div>
                             ))}
