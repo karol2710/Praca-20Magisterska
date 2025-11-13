@@ -32,6 +32,10 @@ export default defineConfig({
         // External dependencies that should not be bundled
         "express",
         "cors",
+        "pg",
+        "jsonwebtoken",
+        "bcryptjs",
+        "js-yaml",
       ],
       output: {
         format: "es",
