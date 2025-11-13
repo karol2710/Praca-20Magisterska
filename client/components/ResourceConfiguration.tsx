@@ -306,6 +306,11 @@ interface PersistentVolumeClaimSpec {
   volumeName?: string;
 }
 
+interface VolumeAttributesClassSpec {
+  driverName?: string;
+  parameters?: Record<string, string>;
+}
+
 interface ResourceConfig {
   id: string;
   name?: string;
