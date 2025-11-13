@@ -535,9 +535,9 @@ const configSections: { [key: string]: { id: string; title: string; description:
       description: "Configure RuntimeClass metadata",
     },
     {
-      id: "handler",
-      title: "Handler",
-      description: "Configure runtime handler and scheduling",
+      id: "spec",
+      title: "Configuration",
+      description: "Configure runtime handler, overhead, and scheduling",
     },
   ],
 };
