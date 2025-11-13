@@ -9333,19 +9333,77 @@ export default function ResourceConfiguration({ config, onConfigChange }: Resour
 
               {/* Data */}
               <div className="border-t border-border pt-4">
-                <label className="block text-sm font-medium text-foreground mb-2">Data</label>
-                {renderTagsField(
-                  (config.spec as ConfigMapSpec)?.data,
-                  (value) => {
-                    onConfigChange("spec", {
-                      ...(config.spec as ConfigMapSpec || {}),
-                      data: value,
-                    });
-                  },
-                  "ConfigMap Data",
-                  "Add data (key=value)"
+                <div className="flex items-center justify-between mb-3">
+                  <label className="block text-sm font-medium text-foreground">Data</label>
+                  <button
+                    onClick={() => {
+                      const data = (config.spec as ConfigMapSpec)?.data || {};
+                      onConfigChange("spec", {
+                        ...(config.spec as ConfigMapSpec || {}),
+                        data: { ...data, [""]: "" },
+                      });
+                    }}
+                    className="text-primary hover:opacity-70 text-sm"
+                  >
+                    + Add Data
+                  </button>
+                </div>
+
+                {((config.spec as ConfigMapSpec)?.data && Object.keys((config.spec as ConfigMapSpec)?.data || {}).length > 0) ? (
+                  <div className="space-y-3">
+                    {Object.entries((config.spec as ConfigMapSpec)?.data || {}).map(([key, value], idx) => (
+                      <div key={idx} className="border border-border rounded-lg p-3 bg-background/50 space-y-2">
+                        <div className="flex gap-2 items-start">
+                          <input
+                            type="text"
+                            value={key}
+                            onChange={(e) => {
+                              const data = { ...(config.spec as ConfigMapSpec)?.data };
+                              delete data[key];
+                              data[e.target.value || ""] = value;
+                              onConfigChange("spec", {
+                                ...(config.spec as ConfigMapSpec || {}),
+                                data,
+                              });
+                            }}
+                            placeholder="key"
+                            className="input-field text-sm flex-1"
+                          />
+                          <button
+                            onClick={() => {
+                              const data = { ...(config.spec as ConfigMapSpec)?.data };
+                              delete data[key];
+                              onConfigChange("spec", {
+                                ...(config.spec as ConfigMapSpec || {}),
+                                data: Object.keys(data).length > 0 ? data : undefined,
+                              });
+                            }}
+                            className="text-destructive hover:opacity-70 mt-1"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
+                        <textarea
+                          value={value}
+                          onChange={(e) => {
+                            const data = { ...(config.spec as ConfigMapSpec)?.data };
+                            data[key] = e.target.value;
+                            onConfigChange("spec", {
+                              ...(config.spec as ConfigMapSpec || {}),
+                              data,
+                            });
+                          }}
+                          placeholder="value (supports multi-line)"
+                          rows={value && value.includes("\n") ? Math.min(Math.max(value.split("\n").length, 3), 8) : 3}
+                          className="input-field text-sm w-full font-mono text-xs"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-foreground/60 text-sm py-2">No data entries defined</p>
                 )}
-                <p className="text-xs text-foreground/50 mt-1">Text data for this ConfigMap</p>
+                <p className="text-xs text-foreground/50 mt-2">Text data for this ConfigMap (supports multi-line values)</p>
               </div>
 
               {/* Binary Data */}
