@@ -561,44 +561,64 @@ export default function CreateChart() {
           </div>
 
           {mode === "standard" && (
-            <form onSubmit={handleStandardSubmit} className="max-w-2xl mx-auto space-y-6 bg-card border border-border rounded-xl p-8">
-              <div>
-                <label htmlFor="repository" className="block text-sm font-semibold text-foreground mb-2">
-                  Repository
-                </label>
-                <input
-                  id="repository"
-                  type="text"
-                  value={repository}
-                  onChange={(e) => setRepository(e.target.value)}
-                  placeholder="kyverno-nirmata https://nirmata.github.io/kyverno-charts/"
-                  className="input-field"
-                  required
-                />
-              </div>
+            <div className="space-y-6">
+              <form onSubmit={handleStandardSubmit} className="max-w-2xl mx-auto space-y-6 bg-card border border-border rounded-xl p-8">
+                <div>
+                  <label htmlFor="repository" className="block text-sm font-semibold text-foreground mb-2">
+                    Repository
+                  </label>
+                  <input
+                    id="repository"
+                    type="text"
+                    value={repository}
+                    onChange={(e) => setRepository(e.target.value)}
+                    placeholder="kyverno-nirmata https://nirmata.github.io/kyverno-charts/"
+                    className="input-field"
+                    required
+                  />
+                </div>
 
-              <div>
-                <label htmlFor="helmInstall" className="block text-sm font-semibold text-foreground mb-2">
-                  Helm Install
-                </label>
-                <textarea
-                  id="helmInstall"
-                  value={helmInstall}
-                  onChange={(e) => setHelmInstall(e.target.value)}
-                  placeholder="my-nirmata-kyverno-operator kyverno-nirmata/nirmata-kyverno-operator --version 0.8.9-rc1"
-                  className="input-field resize-none h-24"
-                  required
-                />
-              </div>
+                <div>
+                  <label htmlFor="helmInstall" className="block text-sm font-semibold text-foreground mb-2">
+                    Helm Install
+                  </label>
+                  <textarea
+                    id="helmInstall"
+                    value={helmInstall}
+                    onChange={(e) => setHelmInstall(e.target.value)}
+                    placeholder="my-nirmata-kyverno-operator kyverno-nirmata/nirmata-kyverno-operator --version 0.8.9-rc1"
+                    className="input-field resize-none h-24"
+                    required
+                  />
+                </div>
 
-              <button
-                type="submit"
-                disabled={isCreating}
-                className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isCreating ? "Deploying Configuration..." : "Deploy Configuration"}
-              </button>
-            </form>
+                <button
+                  type="submit"
+                  disabled={isCreating}
+                  className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isCreating ? "Deploying Configuration..." : "Deploy Configuration"}
+                </button>
+              </form>
+
+              {deploymentResult && (
+                <div className="max-w-2xl mx-auto bg-card border border-border rounded-xl p-8">
+                  <h3 className="text-lg font-bold text-foreground mb-4">Deployment Result</h3>
+                  <pre className="bg-muted p-4 rounded-lg overflow-auto max-h-96 text-sm text-foreground whitespace-pre-wrap break-words">
+                    {deploymentResult}
+                  </pre>
+                </div>
+              )}
+
+              {deploymentError && (
+                <div className="max-w-2xl mx-auto bg-card border border-destructive rounded-xl p-8">
+                  <h3 className="text-lg font-bold text-destructive mb-4">Deployment Error</h3>
+                  <p className="text-sm text-foreground whitespace-pre-wrap break-words">
+                    {deploymentError}
+                  </p>
+                </div>
+              )}
+            </div>
           )}
 
           {/* Advanced Mode Form */}
