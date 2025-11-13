@@ -129,7 +129,7 @@ export default function Index() {
       <section className="py-20 px-4">
         <div className="container mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-foreground mb-4">Two Powerful Options</h2>
+            <h2 className="text-4xl font-bold text-foreground mb-4">Two Deployment Approaches</h2>
             <p className="text-lg text-foreground/60">Choose the approach that works best for you</p>
           </div>
 
@@ -140,9 +140,9 @@ export default function Index() {
                 <Zap className="w-6 h-6 text-primary" />
               </div>
               <h3 className="text-2xl font-bold text-foreground mb-4">Standard</h3>
-              <p className="text-foreground/60 mb-6">Perfect for quick deployments and existing charts</p>
+              <p className="text-foreground/60 mb-6">Perfect for quick deployments of existing configurations</p>
               <ul className="space-y-3 mb-8">
-                {["Upload existing chart file", "Provide repository link", "Add kubectl install command", "Deploy instantly"].map((item) => (
+                {["Use existing configuration files", "Provide repository link", "Add kubectl install command", "Deploy instantly"].map((item) => (
                   <li key={item} className="flex items-center gap-2 text-foreground/70">
                     <CheckCircle className="w-5 h-5 text-primary flex-shrink-0" />
                     {item}
@@ -157,9 +157,9 @@ export default function Index() {
                 <Rocket className="w-6 h-6 text-accent" />
               </div>
               <h3 className="text-2xl font-bold text-foreground mb-4">Advanced</h3>
-              <p className="text-foreground/60 mb-6">For complex setups and custom configurations</p>
+              <p className="text-foreground/60 mb-6">For custom configurations and complex deployments</p>
               <ul className="space-y-3 mb-8">
-                {["Create multiple workflows", "Configure custom containers", "Manage environment variables", "Full customization control"].map((item) => (
+                {["Create multiple workloads", "Configure custom resources", "Manage complex settings", "Full customization control"].map((item) => (
                   <li key={item} className="flex items-center gap-2 text-foreground/70">
                     <CheckCircle className="w-5 h-5 text-accent flex-shrink-0" />
                     {item}
