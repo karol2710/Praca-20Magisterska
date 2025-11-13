@@ -7682,8 +7682,286 @@ export default function ResourceConfiguration({ config, onConfigChange }: Resour
             </div>
           )}
 
+          {/* StorageClass Spec Section */}
+          {expandedSections.has(section.id) && section.id === "spec" && config.type === "StorageClass" && (
+            <div className="px-4 py-4 border-t border-border bg-muted/10 space-y-4">
+              {/* Provisioner */}
+              <div>
+                <label htmlFor="provisioner" className="block text-sm font-medium text-foreground mb-2">
+                  Provisioner
+                </label>
+                <select
+                  id="provisioner"
+                  value={(config.spec as StorageClassSpec)?.provisioner || ""}
+                  onChange={(e) => {
+                    onConfigChange("spec", {
+                      ...(config.spec as StorageClassSpec || {}),
+                      provisioner: e.target.value || undefined,
+                    });
+                  }}
+                  className="input-field"
+                >
+                  <option value="">Select Provisioner</option>
+                  <option value="driver.longhorn.io">driver.longhorn.io</option>
+                </select>
+                <p className="text-xs text-foreground/50 mt-1">Storage provisioner implementation</p>
+              </div>
+
+              {/* Allow Volume Expansion */}
+              <div className="border-t border-border pt-4">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={(config.spec as StorageClassSpec)?.allowVolumeExpansion || false}
+                    onChange={(e) => {
+                      onConfigChange("spec", {
+                        ...(config.spec as StorageClassSpec || {}),
+                        allowVolumeExpansion: e.target.checked || undefined,
+                      });
+                    }}
+                    className="w-4 h-4 cursor-pointer"
+                  />
+                  <span className="text-sm font-medium text-foreground">Allow Volume Expansion</span>
+                </label>
+                <p className="text-xs text-foreground/50 mt-1">Allow volumes provisioned with this storage class to be expanded</p>
+              </div>
+
+              {/* Reclaim Policy */}
+              <div className="border-t border-border pt-4">
+                <label htmlFor="reclaimPolicy" className="block text-sm font-medium text-foreground mb-2">
+                  Reclaim Policy
+                </label>
+                <select
+                  id="reclaimPolicy"
+                  value={(config.spec as StorageClassSpec)?.reclaimPolicy || ""}
+                  onChange={(e) => {
+                    onConfigChange("spec", {
+                      ...(config.spec as StorageClassSpec || {}),
+                      reclaimPolicy: e.target.value || undefined,
+                    });
+                  }}
+                  className="input-field"
+                >
+                  <option value="">Select Reclaim Policy</option>
+                  <option value="Delete">Delete</option>
+                  <option value="Retain">Retain</option>
+                  <option value="Recycle">Recycle</option>
+                </select>
+                <p className="text-xs text-foreground/50 mt-1">How provisioned volumes are reclaimed</p>
+              </div>
+
+              {/* Volume Binding Mode */}
+              <div className="border-t border-border pt-4">
+                <label htmlFor="volumeBindingMode" className="block text-sm font-medium text-foreground mb-2">
+                  Volume Binding Mode
+                </label>
+                <select
+                  id="volumeBindingMode"
+                  value={(config.spec as StorageClassSpec)?.volumeBindingMode || ""}
+                  onChange={(e) => {
+                    onConfigChange("spec", {
+                      ...(config.spec as StorageClassSpec || {}),
+                      volumeBindingMode: e.target.value || undefined,
+                    });
+                  }}
+                  className="input-field"
+                >
+                  <option value="">Select Volume Binding Mode</option>
+                  <option value="Immediate">Immediate</option>
+                  <option value="WaitForFirstConsumer">WaitForFirstConsumer</option>
+                </select>
+                <p className="text-xs text-foreground/50 mt-1">When volume binding and dynamic provisioning should happen</p>
+              </div>
+
+              {/* Mount Options */}
+              <div className="border-t border-border pt-4">
+                <div className="flex items-center justify-between mb-3">
+                  <label className="block text-sm font-medium text-foreground">Mount Options</label>
+                  <button
+                    onClick={() => {
+                      const mountOptions = (config.spec as StorageClassSpec)?.mountOptions || [];
+                      onConfigChange("spec", {
+                        ...(config.spec as StorageClassSpec || {}),
+                        mountOptions: [...mountOptions, ""],
+                      });
+                    }}
+                    className="text-primary hover:opacity-70 text-sm"
+                  >
+                    + Add Option
+                  </button>
+                </div>
+
+                {((config.spec as StorageClassSpec)?.mountOptions && (config.spec as StorageClassSpec)?.mountOptions!.length > 0) ? (
+                  <div className="space-y-2">
+                    {((config.spec as StorageClassSpec)?.mountOptions || []).map((option, idx) => (
+                      <div key={idx} className="flex gap-2 items-center">
+                        <input
+                          type="text"
+                          value={option || ""}
+                          onChange={(e) => {
+                            const updated = [...((config.spec as StorageClassSpec)?.mountOptions || [])];
+                            updated[idx] = e.target.value;
+                            onConfigChange("spec", {
+                              ...(config.spec as StorageClassSpec || {}),
+                              mountOptions: updated,
+                            });
+                          }}
+                          placeholder="e.g., noatime"
+                          className="input-field text-sm flex-1"
+                        />
+                        <button
+                          onClick={() => {
+                            const updated = ((config.spec as StorageClassSpec)?.mountOptions || []).filter((_, i) => i !== idx);
+                            onConfigChange("spec", {
+                              ...(config.spec as StorageClassSpec || {}),
+                              mountOptions: updated.length > 0 ? updated : undefined,
+                            });
+                          }}
+                          className="text-destructive hover:opacity-70"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-foreground/60 text-sm py-2">No mount options defined</p>
+                )}
+                <p className="text-xs text-foreground/50 mt-2">Options that apply to all provisioned volumes of this class</p>
+              </div>
+
+              {/* Parameters */}
+              <div className="border-t border-border pt-4">
+                <label className="block text-sm font-medium text-foreground mb-2">Parameters</label>
+                {renderTagsField(
+                  (config.spec as StorageClassSpec)?.parameters,
+                  (value) => {
+                    onConfigChange("spec", {
+                      ...(config.spec as StorageClassSpec || {}),
+                      parameters: value,
+                    });
+                  },
+                  "StorageClass Parameters",
+                  "Add parameter (key=value)"
+                )}
+                <p className="text-xs text-foreground/50 mt-1">Provider-specific parameters for this storage class</p>
+              </div>
+
+              {/* Allowed Topologies */}
+              <div className="border-t border-border pt-4">
+                <div className="flex items-center justify-between mb-3">
+                  <label className="block text-sm font-medium text-foreground">Allowed Topologies</label>
+                  <button
+                    onClick={() => {
+                      const allowedTopologies = (config.spec as StorageClassSpec)?.allowedTopologies || [];
+                      onConfigChange("spec", {
+                        ...(config.spec as StorageClassSpec || {}),
+                        allowedTopologies: [...allowedTopologies, { matchLabelExpressions: [] }],
+                      });
+                    }}
+                    className="text-primary hover:opacity-70 text-sm"
+                  >
+                    + Add Topology
+                  </button>
+                </div>
+
+                {((config.spec as StorageClassSpec)?.allowedTopologies && (config.spec as StorageClassSpec)?.allowedTopologies!.length > 0) ? (
+                  <div className="space-y-3">
+                    {((config.spec as StorageClassSpec)?.allowedTopologies || []).map((topology, topoIdx) => (
+                      <div key={topoIdx} className="p-4 bg-muted/20 border border-border rounded-lg space-y-3">
+                        {/* Match Label Expressions */}
+                        <div>
+                          <div className="flex items-center justify-between mb-2">
+                            <label className="block text-xs font-medium text-foreground">Match Label Expressions</label>
+                            <button
+                              onClick={() => {
+                                const updated = [...((config.spec as StorageClassSpec)?.allowedTopologies || [])];
+                                updated[topoIdx] = {
+                                  ...topology,
+                                  matchLabelExpressions: [...(topology.matchLabelExpressions || []), { key: "", value: "" }],
+                                };
+                                onConfigChange("spec", { ...(config.spec as StorageClassSpec || {}), allowedTopologies: updated });
+                              }}
+                              className="text-primary hover:opacity-70 text-xs"
+                            >
+                              + Add Expression
+                            </button>
+                          </div>
+
+                          {(topology.matchLabelExpressions && topology.matchLabelExpressions.length > 0) ? (
+                            <div className="space-y-2">
+                              {(topology.matchLabelExpressions || []).map((expr, exprIdx) => (
+                                <div key={exprIdx} className="flex gap-2 items-start bg-background/50 p-2 rounded">
+                                  <input
+                                    type="text"
+                                    value={expr.key || ""}
+                                    onChange={(e) => {
+                                      const updated = [...((config.spec as StorageClassSpec)?.allowedTopologies || [])];
+                                      const expressions = [...(topology.matchLabelExpressions || [])];
+                                      expressions[exprIdx] = { ...expr, key: e.target.value || undefined };
+                                      updated[topoIdx] = { ...topology, matchLabelExpressions: expressions };
+                                      onConfigChange("spec", { ...(config.spec as StorageClassSpec || {}), allowedTopologies: updated });
+                                    }}
+                                    placeholder="Key (e.g., topology.kubernetes.io/zone)"
+                                    className="input-field text-xs flex-1"
+                                  />
+                                  <input
+                                    type="text"
+                                    value={expr.value || ""}
+                                    onChange={(e) => {
+                                      const updated = [...((config.spec as StorageClassSpec)?.allowedTopologies || [])];
+                                      const expressions = [...(topology.matchLabelExpressions || [])];
+                                      expressions[exprIdx] = { ...expr, value: e.target.value || undefined };
+                                      updated[topoIdx] = { ...topology, matchLabelExpressions: expressions };
+                                      onConfigChange("spec", { ...(config.spec as StorageClassSpec || {}), allowedTopologies: updated });
+                                    }}
+                                    placeholder="Value (e.g., us-east-1a)"
+                                    className="input-field text-xs flex-1"
+                                  />
+                                  <button
+                                    onClick={() => {
+                                      const updated = [...((config.spec as StorageClassSpec)?.allowedTopologies || [])];
+                                      const expressions = (topology.matchLabelExpressions || []).filter((_, i) => i !== exprIdx);
+                                      updated[topoIdx] = { ...topology, matchLabelExpressions: expressions.length > 0 ? expressions : undefined };
+                                      onConfigChange("spec", { ...(config.spec as StorageClassSpec || {}), allowedTopologies: updated });
+                                    }}
+                                    className="text-destructive hover:opacity-70"
+                                  >
+                                    <X className="w-4 h-4" />
+                                  </button>
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <p className="text-foreground/60 text-xs py-1">No match expressions defined</p>
+                          )}
+                        </div>
+
+                        <button
+                          onClick={() => {
+                            const updated = ((config.spec as StorageClassSpec)?.allowedTopologies || []).filter((_, i) => i !== topoIdx);
+                            onConfigChange("spec", {
+                              ...(config.spec as StorageClassSpec || {}),
+                              allowedTopologies: updated.length > 0 ? updated : undefined,
+                            });
+                          }}
+                          className="w-full text-xs text-destructive hover:bg-destructive/10 py-1.5 rounded transition-colors border-t border-border/50"
+                        >
+                          Remove Topology
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-foreground/60 text-sm py-2">No topologies defined</p>
+                )}
+                <p className="text-xs text-foreground/50 mt-2">Restrict volume scheduling to specific topologies</p>
+              </div>
+            </div>
+          )}
+
           {/* Resource-specific sections will be rendered here based on type */}
-          {expandedSections.has(section.id) && section.id !== "metadata" && config.type !== "Service" && config.type !== "HTTPRoute" && config.type !== "GRPCRoute" && config.type !== "Gateway" && config.type !== "NetworkPolicy" && (
+          {expandedSections.has(section.id) && section.id !== "metadata" && config.type !== "Service" && config.type !== "HTTPRoute" && config.type !== "GRPCRoute" && config.type !== "Gateway" && config.type !== "NetworkPolicy" && config.type !== "StorageClass" && (
             <div className="px-4 py-4 border-t border-border bg-muted/10 space-y-4">
               <div className="bg-muted/20 border border-border rounded-lg p-4">
                 <p className="text-sm font-medium text-foreground mb-3">{section.title}</p>
