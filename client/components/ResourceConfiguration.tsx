@@ -230,6 +230,52 @@ interface StorageClassSpec {
   volumeBindingMode?: string;
 }
 
+interface ClaimReference {
+  apiVersion?: string;
+  fieldPath?: string;
+  kind?: string;
+  name?: string;
+  namespace?: string;
+  resourceVersion?: string;
+  uid?: string;
+}
+
+interface NodeAffinityMatchExpression {
+  key?: string;
+  operator?: string;
+  values?: string[];
+}
+
+interface NodeAffinityMatchField {
+  key?: string;
+  operator?: string;
+  values?: string[];
+}
+
+interface NodeAffinity {
+  requiredDuringSchedulingIgnoredDuringExecution?: {
+    nodeSelectorTerms?: {
+      matchExpressions?: NodeAffinityMatchExpression[];
+      matchFields?: NodeAffinityMatchField[];
+    }[];
+  };
+}
+
+interface PersistentVolumeSpec {
+  accessModes?: string[];
+  capacity?: Record<string, string>;
+  claimRef?: ClaimReference;
+  local?: {
+    path?: string;
+  };
+  mountOptions?: string[];
+  nodeAffinity?: NodeAffinity;
+  persistentVolumeReclaimPolicy?: string;
+  storageClassName?: string;
+  volumeAttributesClassName?: string;
+  volumeMode?: string;
+}
+
 interface ResourceConfig {
   id: string;
   name?: string;
