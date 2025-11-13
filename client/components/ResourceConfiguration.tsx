@@ -475,9 +475,9 @@ const configSections: { [key: string]: { id: string; title: string; description:
       description: "Configure Secret metadata",
     },
     {
-      id: "data",
+      id: "spec",
       title: "Data",
-      description: "Configure secret data",
+      description: "Configure secret data and settings",
     },
   ],
   LimitRange: [
