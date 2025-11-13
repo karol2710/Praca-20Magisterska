@@ -7995,8 +7995,748 @@ export default function ResourceConfiguration({ config, onConfigChange }: Resour
             </div>
           )}
 
+          {/* PersistentVolume Spec Section */}
+          {expandedSections.has(section.id) && section.id === "spec" && config.type === "PersistentVolume" && (
+            <div className="px-4 py-4 border-t border-border bg-muted/10 space-y-4">
+              {/* Volume Mode */}
+              <div>
+                <label htmlFor="volumeMode" className="block text-sm font-medium text-foreground mb-2">
+                  Volume Mode
+                </label>
+                <select
+                  id="volumeMode"
+                  value={(config.spec as PersistentVolumeSpec)?.volumeMode || ""}
+                  onChange={(e) => {
+                    onConfigChange("spec", {
+                      ...(config.spec as PersistentVolumeSpec || {}),
+                      volumeMode: e.target.value || undefined,
+                    });
+                  }}
+                  className="input-field"
+                >
+                  <option value="">Select Volume Mode</option>
+                  <option value="Filesystem">Filesystem</option>
+                  <option value="Block">Block</option>
+                </select>
+              </div>
+
+              {/* Access Modes */}
+              <div className="border-t border-border pt-4">
+                <label className="block text-sm font-medium text-foreground mb-2">Access Modes</label>
+                <div className="space-y-2">
+                  {["ReadWriteOnce", "ReadOnlyMany", "ReadWriteMany"].map((mode) => (
+                    <label key={mode} className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={((config.spec as PersistentVolumeSpec)?.accessModes || []).includes(mode)}
+                        onChange={(e) => {
+                          const accessModes = (config.spec as PersistentVolumeSpec)?.accessModes || [];
+                          const updated = e.target.checked
+                            ? [...accessModes, mode]
+                            : accessModes.filter((m) => m !== mode);
+                          onConfigChange("spec", {
+                            ...(config.spec as PersistentVolumeSpec || {}),
+                            accessModes: updated.length > 0 ? updated : undefined,
+                          });
+                        }}
+                        className="w-4 h-4 cursor-pointer"
+                      />
+                      <span className="text-sm text-foreground">{mode}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              {/* Capacity */}
+              <div className="border-t border-border pt-4">
+                <label className="block text-sm font-medium text-foreground mb-2">Capacity</label>
+                <div className="grid grid-cols-3 gap-2">
+                  <input
+                    type="text"
+                    value={(config.spec as PersistentVolumeSpec)?.capacity?.storage || ""}
+                    onChange={(e) => {
+                      onConfigChange("spec", {
+                        ...(config.spec as PersistentVolumeSpec || {}),
+                        capacity: e.target.value ? { storage: e.target.value } : undefined,
+                      });
+                    }}
+                    placeholder="e.g., 10Gi"
+                    className="input-field col-span-2"
+                  />
+                  <select className="input-field bg-muted/50 cursor-not-allowed" disabled>
+                    <option>storage</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* PV Reclaim Policy */}
+              <div className="border-t border-border pt-4">
+                <label htmlFor="reclaimPolicy" className="block text-sm font-medium text-foreground mb-2">
+                  PV Reclaim Policy
+                </label>
+                <select
+                  id="reclaimPolicy"
+                  value={(config.spec as PersistentVolumeSpec)?.persistentVolumeReclaimPolicy || ""}
+                  onChange={(e) => {
+                    onConfigChange("spec", {
+                      ...(config.spec as PersistentVolumeSpec || {}),
+                      persistentVolumeReclaimPolicy: e.target.value || undefined,
+                    });
+                  }}
+                  className="input-field"
+                >
+                  <option value="">Select Reclaim Policy</option>
+                  <option value="Delete">Delete</option>
+                  <option value="Retain">Retain</option>
+                  <option value="Recycle">Recycle</option>
+                </select>
+              </div>
+
+              {/* Storage Class Name */}
+              <div className="border-t border-border pt-4">
+                <label htmlFor="storageClassName" className="block text-sm font-medium text-foreground mb-2">
+                  Storage Class Name
+                </label>
+                <input
+                  id="storageClassName"
+                  type="text"
+                  value={(config.spec as PersistentVolumeSpec)?.storageClassName || ""}
+                  onChange={(e) => {
+                    onConfigChange("spec", {
+                      ...(config.spec as PersistentVolumeSpec || {}),
+                      storageClassName: e.target.value || undefined,
+                    });
+                  }}
+                  placeholder="e.g., fast-ssd"
+                  className="input-field"
+                />
+              </div>
+
+              {/* Volume Attributes Class Name */}
+              <div className="border-t border-border pt-4">
+                <label htmlFor="volumeAttributesClassName" className="block text-sm font-medium text-foreground mb-2">
+                  Volume Attributes Class Name
+                </label>
+                <input
+                  id="volumeAttributesClassName"
+                  type="text"
+                  value={(config.spec as PersistentVolumeSpec)?.volumeAttributesClassName || ""}
+                  onChange={(e) => {
+                    onConfigChange("spec", {
+                      ...(config.spec as PersistentVolumeSpec || {}),
+                      volumeAttributesClassName: e.target.value || undefined,
+                    });
+                  }}
+                  placeholder="e.g., premium"
+                  className="input-field"
+                />
+              </div>
+
+              {/* Local Path */}
+              <div className="border-t border-border pt-4">
+                <label htmlFor="localPath" className="block text-sm font-medium text-foreground mb-2">
+                  Local Path
+                </label>
+                <input
+                  id="localPath"
+                  type="text"
+                  value={(config.spec as PersistentVolumeSpec)?.local?.path || ""}
+                  onChange={(e) => {
+                    onConfigChange("spec", {
+                      ...(config.spec as PersistentVolumeSpec || {}),
+                      local: e.target.value ? { path: e.target.value } : undefined,
+                    });
+                  }}
+                  placeholder="e.g., /mnt/data"
+                  className="input-field"
+                />
+              </div>
+
+              {/* Mount Options */}
+              <div className="border-t border-border pt-4">
+                <div className="flex items-center justify-between mb-3">
+                  <label className="block text-sm font-medium text-foreground">Mount Options</label>
+                  <button
+                    onClick={() => {
+                      const mountOptions = (config.spec as PersistentVolumeSpec)?.mountOptions || [];
+                      onConfigChange("spec", {
+                        ...(config.spec as PersistentVolumeSpec || {}),
+                        mountOptions: [...mountOptions, ""],
+                      });
+                    }}
+                    className="text-primary hover:opacity-70 text-sm"
+                  >
+                    + Add Option
+                  </button>
+                </div>
+
+                {((config.spec as PersistentVolumeSpec)?.mountOptions && (config.spec as PersistentVolumeSpec)?.mountOptions!.length > 0) ? (
+                  <div className="space-y-2">
+                    {((config.spec as PersistentVolumeSpec)?.mountOptions || []).map((option, idx) => (
+                      <div key={idx} className="flex gap-2 items-center">
+                        <input
+                          type="text"
+                          value={option || ""}
+                          onChange={(e) => {
+                            const updated = [...((config.spec as PersistentVolumeSpec)?.mountOptions || [])];
+                            updated[idx] = e.target.value;
+                            onConfigChange("spec", {
+                              ...(config.spec as PersistentVolumeSpec || {}),
+                              mountOptions: updated,
+                            });
+                          }}
+                          placeholder="e.g., noatime"
+                          className="input-field text-sm flex-1"
+                        />
+                        <button
+                          onClick={() => {
+                            const updated = ((config.spec as PersistentVolumeSpec)?.mountOptions || []).filter((_, i) => i !== idx);
+                            onConfigChange("spec", {
+                              ...(config.spec as PersistentVolumeSpec || {}),
+                              mountOptions: updated.length > 0 ? updated : undefined,
+                            });
+                          }}
+                          className="text-destructive hover:opacity-70"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-foreground/60 text-sm py-2">No mount options defined</p>
+                )}
+              </div>
+
+              {/* Claim Reference */}
+              <div className="border-t border-border pt-4">
+                <label className="block text-sm font-medium text-foreground mb-3">Claim Reference</label>
+                <div className="space-y-3 p-4 bg-muted/20 border border-border rounded-lg">
+                  <div>
+                    <label htmlFor="claimRef-apiVersion" className="block text-xs font-medium text-foreground/70 mb-1">
+                      API Version
+                    </label>
+                    <input
+                      id="claimRef-apiVersion"
+                      type="text"
+                      value={(config.spec as PersistentVolumeSpec)?.claimRef?.apiVersion || ""}
+                      onChange={(e) => {
+                        onConfigChange("spec", {
+                          ...(config.spec as PersistentVolumeSpec || {}),
+                          claimRef: { ...(config.spec as PersistentVolumeSpec)?.claimRef, apiVersion: e.target.value || undefined },
+                        });
+                      }}
+                      placeholder="e.g., v1"
+                      className="input-field text-sm"
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="claimRef-kind" className="block text-xs font-medium text-foreground/70 mb-1">
+                      Kind
+                    </label>
+                    <input
+                      id="claimRef-kind"
+                      type="text"
+                      value={(config.spec as PersistentVolumeSpec)?.claimRef?.kind || ""}
+                      onChange={(e) => {
+                        onConfigChange("spec", {
+                          ...(config.spec as PersistentVolumeSpec || {}),
+                          claimRef: { ...(config.spec as PersistentVolumeSpec)?.claimRef, kind: e.target.value || undefined },
+                        });
+                      }}
+                      placeholder="e.g., PersistentVolumeClaim"
+                      className="input-field text-sm"
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="claimRef-name" className="block text-xs font-medium text-foreground/70 mb-1">
+                      Name
+                    </label>
+                    <input
+                      id="claimRef-name"
+                      type="text"
+                      value={(config.spec as PersistentVolumeSpec)?.claimRef?.name || ""}
+                      onChange={(e) => {
+                        onConfigChange("spec", {
+                          ...(config.spec as PersistentVolumeSpec || {}),
+                          claimRef: { ...(config.spec as PersistentVolumeSpec)?.claimRef, name: e.target.value || undefined },
+                        });
+                      }}
+                      placeholder="e.g., my-claim"
+                      className="input-field text-sm"
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="claimRef-namespace" className="block text-xs font-medium text-foreground/70 mb-1">
+                      Namespace
+                    </label>
+                    <input
+                      id="claimRef-namespace"
+                      type="text"
+                      value={(config.spec as PersistentVolumeSpec)?.claimRef?.namespace || ""}
+                      onChange={(e) => {
+                        onConfigChange("spec", {
+                          ...(config.spec as PersistentVolumeSpec || {}),
+                          claimRef: { ...(config.spec as PersistentVolumeSpec)?.claimRef, namespace: e.target.value || undefined },
+                        });
+                      }}
+                      placeholder="e.g., default"
+                      className="input-field text-sm"
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="claimRef-fieldPath" className="block text-xs font-medium text-foreground/70 mb-1">
+                      Field Path
+                    </label>
+                    <input
+                      id="claimRef-fieldPath"
+                      type="text"
+                      value={(config.spec as PersistentVolumeSpec)?.claimRef?.fieldPath || ""}
+                      onChange={(e) => {
+                        onConfigChange("spec", {
+                          ...(config.spec as PersistentVolumeSpec || {}),
+                          claimRef: { ...(config.spec as PersistentVolumeSpec)?.claimRef, fieldPath: e.target.value || undefined },
+                        });
+                      }}
+                      placeholder="Optional"
+                      className="input-field text-sm"
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="claimRef-resourceVersion" className="block text-xs font-medium text-foreground/70 mb-1">
+                      Resource Version
+                    </label>
+                    <input
+                      id="claimRef-resourceVersion"
+                      type="text"
+                      value={(config.spec as PersistentVolumeSpec)?.claimRef?.resourceVersion || ""}
+                      onChange={(e) => {
+                        onConfigChange("spec", {
+                          ...(config.spec as PersistentVolumeSpec || {}),
+                          claimRef: { ...(config.spec as PersistentVolumeSpec)?.claimRef, resourceVersion: e.target.value || undefined },
+                        });
+                      }}
+                      placeholder="Optional"
+                      className="input-field text-sm"
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="claimRef-uid" className="block text-xs font-medium text-foreground/70 mb-1">
+                      UID
+                    </label>
+                    <input
+                      id="claimRef-uid"
+                      type="text"
+                      value={(config.spec as PersistentVolumeSpec)?.claimRef?.uid || ""}
+                      onChange={(e) => {
+                        onConfigChange("spec", {
+                          ...(config.spec as PersistentVolumeSpec || {}),
+                          claimRef: { ...(config.spec as PersistentVolumeSpec)?.claimRef, uid: e.target.value || undefined },
+                        });
+                      }}
+                      placeholder="Optional"
+                      className="input-field text-sm"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Node Affinity */}
+              <div className="border-t border-border pt-4">
+                <label className="block text-sm font-medium text-foreground mb-3">Node Affinity</label>
+                <div className="space-y-4">
+                  {/* Match Expressions */}
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <label className="block text-xs font-medium text-foreground">Match Expressions</label>
+                      <button
+                        onClick={() => {
+                          const nodeAffinity = (config.spec as PersistentVolumeSpec)?.nodeAffinity || {};
+                          const nodeSelectorTerms = nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution?.nodeSelectorTerms || [];
+                          const term = nodeSelectorTerms[0] || {};
+                          const newExpr = { key: "", operator: "", values: [] };
+                          onConfigChange("spec", {
+                            ...(config.spec as PersistentVolumeSpec || {}),
+                            nodeAffinity: {
+                              requiredDuringSchedulingIgnoredDuringExecution: {
+                                nodeSelectorTerms: [
+                                  {
+                                    ...term,
+                                    matchExpressions: [...(term.matchExpressions || []), newExpr],
+                                  },
+                                ],
+                              },
+                            },
+                          });
+                        }}
+                        className="text-primary hover:opacity-70 text-xs"
+                      >
+                        + Add Expression
+                      </button>
+                    </div>
+
+                    {((config.spec as PersistentVolumeSpec)?.nodeAffinity?.requiredDuringSchedulingIgnoredDuringExecution?.nodeSelectorTerms?.[0]?.matchExpressions || []).length > 0 ? (
+                      <div className="space-y-2">
+                        {((config.spec as PersistentVolumeSpec)?.nodeAffinity?.requiredDuringSchedulingIgnoredDuringExecution?.nodeSelectorTerms?.[0]?.matchExpressions || []).map((expr, exprIdx) => (
+                          <div key={exprIdx} className="p-2 bg-background/50 rounded space-y-2">
+                            <div className="grid grid-cols-2 gap-2">
+                              <div>
+                                <label className="block text-xs font-medium text-foreground/70 mb-1">Key</label>
+                                <input
+                                  type="text"
+                                  value={expr.key || ""}
+                                  onChange={(e) => {
+                                    const nodeAffinity = (config.spec as PersistentVolumeSpec)?.nodeAffinity || {};
+                                    const nodeSelectorTerms = nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution?.nodeSelectorTerms || [{}];
+                                    const term = nodeSelectorTerms[0];
+                                    const expressions = [...(term?.matchExpressions || [])];
+                                    expressions[exprIdx] = { ...expr, key: e.target.value || undefined };
+                                    onConfigChange("spec", {
+                                      ...(config.spec as PersistentVolumeSpec || {}),
+                                      nodeAffinity: {
+                                        requiredDuringSchedulingIgnoredDuringExecution: {
+                                          nodeSelectorTerms: [{ ...term, matchExpressions: expressions }],
+                                        },
+                                      },
+                                    });
+                                  }}
+                                  placeholder="key"
+                                  className="input-field text-xs"
+                                />
+                              </div>
+                              <div>
+                                <label className="block text-xs font-medium text-foreground/70 mb-1">Operator</label>
+                                <select
+                                  value={expr.operator || ""}
+                                  onChange={(e) => {
+                                    const nodeAffinity = (config.spec as PersistentVolumeSpec)?.nodeAffinity || {};
+                                    const nodeSelectorTerms = nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution?.nodeSelectorTerms || [{}];
+                                    const term = nodeSelectorTerms[0];
+                                    const expressions = [...(term?.matchExpressions || [])];
+                                    expressions[exprIdx] = { ...expr, operator: e.target.value || undefined };
+                                    onConfigChange("spec", {
+                                      ...(config.spec as PersistentVolumeSpec || {}),
+                                      nodeAffinity: {
+                                        requiredDuringSchedulingIgnoredDuringExecution: {
+                                          nodeSelectorTerms: [{ ...term, matchExpressions: expressions }],
+                                        },
+                                      },
+                                    });
+                                  }}
+                                  className="input-field text-xs"
+                                >
+                                  <option value="">Select Operator</option>
+                                  <option value="In">In</option>
+                                  <option value="NotIn">NotIn</option>
+                                  <option value="Exists">Exists</option>
+                                  <option value="DoesNotExist">DoesNotExist</option>
+                                  <option value="Gt">Gt</option>
+                                  <option value="Lt">Lt</option>
+                                </select>
+                              </div>
+                            </div>
+                            <div>
+                              <label className="block text-xs font-medium text-foreground/70 mb-1">Values</label>
+                              <div className="space-y-1">
+                                {(expr.values || []).map((val, valIdx) => (
+                                  <div key={valIdx} className="flex gap-2 items-center">
+                                    <input
+                                      type="text"
+                                      value={val}
+                                      onChange={(e) => {
+                                        const nodeAffinity = (config.spec as PersistentVolumeSpec)?.nodeAffinity || {};
+                                        const nodeSelectorTerms = nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution?.nodeSelectorTerms || [{}];
+                                        const term = nodeSelectorTerms[0];
+                                        const expressions = [...(term?.matchExpressions || [])];
+                                        const values = [...(expr.values || [])];
+                                        values[valIdx] = e.target.value;
+                                        expressions[exprIdx] = { ...expr, values };
+                                        onConfigChange("spec", {
+                                          ...(config.spec as PersistentVolumeSpec || {}),
+                                          nodeAffinity: {
+                                            requiredDuringSchedulingIgnoredDuringExecution: {
+                                              nodeSelectorTerms: [{ ...term, matchExpressions: expressions }],
+                                            },
+                                          },
+                                        });
+                                      }}
+                                      placeholder="value"
+                                      className="input-field text-xs flex-1"
+                                    />
+                                    <button
+                                      onClick={() => {
+                                        const nodeAffinity = (config.spec as PersistentVolumeSpec)?.nodeAffinity || {};
+                                        const nodeSelectorTerms = nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution?.nodeSelectorTerms || [{}];
+                                        const term = nodeSelectorTerms[0];
+                                        const expressions = [...(term?.matchExpressions || [])];
+                                        const values = (expr.values || []).filter((_, i) => i !== valIdx);
+                                        expressions[exprIdx] = { ...expr, values: values.length > 0 ? values : undefined };
+                                        onConfigChange("spec", {
+                                          ...(config.spec as PersistentVolumeSpec || {}),
+                                          nodeAffinity: {
+                                            requiredDuringSchedulingIgnoredDuringExecution: {
+                                              nodeSelectorTerms: [{ ...term, matchExpressions: expressions }],
+                                            },
+                                          },
+                                        });
+                                      }}
+                                      className="text-destructive hover:opacity-70"
+                                    >
+                                      <X className="w-4 h-4" />
+                                    </button>
+                                  </div>
+                                ))}
+                                <button
+                                  onClick={() => {
+                                    const nodeAffinity = (config.spec as PersistentVolumeSpec)?.nodeAffinity || {};
+                                    const nodeSelectorTerms = nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution?.nodeSelectorTerms || [{}];
+                                    const term = nodeSelectorTerms[0];
+                                    const expressions = [...(term?.matchExpressions || [])];
+                                    expressions[exprIdx] = { ...expr, values: [...(expr.values || []), ""] };
+                                    onConfigChange("spec", {
+                                      ...(config.spec as PersistentVolumeSpec || {}),
+                                      nodeAffinity: {
+                                        requiredDuringSchedulingIgnoredDuringExecution: {
+                                          nodeSelectorTerms: [{ ...term, matchExpressions: expressions }],
+                                        },
+                                      },
+                                    });
+                                  }}
+                                  className="text-primary hover:opacity-70 text-xs"
+                                >
+                                  + Add Value
+                                </button>
+                              </div>
+                            </div>
+                            <button
+                              onClick={() => {
+                                const nodeAffinity = (config.spec as PersistentVolumeSpec)?.nodeAffinity || {};
+                                const nodeSelectorTerms = nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution?.nodeSelectorTerms || [{}];
+                                const term = nodeSelectorTerms[0];
+                                const expressions = (term?.matchExpressions || []).filter((_, i) => i !== exprIdx);
+                                onConfigChange("spec", {
+                                  ...(config.spec as PersistentVolumeSpec || {}),
+                                  nodeAffinity: {
+                                    requiredDuringSchedulingIgnoredDuringExecution: {
+                                      nodeSelectorTerms: [{ ...term, matchExpressions: expressions.length > 0 ? expressions : undefined }],
+                                    },
+                                  },
+                                });
+                              }}
+                              className="w-full text-xs text-destructive hover:bg-destructive/10 py-1 rounded transition-colors"
+                            >
+                              Remove Expression
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-foreground/60 text-xs py-1">No match expressions defined</p>
+                    )}
+                  </div>
+
+                  {/* Match Fields */}
+                  <div className="border-t border-border pt-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <label className="block text-xs font-medium text-foreground">Match Fields</label>
+                      <button
+                        onClick={() => {
+                          const nodeAffinity = (config.spec as PersistentVolumeSpec)?.nodeAffinity || {};
+                          const nodeSelectorTerms = nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution?.nodeSelectorTerms || [];
+                          const term = nodeSelectorTerms[0] || {};
+                          const newField = { key: "", operator: "", values: [] };
+                          onConfigChange("spec", {
+                            ...(config.spec as PersistentVolumeSpec || {}),
+                            nodeAffinity: {
+                              requiredDuringSchedulingIgnoredDuringExecution: {
+                                nodeSelectorTerms: [
+                                  {
+                                    ...term,
+                                    matchFields: [...(term.matchFields || []), newField],
+                                  },
+                                ],
+                              },
+                            },
+                          });
+                        }}
+                        className="text-primary hover:opacity-70 text-xs"
+                      >
+                        + Add Field
+                      </button>
+                    </div>
+
+                    {((config.spec as PersistentVolumeSpec)?.nodeAffinity?.requiredDuringSchedulingIgnoredDuringExecution?.nodeSelectorTerms?.[0]?.matchFields || []).length > 0 ? (
+                      <div className="space-y-2">
+                        {((config.spec as PersistentVolumeSpec)?.nodeAffinity?.requiredDuringSchedulingIgnoredDuringExecution?.nodeSelectorTerms?.[0]?.matchFields || []).map((field, fieldIdx) => (
+                          <div key={fieldIdx} className="p-2 bg-background/50 rounded space-y-2">
+                            <div className="grid grid-cols-2 gap-2">
+                              <div>
+                                <label className="block text-xs font-medium text-foreground/70 mb-1">Key</label>
+                                <input
+                                  type="text"
+                                  value={field.key || ""}
+                                  onChange={(e) => {
+                                    const nodeAffinity = (config.spec as PersistentVolumeSpec)?.nodeAffinity || {};
+                                    const nodeSelectorTerms = nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution?.nodeSelectorTerms || [{}];
+                                    const term = nodeSelectorTerms[0];
+                                    const fields = [...(term?.matchFields || [])];
+                                    fields[fieldIdx] = { ...field, key: e.target.value || undefined };
+                                    onConfigChange("spec", {
+                                      ...(config.spec as PersistentVolumeSpec || {}),
+                                      nodeAffinity: {
+                                        requiredDuringSchedulingIgnoredDuringExecution: {
+                                          nodeSelectorTerms: [{ ...term, matchFields: fields }],
+                                        },
+                                      },
+                                    });
+                                  }}
+                                  placeholder="key"
+                                  className="input-field text-xs"
+                                />
+                              </div>
+                              <div>
+                                <label className="block text-xs font-medium text-foreground/70 mb-1">Operator</label>
+                                <select
+                                  value={field.operator || ""}
+                                  onChange={(e) => {
+                                    const nodeAffinity = (config.spec as PersistentVolumeSpec)?.nodeAffinity || {};
+                                    const nodeSelectorTerms = nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution?.nodeSelectorTerms || [{}];
+                                    const term = nodeSelectorTerms[0];
+                                    const fields = [...(term?.matchFields || [])];
+                                    fields[fieldIdx] = { ...field, operator: e.target.value || undefined };
+                                    onConfigChange("spec", {
+                                      ...(config.spec as PersistentVolumeSpec || {}),
+                                      nodeAffinity: {
+                                        requiredDuringSchedulingIgnoredDuringExecution: {
+                                          nodeSelectorTerms: [{ ...term, matchFields: fields }],
+                                        },
+                                      },
+                                    });
+                                  }}
+                                  className="input-field text-xs"
+                                >
+                                  <option value="">Select Operator</option>
+                                  <option value="In">In</option>
+                                  <option value="NotIn">NotIn</option>
+                                  <option value="Exists">Exists</option>
+                                  <option value="DoesNotExist">DoesNotExist</option>
+                                  <option value="Gt">Gt</option>
+                                  <option value="Lt">Lt</option>
+                                </select>
+                              </div>
+                            </div>
+                            <div>
+                              <label className="block text-xs font-medium text-foreground/70 mb-1">Values</label>
+                              <div className="space-y-1">
+                                {(field.values || []).map((val, valIdx) => (
+                                  <div key={valIdx} className="flex gap-2 items-center">
+                                    <input
+                                      type="text"
+                                      value={val}
+                                      onChange={(e) => {
+                                        const nodeAffinity = (config.spec as PersistentVolumeSpec)?.nodeAffinity || {};
+                                        const nodeSelectorTerms = nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution?.nodeSelectorTerms || [{}];
+                                        const term = nodeSelectorTerms[0];
+                                        const fields = [...(term?.matchFields || [])];
+                                        const values = [...(field.values || [])];
+                                        values[valIdx] = e.target.value;
+                                        fields[fieldIdx] = { ...field, values };
+                                        onConfigChange("spec", {
+                                          ...(config.spec as PersistentVolumeSpec || {}),
+                                          nodeAffinity: {
+                                            requiredDuringSchedulingIgnoredDuringExecution: {
+                                              nodeSelectorTerms: [{ ...term, matchFields: fields }],
+                                            },
+                                          },
+                                        });
+                                      }}
+                                      placeholder="value"
+                                      className="input-field text-xs flex-1"
+                                    />
+                                    <button
+                                      onClick={() => {
+                                        const nodeAffinity = (config.spec as PersistentVolumeSpec)?.nodeAffinity || {};
+                                        const nodeSelectorTerms = nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution?.nodeSelectorTerms || [{}];
+                                        const term = nodeSelectorTerms[0];
+                                        const fields = [...(term?.matchFields || [])];
+                                        const values = (field.values || []).filter((_, i) => i !== valIdx);
+                                        fields[fieldIdx] = { ...field, values: values.length > 0 ? values : undefined };
+                                        onConfigChange("spec", {
+                                          ...(config.spec as PersistentVolumeSpec || {}),
+                                          nodeAffinity: {
+                                            requiredDuringSchedulingIgnoredDuringExecution: {
+                                              nodeSelectorTerms: [{ ...term, matchFields: fields }],
+                                            },
+                                          },
+                                        });
+                                      }}
+                                      className="text-destructive hover:opacity-70"
+                                    >
+                                      <X className="w-4 h-4" />
+                                    </button>
+                                  </div>
+                                ))}
+                                <button
+                                  onClick={() => {
+                                    const nodeAffinity = (config.spec as PersistentVolumeSpec)?.nodeAffinity || {};
+                                    const nodeSelectorTerms = nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution?.nodeSelectorTerms || [{}];
+                                    const term = nodeSelectorTerms[0];
+                                    const fields = [...(term?.matchFields || [])];
+                                    fields[fieldIdx] = { ...field, values: [...(field.values || []), ""] };
+                                    onConfigChange("spec", {
+                                      ...(config.spec as PersistentVolumeSpec || {}),
+                                      nodeAffinity: {
+                                        requiredDuringSchedulingIgnoredDuringExecution: {
+                                          nodeSelectorTerms: [{ ...term, matchFields: fields }],
+                                        },
+                                      },
+                                    });
+                                  }}
+                                  className="text-primary hover:opacity-70 text-xs"
+                                >
+                                  + Add Value
+                                </button>
+                              </div>
+                            </div>
+                            <button
+                              onClick={() => {
+                                const nodeAffinity = (config.spec as PersistentVolumeSpec)?.nodeAffinity || {};
+                                const nodeSelectorTerms = nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution?.nodeSelectorTerms || [{}];
+                                const term = nodeSelectorTerms[0];
+                                const fields = (term?.matchFields || []).filter((_, i) => i !== fieldIdx);
+                                onConfigChange("spec", {
+                                  ...(config.spec as PersistentVolumeSpec || {}),
+                                  nodeAffinity: {
+                                    requiredDuringSchedulingIgnoredDuringExecution: {
+                                      nodeSelectorTerms: [{ ...term, matchFields: fields.length > 0 ? fields : undefined }],
+                                    },
+                                  },
+                                });
+                              }}
+                              className="w-full text-xs text-destructive hover:bg-destructive/10 py-1 rounded transition-colors"
+                            >
+                              Remove Field
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-foreground/60 text-xs py-1">No match fields defined</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Resource-specific sections will be rendered here based on type */}
-          {expandedSections.has(section.id) && section.id !== "metadata" && config.type !== "Service" && config.type !== "HTTPRoute" && config.type !== "GRPCRoute" && config.type !== "Gateway" && config.type !== "NetworkPolicy" && config.type !== "StorageClass" && (
+          {expandedSections.has(section.id) && section.id !== "metadata" && config.type !== "Service" && config.type !== "HTTPRoute" && config.type !== "GRPCRoute" && config.type !== "Gateway" && config.type !== "NetworkPolicy" && config.type !== "StorageClass" && config.type !== "PersistentVolume" && (
             <div className="px-4 py-4 border-t border-border bg-muted/10 space-y-4">
               <div className="bg-muted/20 border border-border rounded-lg p-4">
                 <p className="text-sm font-medium text-foreground mb-3">{section.title}</p>
