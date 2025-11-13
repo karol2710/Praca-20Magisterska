@@ -8765,8 +8765,501 @@ export default function ResourceConfiguration({ config, onConfigChange }: Resour
             </div>
           )}
 
+          {/* PersistentVolumeClaim Spec Section */}
+          {expandedSections.has(section.id) && section.id === "spec" && config.type === "PersistentVolumeClaim" && (
+            <div className="px-4 py-4 border-t border-border bg-muted/10 space-y-4">
+              {/* Volume Mode */}
+              <div>
+                <label htmlFor="pvcVolumeMode" className="block text-sm font-medium text-foreground mb-2">
+                  Volume Mode
+                </label>
+                <select
+                  id="pvcVolumeMode"
+                  value={(config.spec as PersistentVolumeClaimSpec)?.volumeMode || ""}
+                  onChange={(e) => {
+                    onConfigChange("spec", {
+                      ...(config.spec as PersistentVolumeClaimSpec || {}),
+                      volumeMode: e.target.value || undefined,
+                    });
+                  }}
+                  className="input-field"
+                >
+                  <option value="">Select Volume Mode</option>
+                  <option value="Filesystem">Filesystem</option>
+                  <option value="Block">Block</option>
+                </select>
+              </div>
+
+              {/* Access Modes */}
+              <div className="border-t border-border pt-4">
+                <label className="block text-sm font-medium text-foreground mb-2">Access Modes</label>
+                <div className="space-y-2">
+                  {["ReadWriteOnce", "ReadOnlyMany", "ReadWriteMany"].map((mode) => (
+                    <label key={mode} className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={((config.spec as PersistentVolumeClaimSpec)?.accessModes || []).includes(mode)}
+                        onChange={(e) => {
+                          const accessModes = (config.spec as PersistentVolumeClaimSpec)?.accessModes || [];
+                          const updated = e.target.checked
+                            ? [...accessModes, mode]
+                            : accessModes.filter((m) => m !== mode);
+                          onConfigChange("spec", {
+                            ...(config.spec as PersistentVolumeClaimSpec || {}),
+                            accessModes: updated.length > 0 ? updated : undefined,
+                          });
+                        }}
+                        className="w-4 h-4 cursor-pointer"
+                      />
+                      <span className="text-sm text-foreground">{mode}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              {/* Storage Class Name */}
+              <div className="border-t border-border pt-4">
+                <label htmlFor="pvcStorageClassName" className="block text-sm font-medium text-foreground mb-2">
+                  Storage Class Name
+                </label>
+                <input
+                  id="pvcStorageClassName"
+                  type="text"
+                  value={(config.spec as PersistentVolumeClaimSpec)?.storageClassName || ""}
+                  onChange={(e) => {
+                    onConfigChange("spec", {
+                      ...(config.spec as PersistentVolumeClaimSpec || {}),
+                      storageClassName: e.target.value || undefined,
+                    });
+                  }}
+                  placeholder="e.g., fast-ssd"
+                  className="input-field"
+                />
+              </div>
+
+              {/* Volume Attributes Class Name */}
+              <div className="border-t border-border pt-4">
+                <label htmlFor="pvcVolumeAttributesClassName" className="block text-sm font-medium text-foreground mb-2">
+                  Volume Attributes Class Name
+                </label>
+                <input
+                  id="pvcVolumeAttributesClassName"
+                  type="text"
+                  value={(config.spec as PersistentVolumeClaimSpec)?.volumeAttributesClassName || ""}
+                  onChange={(e) => {
+                    onConfigChange("spec", {
+                      ...(config.spec as PersistentVolumeClaimSpec || {}),
+                      volumeAttributesClassName: e.target.value || undefined,
+                    });
+                  }}
+                  placeholder="e.g., premium"
+                  className="input-field"
+                />
+              </div>
+
+              {/* Volume Name */}
+              <div className="border-t border-border pt-4">
+                <label htmlFor="pvcVolumeName" className="block text-sm font-medium text-foreground mb-2">
+                  Volume Name
+                </label>
+                <input
+                  id="pvcVolumeName"
+                  type="text"
+                  value={(config.spec as PersistentVolumeClaimSpec)?.volumeName || ""}
+                  onChange={(e) => {
+                    onConfigChange("spec", {
+                      ...(config.spec as PersistentVolumeClaimSpec || {}),
+                      volumeName: e.target.value || undefined,
+                    });
+                  }}
+                  placeholder="e.g., my-pv"
+                  className="input-field"
+                />
+              </div>
+
+              {/* Resources */}
+              <div className="border-t border-border pt-4">
+                <label className="block text-sm font-medium text-foreground mb-3">Resources</label>
+                <div className="space-y-4 p-4 bg-muted/20 border border-border rounded-lg">
+                  {/* Requests */}
+                  <div>
+                    <label className="block text-xs font-medium text-foreground/70 mb-2">Requests</label>
+                    <input
+                      type="text"
+                      value={(config.spec as PersistentVolumeClaimSpec)?.resources?.requests?.storage || ""}
+                      onChange={(e) => {
+                        onConfigChange("spec", {
+                          ...(config.spec as PersistentVolumeClaimSpec || {}),
+                          resources: {
+                            ...(config.spec as PersistentVolumeClaimSpec)?.resources,
+                            requests: e.target.value ? { storage: e.target.value } : undefined,
+                          },
+                        });
+                      }}
+                      placeholder="e.g., 10Gi"
+                      className="input-field text-sm"
+                    />
+                  </div>
+
+                  {/* Limits */}
+                  <div>
+                    <label className="block text-xs font-medium text-foreground/70 mb-2">Limits</label>
+                    <input
+                      type="text"
+                      value={(config.spec as PersistentVolumeClaimSpec)?.resources?.limits?.storage || ""}
+                      onChange={(e) => {
+                        onConfigChange("spec", {
+                          ...(config.spec as PersistentVolumeClaimSpec || {}),
+                          resources: {
+                            ...(config.spec as PersistentVolumeClaimSpec)?.resources,
+                            limits: e.target.value ? { storage: e.target.value } : undefined,
+                          },
+                        });
+                      }}
+                      placeholder="e.g., 20Gi"
+                      className="input-field text-sm"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Selector */}
+              <div className="border-t border-border pt-4">
+                <label className="block text-sm font-medium text-foreground mb-3">Selector</label>
+
+                {/* Match Labels */}
+                <div className="mb-4">
+                  <label className="block text-xs font-medium text-foreground/70 mb-2">Match Labels</label>
+                  {renderTagsField(
+                    (config.spec as PersistentVolumeClaimSpec)?.selector?.matchLabels,
+                    (value) => {
+                      onConfigChange("spec", {
+                        ...(config.spec as PersistentVolumeClaimSpec || {}),
+                        selector: {
+                          ...(config.spec as PersistentVolumeClaimSpec)?.selector,
+                          matchLabels: value,
+                        },
+                      });
+                    },
+                    "Selector Match Labels",
+                    "Add label (key=value)"
+                  )}
+                </div>
+
+                {/* Match Expressions */}
+                <div className="border-t border-border pt-3">
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="block text-xs font-medium text-foreground">Match Expressions</label>
+                    <button
+                      onClick={() => {
+                        const selector = (config.spec as PersistentVolumeClaimSpec)?.selector || {};
+                        onConfigChange("spec", {
+                          ...(config.spec as PersistentVolumeClaimSpec || {}),
+                          selector: {
+                            ...selector,
+                            matchExpressions: [...(selector.matchExpressions || []), { key: "", operator: "", values: [] }],
+                          },
+                        });
+                      }}
+                      className="text-primary hover:opacity-70 text-xs"
+                    >
+                      + Add Expression
+                    </button>
+                  </div>
+
+                  {((config.spec as PersistentVolumeClaimSpec)?.selector?.matchExpressions || []).length > 0 ? (
+                    <div className="space-y-2">
+                      {((config.spec as PersistentVolumeClaimSpec)?.selector?.matchExpressions || []).map((expr, exprIdx) => (
+                        <div key={exprIdx} className="p-2 bg-background/50 rounded space-y-2">
+                          <div className="grid grid-cols-2 gap-2">
+                            <div>
+                              <label className="block text-xs font-medium text-foreground/70 mb-1">Key</label>
+                              <input
+                                type="text"
+                                value={expr.key || ""}
+                                onChange={(e) => {
+                                  const selector = (config.spec as PersistentVolumeClaimSpec)?.selector || {};
+                                  const expressions = [...(selector.matchExpressions || [])];
+                                  expressions[exprIdx] = { ...expr, key: e.target.value || undefined };
+                                  onConfigChange("spec", {
+                                    ...(config.spec as PersistentVolumeClaimSpec || {}),
+                                    selector: { ...selector, matchExpressions: expressions },
+                                  });
+                                }}
+                                placeholder="key"
+                                className="input-field text-xs"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-xs font-medium text-foreground/70 mb-1">Operator</label>
+                              <select
+                                value={expr.operator || ""}
+                                onChange={(e) => {
+                                  const selector = (config.spec as PersistentVolumeClaimSpec)?.selector || {};
+                                  const expressions = [...(selector.matchExpressions || [])];
+                                  expressions[exprIdx] = { ...expr, operator: e.target.value || undefined };
+                                  onConfigChange("spec", {
+                                    ...(config.spec as PersistentVolumeClaimSpec || {}),
+                                    selector: { ...selector, matchExpressions: expressions },
+                                  });
+                                }}
+                                className="input-field text-xs"
+                              >
+                                <option value="">Select Operator</option>
+                                <option value="In">In</option>
+                                <option value="NotIn">NotIn</option>
+                                <option value="Exists">Exists</option>
+                                <option value="DoesNotExist">DoesNotExist</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div>
+                            <label className="block text-xs font-medium text-foreground/70 mb-1">Values</label>
+                            <div className="space-y-1">
+                              {(expr.values || []).map((val, valIdx) => (
+                                <div key={valIdx} className="flex gap-2 items-center">
+                                  <input
+                                    type="text"
+                                    value={val}
+                                    onChange={(e) => {
+                                      const selector = (config.spec as PersistentVolumeClaimSpec)?.selector || {};
+                                      const expressions = [...(selector.matchExpressions || [])];
+                                      const values = [...(expr.values || [])];
+                                      values[valIdx] = e.target.value;
+                                      expressions[exprIdx] = { ...expr, values };
+                                      onConfigChange("spec", {
+                                        ...(config.spec as PersistentVolumeClaimSpec || {}),
+                                        selector: { ...selector, matchExpressions: expressions },
+                                      });
+                                    }}
+                                    placeholder="value"
+                                    className="input-field text-xs flex-1"
+                                  />
+                                  <button
+                                    onClick={() => {
+                                      const selector = (config.spec as PersistentVolumeClaimSpec)?.selector || {};
+                                      const expressions = [...(selector.matchExpressions || [])];
+                                      const values = (expr.values || []).filter((_, i) => i !== valIdx);
+                                      expressions[exprIdx] = { ...expr, values: values.length > 0 ? values : undefined };
+                                      onConfigChange("spec", {
+                                        ...(config.spec as PersistentVolumeClaimSpec || {}),
+                                        selector: { ...selector, matchExpressions: expressions },
+                                      });
+                                    }}
+                                    className="text-destructive hover:opacity-70"
+                                  >
+                                    <X className="w-4 h-4" />
+                                  </button>
+                                </div>
+                              ))}
+                              <button
+                                onClick={() => {
+                                  const selector = (config.spec as PersistentVolumeClaimSpec)?.selector || {};
+                                  const expressions = [...(selector.matchExpressions || [])];
+                                  expressions[exprIdx] = { ...expr, values: [...(expr.values || []), ""] };
+                                  onConfigChange("spec", {
+                                    ...(config.spec as PersistentVolumeClaimSpec || {}),
+                                    selector: { ...selector, matchExpressions: expressions },
+                                  });
+                                }}
+                                className="text-primary hover:opacity-70 text-xs"
+                              >
+                                + Add Value
+                              </button>
+                            </div>
+                          </div>
+                          <button
+                            onClick={() => {
+                              const selector = (config.spec as PersistentVolumeClaimSpec)?.selector || {};
+                              const expressions = (selector.matchExpressions || []).filter((_, i) => i !== exprIdx);
+                              onConfigChange("spec", {
+                                ...(config.spec as PersistentVolumeClaimSpec || {}),
+                                selector: { ...selector, matchExpressions: expressions.length > 0 ? expressions : undefined },
+                              });
+                            }}
+                            className="w-full text-xs text-destructive hover:bg-destructive/10 py-1 rounded transition-colors"
+                          >
+                            Remove Expression
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-foreground/60 text-xs py-1">No match expressions defined</p>
+                  )}
+                </div>
+              </div>
+
+              {/* Data Source */}
+              <div className="border-t border-border pt-4">
+                <label className="block text-sm font-medium text-foreground mb-3">Data Source</label>
+                <div className="space-y-3 p-4 bg-muted/20 border border-border rounded-lg">
+                  <div>
+                    <label htmlFor="dataSource-apiGroup" className="block text-xs font-medium text-foreground/70 mb-1">
+                      API Group
+                    </label>
+                    <input
+                      id="dataSource-apiGroup"
+                      type="text"
+                      value={(config.spec as PersistentVolumeClaimSpec)?.dataSource?.apiGroup || ""}
+                      onChange={(e) => {
+                        onConfigChange("spec", {
+                          ...(config.spec as PersistentVolumeClaimSpec || {}),
+                          dataSource: {
+                            ...(config.spec as PersistentVolumeClaimSpec)?.dataSource,
+                            apiGroup: e.target.value || undefined,
+                          },
+                        });
+                      }}
+                      placeholder="e.g., snapshot.storage.k8s.io"
+                      className="input-field text-sm"
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="dataSource-kind" className="block text-xs font-medium text-foreground/70 mb-1">
+                      Kind
+                    </label>
+                    <input
+                      id="dataSource-kind"
+                      type="text"
+                      value={(config.spec as PersistentVolumeClaimSpec)?.dataSource?.kind || ""}
+                      onChange={(e) => {
+                        onConfigChange("spec", {
+                          ...(config.spec as PersistentVolumeClaimSpec || {}),
+                          dataSource: {
+                            ...(config.spec as PersistentVolumeClaimSpec)?.dataSource,
+                            kind: e.target.value || undefined,
+                          },
+                        });
+                      }}
+                      placeholder="e.g., VolumeSnapshot"
+                      className="input-field text-sm"
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="dataSource-name" className="block text-xs font-medium text-foreground/70 mb-1">
+                      Name
+                    </label>
+                    <input
+                      id="dataSource-name"
+                      type="text"
+                      value={(config.spec as PersistentVolumeClaimSpec)?.dataSource?.name || ""}
+                      onChange={(e) => {
+                        onConfigChange("spec", {
+                          ...(config.spec as PersistentVolumeClaimSpec || {}),
+                          dataSource: {
+                            ...(config.spec as PersistentVolumeClaimSpec)?.dataSource,
+                            name: e.target.value || undefined,
+                          },
+                        });
+                      }}
+                      placeholder="e.g., my-snapshot"
+                      className="input-field text-sm"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Data Source Reference */}
+              <div className="border-t border-border pt-4">
+                <label className="block text-sm font-medium text-foreground mb-3">Data Source Reference</label>
+                <div className="space-y-3 p-4 bg-muted/20 border border-border rounded-lg">
+                  <div>
+                    <label htmlFor="dataSourceRef-apiGroup" className="block text-xs font-medium text-foreground/70 mb-1">
+                      API Group
+                    </label>
+                    <input
+                      id="dataSourceRef-apiGroup"
+                      type="text"
+                      value={(config.spec as PersistentVolumeClaimSpec)?.dataSourceRef?.apiGroup || ""}
+                      onChange={(e) => {
+                        onConfigChange("spec", {
+                          ...(config.spec as PersistentVolumeClaimSpec || {}),
+                          dataSourceRef: {
+                            ...(config.spec as PersistentVolumeClaimSpec)?.dataSourceRef,
+                            apiGroup: e.target.value || undefined,
+                          },
+                        });
+                      }}
+                      placeholder="e.g., snapshot.storage.k8s.io"
+                      className="input-field text-sm"
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="dataSourceRef-kind" className="block text-xs font-medium text-foreground/70 mb-1">
+                      Kind
+                    </label>
+                    <input
+                      id="dataSourceRef-kind"
+                      type="text"
+                      value={(config.spec as PersistentVolumeClaimSpec)?.dataSourceRef?.kind || ""}
+                      onChange={(e) => {
+                        onConfigChange("spec", {
+                          ...(config.spec as PersistentVolumeClaimSpec || {}),
+                          dataSourceRef: {
+                            ...(config.spec as PersistentVolumeClaimSpec)?.dataSourceRef,
+                            kind: e.target.value || undefined,
+                          },
+                        });
+                      }}
+                      placeholder="e.g., VolumeSnapshot"
+                      className="input-field text-sm"
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="dataSourceRef-name" className="block text-xs font-medium text-foreground/70 mb-1">
+                      Name
+                    </label>
+                    <input
+                      id="dataSourceRef-name"
+                      type="text"
+                      value={(config.spec as PersistentVolumeClaimSpec)?.dataSourceRef?.name || ""}
+                      onChange={(e) => {
+                        onConfigChange("spec", {
+                          ...(config.spec as PersistentVolumeClaimSpec || {}),
+                          dataSourceRef: {
+                            ...(config.spec as PersistentVolumeClaimSpec)?.dataSourceRef,
+                            name: e.target.value || undefined,
+                          },
+                        });
+                      }}
+                      placeholder="e.g., my-snapshot"
+                      className="input-field text-sm"
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="dataSourceRef-namespace" className="block text-xs font-medium text-foreground/70 mb-1">
+                      Namespace
+                    </label>
+                    <input
+                      id="dataSourceRef-namespace"
+                      type="text"
+                      value={(config.spec as PersistentVolumeClaimSpec)?.dataSourceRef?.namespace || ""}
+                      onChange={(e) => {
+                        onConfigChange("spec", {
+                          ...(config.spec as PersistentVolumeClaimSpec || {}),
+                          dataSourceRef: {
+                            ...(config.spec as PersistentVolumeClaimSpec)?.dataSourceRef,
+                            namespace: e.target.value || undefined,
+                          },
+                        });
+                      }}
+                      placeholder="e.g., default"
+                      className="input-field text-sm"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Resource-specific sections will be rendered here based on type */}
-          {expandedSections.has(section.id) && section.id !== "metadata" && config.type !== "Service" && config.type !== "HTTPRoute" && config.type !== "GRPCRoute" && config.type !== "Gateway" && config.type !== "NetworkPolicy" && config.type !== "StorageClass" && config.type !== "PersistentVolume" && (
+          {expandedSections.has(section.id) && section.id !== "metadata" && config.type !== "Service" && config.type !== "HTTPRoute" && config.type !== "GRPCRoute" && config.type !== "Gateway" && config.type !== "NetworkPolicy" && config.type !== "StorageClass" && config.type !== "PersistentVolume" && config.type !== "PersistentVolumeClaim" && (
             <div className="px-4 py-4 border-t border-border bg-muted/10 space-y-4">
               <div className="bg-muted/20 border border-border rounded-lg p-4">
                 <p className="text-sm font-medium text-foreground mb-3">{section.title}</p>
