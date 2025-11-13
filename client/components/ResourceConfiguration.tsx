@@ -9877,8 +9877,257 @@ export default function ResourceConfiguration({ config, onConfigChange }: Resour
             </div>
           )}
 
+          {/* RuntimeClass Spec Section */}
+          {expandedSections.has(section.id) && section.id === "spec" && config.type === "RuntimeClass" && (
+            <div className="px-4 py-4 border-t border-border bg-muted/10 space-y-4">
+              {/* Handler */}
+              <div>
+                <label htmlFor="handler" className="block text-sm font-medium text-foreground mb-2">
+                  Handler
+                </label>
+                <input
+                  id="handler"
+                  type="text"
+                  value={(config.spec as RuntimeClassSpec)?.handler || ""}
+                  onChange={(e) => {
+                    onConfigChange("spec", {
+                      ...(config.spec as RuntimeClassSpec || {}),
+                      handler: e.target.value || undefined,
+                    });
+                  }}
+                  placeholder="e.g., crun, runc"
+                  className="input-field"
+                />
+                <p className="text-xs text-foreground/50 mt-1">The handler for this runtime</p>
+              </div>
+
+              {/* Overhead */}
+              <div className="border-t border-border pt-4">
+                <label className="block text-sm font-medium text-foreground mb-3">Overhead</label>
+                <div className="p-4 bg-muted/20 border border-border rounded-lg space-y-3">
+                  <div>
+                    <label className="block text-xs font-medium text-foreground/70 mb-2">Pod Fixed</label>
+                    <div className="space-y-1">
+                      {["cpu", "memory"].map((resource) => (
+                        <div key={resource} className="flex gap-2 items-center">
+                          <span className="text-xs text-foreground/60 w-16">{resource}:</span>
+                          <input
+                            type="text"
+                            value={(config.spec as RuntimeClassSpec)?.overhead?.podFixed?.[resource] || ""}
+                            onChange={(e) => {
+                              onConfigChange("spec", {
+                                ...(config.spec as RuntimeClassSpec || {}),
+                                overhead: {
+                                  ...(config.spec as RuntimeClassSpec)?.overhead,
+                                  podFixed: e.target.value
+                                    ? { ...((config.spec as RuntimeClassSpec)?.overhead?.podFixed || {}), [resource]: e.target.value }
+                                    : { ...((config.spec as RuntimeClassSpec)?.overhead?.podFixed || {}), [resource]: undefined },
+                                },
+                              });
+                            }}
+                            placeholder={resource === "cpu" ? "e.g., 50m" : "e.g., 100Mi"}
+                            className="input-field text-xs flex-1"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Scheduling */}
+              <div className="border-t border-border pt-4">
+                <label className="block text-sm font-medium text-foreground mb-3">Scheduling</label>
+
+                {/* Node Selector */}
+                <div className="mb-4">
+                  <label className="block text-xs font-medium text-foreground/70 mb-2">Node Selector</label>
+                  {renderTagsField(
+                    (config.spec as RuntimeClassSpec)?.scheduling?.nodeSelector,
+                    (value) => {
+                      onConfigChange("spec", {
+                        ...(config.spec as RuntimeClassSpec || {}),
+                        scheduling: {
+                          ...(config.spec as RuntimeClassSpec)?.scheduling,
+                          nodeSelector: value,
+                        },
+                      });
+                    },
+                    "RuntimeClass Node Selector",
+                    "Add node selector (key=value)"
+                  )}
+                </div>
+
+                {/* Tolerations */}
+                <div className="border-t border-border/30 pt-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <label className="block text-xs font-medium text-foreground">Tolerations</label>
+                    <button
+                      onClick={() => {
+                        const tolerations = (config.spec as RuntimeClassSpec)?.scheduling?.tolerations || [];
+                        onConfigChange("spec", {
+                          ...(config.spec as RuntimeClassSpec || {}),
+                          scheduling: {
+                            ...(config.spec as RuntimeClassSpec)?.scheduling,
+                            tolerations: [...tolerations, { key: "", operator: "", effect: "" }],
+                          },
+                        });
+                      }}
+                      className="text-primary hover:opacity-70 text-xs"
+                    >
+                      + Add Toleration
+                    </button>
+                  </div>
+
+                  {((config.spec as RuntimeClassSpec)?.scheduling?.tolerations || []).length > 0 ? (
+                    <div className="space-y-2">
+                      {((config.spec as RuntimeClassSpec)?.scheduling?.tolerations || []).map((tol, tolIdx) => (
+                        <div key={tolIdx} className="p-3 bg-background/50 rounded-lg space-y-2">
+                          <div className="grid grid-cols-2 gap-2">
+                            <div>
+                              <label className="block text-xs font-medium text-foreground/70 mb-1">Key</label>
+                              <input
+                                type="text"
+                                value={tol.key || ""}
+                                onChange={(e) => {
+                                  const tolerations = [...((config.spec as RuntimeClassSpec)?.scheduling?.tolerations || [])];
+                                  tolerations[tolIdx] = { ...tol, key: e.target.value || undefined };
+                                  onConfigChange("spec", {
+                                    ...(config.spec as RuntimeClassSpec || {}),
+                                    scheduling: {
+                                      ...(config.spec as RuntimeClassSpec)?.scheduling,
+                                      tolerations,
+                                    },
+                                  });
+                                }}
+                                placeholder="key"
+                                className="input-field text-xs"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-xs font-medium text-foreground/70 mb-1">Operator</label>
+                              <select
+                                value={tol.operator || ""}
+                                onChange={(e) => {
+                                  const tolerations = [...((config.spec as RuntimeClassSpec)?.scheduling?.tolerations || [])];
+                                  tolerations[tolIdx] = { ...tol, operator: e.target.value || undefined };
+                                  onConfigChange("spec", {
+                                    ...(config.spec as RuntimeClassSpec || {}),
+                                    scheduling: {
+                                      ...(config.spec as RuntimeClassSpec)?.scheduling,
+                                      tolerations,
+                                    },
+                                  });
+                                }}
+                                className="input-field text-xs"
+                              >
+                                <option value="">Select Operator</option>
+                                <option value="Equal">Equal</option>
+                                <option value="Exists">Exists</option>
+                              </select>
+                            </div>
+                          </div>
+
+                          <div>
+                            <label className="block text-xs font-medium text-foreground/70 mb-1">Value</label>
+                            <input
+                              type="text"
+                              value={tol.value || ""}
+                              onChange={(e) => {
+                                const tolerations = [...((config.spec as RuntimeClassSpec)?.scheduling?.tolerations || [])];
+                                tolerations[tolIdx] = { ...tol, value: e.target.value || undefined };
+                                onConfigChange("spec", {
+                                  ...(config.spec as RuntimeClassSpec || {}),
+                                  scheduling: {
+                                    ...(config.spec as RuntimeClassSpec)?.scheduling,
+                                    tolerations,
+                                  },
+                                });
+                              }}
+                              placeholder="value"
+                              className="input-field text-xs"
+                            />
+                          </div>
+
+                          <div>
+                            <label className="block text-xs font-medium text-foreground/70 mb-1">Effect</label>
+                            <select
+                              value={tol.effect || ""}
+                              onChange={(e) => {
+                                const tolerations = [...((config.spec as RuntimeClassSpec)?.scheduling?.tolerations || [])];
+                                tolerations[tolIdx] = { ...tol, effect: e.target.value || undefined };
+                                onConfigChange("spec", {
+                                  ...(config.spec as RuntimeClassSpec || {}),
+                                  scheduling: {
+                                    ...(config.spec as RuntimeClassSpec)?.scheduling,
+                                    tolerations,
+                                  },
+                                });
+                              }}
+                              className="input-field text-xs"
+                            >
+                              <option value="">Select Effect</option>
+                              <option value="NoSchedule">NoSchedule</option>
+                              <option value="NoExecute">NoExecute</option>
+                              <option value="PreferNoSchedule">PreferNoSchedule</option>
+                            </select>
+                          </div>
+
+                          <div>
+                            <label htmlFor={`tolerationSeconds-${tolIdx}`} className="block text-xs font-medium text-foreground/70 mb-1">
+                              Toleration Seconds
+                            </label>
+                            <input
+                              id={`tolerationSeconds-${tolIdx}`}
+                              type="number"
+                              value={tol.tolerationSeconds || ""}
+                              onChange={(e) => {
+                                const tolerations = [...((config.spec as RuntimeClassSpec)?.scheduling?.tolerations || [])];
+                                tolerations[tolIdx] = {
+                                  ...tol,
+                                  tolerationSeconds: e.target.value ? parseInt(e.target.value) : undefined,
+                                };
+                                onConfigChange("spec", {
+                                  ...(config.spec as RuntimeClassSpec || {}),
+                                  scheduling: {
+                                    ...(config.spec as RuntimeClassSpec)?.scheduling,
+                                    tolerations,
+                                  },
+                                });
+                              }}
+                              placeholder="Optional (for NoExecute)"
+                              className="input-field text-xs"
+                            />
+                          </div>
+
+                          <button
+                            onClick={() => {
+                              const tolerations = ((config.spec as RuntimeClassSpec)?.scheduling?.tolerations || []).filter((_, i) => i !== tolIdx);
+                              onConfigChange("spec", {
+                                ...(config.spec as RuntimeClassSpec || {}),
+                                scheduling: {
+                                  ...(config.spec as RuntimeClassSpec)?.scheduling,
+                                  tolerations: tolerations.length > 0 ? tolerations : undefined,
+                                },
+                              });
+                            }}
+                            className="w-full text-xs text-destructive hover:bg-destructive/10 py-1 rounded transition-colors"
+                          >
+                            Remove Toleration
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-foreground/60 text-xs py-1">No tolerations defined</p>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Resource-specific sections will be rendered here based on type */}
-          {expandedSections.has(section.id) && section.id !== "metadata" && config.type !== "Service" && config.type !== "HTTPRoute" && config.type !== "GRPCRoute" && config.type !== "Gateway" && config.type !== "NetworkPolicy" && config.type !== "StorageClass" && config.type !== "PersistentVolume" && config.type !== "PersistentVolumeClaim" && config.type !== "VolumeAttributesClass" && config.type !== "ConfigMap" && config.type !== "Secret" && config.type !== "LimitRange" && (
+          {expandedSections.has(section.id) && section.id !== "metadata" && config.type !== "Service" && config.type !== "HTTPRoute" && config.type !== "GRPCRoute" && config.type !== "Gateway" && config.type !== "NetworkPolicy" && config.type !== "StorageClass" && config.type !== "PersistentVolume" && config.type !== "PersistentVolumeClaim" && config.type !== "VolumeAttributesClass" && config.type !== "ConfigMap" && config.type !== "Secret" && config.type !== "LimitRange" && config.type !== "RuntimeClass" && (
             <div className="px-4 py-4 border-t border-border bg-muted/10 space-y-4">
               <div className="bg-muted/20 border border-border rounded-lg p-4">
                 <p className="text-sm font-medium text-foreground mb-3">{section.title}</p>
