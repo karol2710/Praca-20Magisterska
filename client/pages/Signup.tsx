@@ -69,19 +69,20 @@ export default function Signup() {
           <p className="text-foreground/60 mb-6">Join KubeChart to manage your Kubernetes deployments</p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Full Name Input */}
+            {/* Username Input */}
             <div>
-              <label htmlFor="fullName" className="block text-sm font-medium text-foreground mb-2">
-                Full Name
+              <label htmlFor="username" className="block text-sm font-medium text-foreground mb-2">
+                Username
               </label>
               <input
-                id="fullName"
+                id="username"
                 type="text"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-                placeholder="John Doe"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="your-username"
                 className="input-field"
                 required
+                disabled={isLoading}
               />
             </div>
 
@@ -98,6 +99,7 @@ export default function Signup() {
                 placeholder="you@example.com"
                 className="input-field"
                 required
+                disabled={isLoading}
               />
             </div>
 
@@ -114,6 +116,7 @@ export default function Signup() {
                 placeholder="••••••••"
                 className="input-field"
                 required
+                disabled={isLoading}
               />
               <p className="text-xs text-foreground/50 mt-1">At least 8 characters</p>
             </div>
@@ -131,30 +134,16 @@ export default function Signup() {
                 placeholder="••••••••"
                 className="input-field"
                 required
+                disabled={isLoading}
               />
             </div>
 
             {/* Error Message */}
-            {passwordError && (
+            {error && (
               <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-sm">
-                {passwordError}
+                {error}
               </div>
             )}
-
-            {/* Terms */}
-            <label className="flex items-start gap-2 text-sm cursor-pointer">
-              <input type="checkbox" className="w-4 h-4 rounded border-border bg-input cursor-pointer mt-0.5" required />
-              <span className="text-foreground/70">
-                I agree to the{" "}
-                <Link to="#" className="text-primary hover:underline">
-                  Terms of Service
-                </Link>
-                {" "}and{" "}
-                <Link to="#" className="text-primary hover:underline">
-                  Privacy Policy
-                </Link>
-              </span>
-            </label>
 
             {/* Submit Button */}
             <button
