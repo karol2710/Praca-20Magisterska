@@ -7286,52 +7286,161 @@ export default function ResourceConfiguration({ config, onConfigChange }: Resour
                                       )}
                                     </div>
                                     <div>
-                                      <label className="block text-xs font-medium text-foreground/70 mb-1">Match Expressions</label>
-                                      {(peer.namespaceSelector?.matchExpressions || []).length > 0 ? (
-                                        <div className="space-y-1">
-                                          {(peer.namespaceSelector?.matchExpressions || []).map((expr, exprIdx) => (
-                                            <div key={exprIdx} className="flex gap-1 items-center text-xs">
-                                              <span className="text-foreground/70">{expr.key}</span>
-                                              <span className="text-foreground/50">{expr.operator}</span>
-                                              <span className="text-foreground/70">{expr.values?.join(", ")}</span>
-                                              <button
-                                                onClick={() => {
-                                                  const updated = [...((config.spec as NetworkPolicySpec)?.egress || [])];
-                                                  const peers = [...(rule.peers || [])];
-                                                  const exprs = (peer.namespaceSelector?.matchExpressions || []).filter((_, i) => i !== exprIdx);
-                                                  peers[peerIdx] = {
-                                                    ...peer,
-                                                    namespaceSelector: { ...peer.namespaceSelector, matchExpressions: exprs.length > 0 ? exprs : undefined },
-                                                  };
-                                                  updated[ruleIdx] = { ...rule, peers };
-                                                  onConfigChange("spec", { ...(config.spec as NetworkPolicySpec || {}), egress: updated });
-                                                }}
-                                                className="text-destructive hover:opacity-70 ml-auto"
-                                              >
-                                                <X className="w-3 h-3" />
-                                              </button>
+                                      <div className="flex items-center justify-between mb-1">
+                                        <label className="block text-xs font-medium text-foreground/70">Match Expressions</label>
+                                        <button
+                                          onClick={() => {
+                                            const updated = [...((config.spec as NetworkPolicySpec)?.egress || [])];
+                                            const peers = [...(rule.peers || [])];
+                                            peers[peerIdx] = {
+                                              ...peer,
+                                              namespaceSelector: {
+                                                ...peer.namespaceSelector,
+                                                matchExpressions: [...(peer.namespaceSelector?.matchExpressions || []), { key: "", operator: "", values: [] }],
+                                              },
+                                            };
+                                            updated[ruleIdx] = { ...rule, peers };
+                                            onConfigChange("spec", { ...(config.spec as NetworkPolicySpec || {}), egress: updated });
+                                          }}
+                                          className="text-primary hover:opacity-70 text-xs"
+                                        >
+                                          + Add Expression
+                                        </button>
+                                      </div>
+                                      <div className="space-y-2">
+                                        {(peer.namespaceSelector?.matchExpressions || []).map((expr, exprIdx) => (
+                                          <div key={exprIdx} className="p-2 bg-background/50 rounded space-y-2">
+                                            <div className="grid grid-cols-2 gap-2">
+                                              <div>
+                                                <label className="block text-xs font-medium text-foreground/70 mb-1">Key</label>
+                                                <input
+                                                  type="text"
+                                                  value={expr.key || ""}
+                                                  onChange={(e) => {
+                                                    const updated = [...((config.spec as NetworkPolicySpec)?.egress || [])];
+                                                    const peers = [...(rule.peers || [])];
+                                                    const exprs = [...(peer.namespaceSelector?.matchExpressions || [])];
+                                                    exprs[exprIdx] = { ...expr, key: e.target.value || undefined };
+                                                    peers[peerIdx] = {
+                                                      ...peer,
+                                                      namespaceSelector: { ...peer.namespaceSelector, matchExpressions: exprs },
+                                                    };
+                                                    updated[ruleIdx] = { ...rule, peers };
+                                                    onConfigChange("spec", { ...(config.spec as NetworkPolicySpec || {}), egress: updated });
+                                                  }}
+                                                  placeholder="app"
+                                                  className="input-field text-xs"
+                                                />
+                                              </div>
+                                              <div>
+                                                <label className="block text-xs font-medium text-foreground/70 mb-1">Operator</label>
+                                                <select
+                                                  value={expr.operator || ""}
+                                                  onChange={(e) => {
+                                                    const updated = [...((config.spec as NetworkPolicySpec)?.egress || [])];
+                                                    const peers = [...(rule.peers || [])];
+                                                    const exprs = [...(peer.namespaceSelector?.matchExpressions || [])];
+                                                    exprs[exprIdx] = { ...expr, operator: e.target.value || undefined };
+                                                    peers[peerIdx] = {
+                                                      ...peer,
+                                                      namespaceSelector: { ...peer.namespaceSelector, matchExpressions: exprs },
+                                                    };
+                                                    updated[ruleIdx] = { ...rule, peers };
+                                                    onConfigChange("spec", { ...(config.spec as NetworkPolicySpec || {}), egress: updated });
+                                                  }}
+                                                  className="input-field text-xs"
+                                                >
+                                                  <option value="">Select Operator</option>
+                                                  <option value="In">In</option>
+                                                  <option value="NotIn">NotIn</option>
+                                                  <option value="Exists">Exists</option>
+                                                  <option value="DoesNotExist">DoesNotExist</option>
+                                                </select>
+                                              </div>
                                             </div>
-                                          ))}
-                                        </div>
-                                      ) : null}
-                                      <button
-                                        onClick={() => {
-                                          const updated = [...((config.spec as NetworkPolicySpec)?.egress || [])];
-                                          const peers = [...(rule.peers || [])];
-                                          peers[peerIdx] = {
-                                            ...peer,
-                                            namespaceSelector: {
-                                              ...peer.namespaceSelector,
-                                              matchExpressions: [...(peer.namespaceSelector?.matchExpressions || []), { key: "", operator: "", values: [] }],
-                                            },
-                                          };
-                                          updated[ruleIdx] = { ...rule, peers };
-                                          onConfigChange("spec", { ...(config.spec as NetworkPolicySpec || {}), egress: updated });
-                                        }}
-                                        className="text-primary hover:opacity-70 text-xs"
-                                      >
-                                        + Add Expression
-                                      </button>
+                                            <div>
+                                              <label className="block text-xs font-medium text-foreground/70 mb-1">Values</label>
+                                              <div className="space-y-1">
+                                                {(expr.values || []).map((val, valIdx) => (
+                                                  <div key={valIdx} className="flex gap-2 items-center">
+                                                    <input
+                                                      type="text"
+                                                      value={val}
+                                                      onChange={(e) => {
+                                                        const updated = [...((config.spec as NetworkPolicySpec)?.egress || [])];
+                                                        const peers = [...(rule.peers || [])];
+                                                        const exprs = [...(peer.namespaceSelector?.matchExpressions || [])];
+                                                        const values = [...(expr.values || [])];
+                                                        values[valIdx] = e.target.value || "";
+                                                        exprs[exprIdx] = { ...expr, values };
+                                                        peers[peerIdx] = {
+                                                          ...peer,
+                                                          namespaceSelector: { ...peer.namespaceSelector, matchExpressions: exprs },
+                                                        };
+                                                        updated[ruleIdx] = { ...rule, peers };
+                                                        onConfigChange("spec", { ...(config.spec as NetworkPolicySpec || {}), egress: updated });
+                                                      }}
+                                                      placeholder="production"
+                                                      className="input-field text-xs flex-1"
+                                                    />
+                                                    <button
+                                                      onClick={() => {
+                                                        const updated = [...((config.spec as NetworkPolicySpec)?.egress || [])];
+                                                        const peers = [...(rule.peers || [])];
+                                                        const exprs = [...(peer.namespaceSelector?.matchExpressions || [])];
+                                                        const values = (expr.values || []).filter((_, i) => i !== valIdx);
+                                                        exprs[exprIdx] = { ...expr, values: values.length > 0 ? values : undefined };
+                                                        peers[peerIdx] = {
+                                                          ...peer,
+                                                          namespaceSelector: { ...peer.namespaceSelector, matchExpressions: exprs },
+                                                        };
+                                                        updated[ruleIdx] = { ...rule, peers };
+                                                        onConfigChange("spec", { ...(config.spec as NetworkPolicySpec || {}), egress: updated });
+                                                      }}
+                                                      className="text-destructive hover:opacity-70"
+                                                    >
+                                                      <X className="w-4 h-4" />
+                                                    </button>
+                                                  </div>
+                                                ))}
+                                                <button
+                                                  onClick={() => {
+                                                    const updated = [...((config.spec as NetworkPolicySpec)?.egress || [])];
+                                                    const peers = [...(rule.peers || [])];
+                                                    const exprs = [...(peer.namespaceSelector?.matchExpressions || [])];
+                                                    exprs[exprIdx] = { ...expr, values: [...(expr.values || []), ""] };
+                                                    peers[peerIdx] = {
+                                                      ...peer,
+                                                      namespaceSelector: { ...peer.namespaceSelector, matchExpressions: exprs },
+                                                    };
+                                                    updated[ruleIdx] = { ...rule, peers };
+                                                    onConfigChange("spec", { ...(config.spec as NetworkPolicySpec || {}), egress: updated });
+                                                  }}
+                                                  className="text-primary hover:opacity-70 text-xs"
+                                                >
+                                                  + Add Value
+                                                </button>
+                                              </div>
+                                            </div>
+                                            <button
+                                              onClick={() => {
+                                                const updated = [...((config.spec as NetworkPolicySpec)?.egress || [])];
+                                                const peers = [...(rule.peers || [])];
+                                                const exprs = (peer.namespaceSelector?.matchExpressions || []).filter((_, i) => i !== exprIdx);
+                                                peers[peerIdx] = {
+                                                  ...peer,
+                                                  namespaceSelector: { ...peer.namespaceSelector, matchExpressions: exprs.length > 0 ? exprs : undefined },
+                                                };
+                                                updated[ruleIdx] = { ...rule, peers };
+                                                onConfigChange("spec", { ...(config.spec as NetworkPolicySpec || {}), egress: updated });
+                                              }}
+                                              className="w-full text-xs text-destructive hover:bg-destructive/10 py-1 rounded transition-colors"
+                                            >
+                                              Remove Expression
+                                            </button>
+                                          </div>
+                                        ))}
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
@@ -7359,52 +7468,161 @@ export default function ResourceConfiguration({ config, onConfigChange }: Resour
                                       )}
                                     </div>
                                     <div>
-                                      <label className="block text-xs font-medium text-foreground/70 mb-1">Match Expressions</label>
-                                      {(peer.podSelector?.matchExpressions || []).length > 0 ? (
-                                        <div className="space-y-1">
-                                          {(peer.podSelector?.matchExpressions || []).map((expr, exprIdx) => (
-                                            <div key={exprIdx} className="flex gap-1 items-center text-xs">
-                                              <span className="text-foreground/70">{expr.key}</span>
-                                              <span className="text-foreground/50">{expr.operator}</span>
-                                              <span className="text-foreground/70">{expr.values?.join(", ")}</span>
-                                              <button
-                                                onClick={() => {
-                                                  const updated = [...((config.spec as NetworkPolicySpec)?.egress || [])];
-                                                  const peers = [...(rule.peers || [])];
-                                                  const exprs = (peer.podSelector?.matchExpressions || []).filter((_, i) => i !== exprIdx);
-                                                  peers[peerIdx] = {
-                                                    ...peer,
-                                                    podSelector: { ...peer.podSelector, matchExpressions: exprs.length > 0 ? exprs : undefined },
-                                                  };
-                                                  updated[ruleIdx] = { ...rule, peers };
-                                                  onConfigChange("spec", { ...(config.spec as NetworkPolicySpec || {}), egress: updated });
-                                                }}
-                                                className="text-destructive hover:opacity-70 ml-auto"
-                                              >
-                                                <X className="w-3 h-3" />
-                                              </button>
+                                      <div className="flex items-center justify-between mb-1">
+                                        <label className="block text-xs font-medium text-foreground/70">Match Expressions</label>
+                                        <button
+                                          onClick={() => {
+                                            const updated = [...((config.spec as NetworkPolicySpec)?.egress || [])];
+                                            const peers = [...(rule.peers || [])];
+                                            peers[peerIdx] = {
+                                              ...peer,
+                                              podSelector: {
+                                                ...peer.podSelector,
+                                                matchExpressions: [...(peer.podSelector?.matchExpressions || []), { key: "", operator: "", values: [] }],
+                                              },
+                                            };
+                                            updated[ruleIdx] = { ...rule, peers };
+                                            onConfigChange("spec", { ...(config.spec as NetworkPolicySpec || {}), egress: updated });
+                                          }}
+                                          className="text-primary hover:opacity-70 text-xs"
+                                        >
+                                          + Add Expression
+                                        </button>
+                                      </div>
+                                      <div className="space-y-2">
+                                        {(peer.podSelector?.matchExpressions || []).map((expr, exprIdx) => (
+                                          <div key={exprIdx} className="p-2 bg-background/50 rounded space-y-2">
+                                            <div className="grid grid-cols-2 gap-2">
+                                              <div>
+                                                <label className="block text-xs font-medium text-foreground/70 mb-1">Key</label>
+                                                <input
+                                                  type="text"
+                                                  value={expr.key || ""}
+                                                  onChange={(e) => {
+                                                    const updated = [...((config.spec as NetworkPolicySpec)?.egress || [])];
+                                                    const peers = [...(rule.peers || [])];
+                                                    const exprs = [...(peer.podSelector?.matchExpressions || [])];
+                                                    exprs[exprIdx] = { ...expr, key: e.target.value || undefined };
+                                                    peers[peerIdx] = {
+                                                      ...peer,
+                                                      podSelector: { ...peer.podSelector, matchExpressions: exprs },
+                                                    };
+                                                    updated[ruleIdx] = { ...rule, peers };
+                                                    onConfigChange("spec", { ...(config.spec as NetworkPolicySpec || {}), egress: updated });
+                                                  }}
+                                                  placeholder="app"
+                                                  className="input-field text-xs"
+                                                />
+                                              </div>
+                                              <div>
+                                                <label className="block text-xs font-medium text-foreground/70 mb-1">Operator</label>
+                                                <select
+                                                  value={expr.operator || ""}
+                                                  onChange={(e) => {
+                                                    const updated = [...((config.spec as NetworkPolicySpec)?.egress || [])];
+                                                    const peers = [...(rule.peers || [])];
+                                                    const exprs = [...(peer.podSelector?.matchExpressions || [])];
+                                                    exprs[exprIdx] = { ...expr, operator: e.target.value || undefined };
+                                                    peers[peerIdx] = {
+                                                      ...peer,
+                                                      podSelector: { ...peer.podSelector, matchExpressions: exprs },
+                                                    };
+                                                    updated[ruleIdx] = { ...rule, peers };
+                                                    onConfigChange("spec", { ...(config.spec as NetworkPolicySpec || {}), egress: updated });
+                                                  }}
+                                                  className="input-field text-xs"
+                                                >
+                                                  <option value="">Select Operator</option>
+                                                  <option value="In">In</option>
+                                                  <option value="NotIn">NotIn</option>
+                                                  <option value="Exists">Exists</option>
+                                                  <option value="DoesNotExist">DoesNotExist</option>
+                                                </select>
+                                              </div>
                                             </div>
-                                          ))}
-                                        </div>
-                                      ) : null}
-                                      <button
-                                        onClick={() => {
-                                          const updated = [...((config.spec as NetworkPolicySpec)?.egress || [])];
-                                          const peers = [...(rule.peers || [])];
-                                          peers[peerIdx] = {
-                                            ...peer,
-                                            podSelector: {
-                                              ...peer.podSelector,
-                                              matchExpressions: [...(peer.podSelector?.matchExpressions || []), { key: "", operator: "", values: [] }],
-                                            },
-                                          };
-                                          updated[ruleIdx] = { ...rule, peers };
-                                          onConfigChange("spec", { ...(config.spec as NetworkPolicySpec || {}), egress: updated });
-                                        }}
-                                        className="text-primary hover:opacity-70 text-xs"
-                                      >
-                                        + Add Expression
-                                      </button>
+                                            <div>
+                                              <label className="block text-xs font-medium text-foreground/70 mb-1">Values</label>
+                                              <div className="space-y-1">
+                                                {(expr.values || []).map((val, valIdx) => (
+                                                  <div key={valIdx} className="flex gap-2 items-center">
+                                                    <input
+                                                      type="text"
+                                                      value={val}
+                                                      onChange={(e) => {
+                                                        const updated = [...((config.spec as NetworkPolicySpec)?.egress || [])];
+                                                        const peers = [...(rule.peers || [])];
+                                                        const exprs = [...(peer.podSelector?.matchExpressions || [])];
+                                                        const values = [...(expr.values || [])];
+                                                        values[valIdx] = e.target.value || "";
+                                                        exprs[exprIdx] = { ...expr, values };
+                                                        peers[peerIdx] = {
+                                                          ...peer,
+                                                          podSelector: { ...peer.podSelector, matchExpressions: exprs },
+                                                        };
+                                                        updated[ruleIdx] = { ...rule, peers };
+                                                        onConfigChange("spec", { ...(config.spec as NetworkPolicySpec || {}), egress: updated });
+                                                      }}
+                                                      placeholder="production"
+                                                      className="input-field text-xs flex-1"
+                                                    />
+                                                    <button
+                                                      onClick={() => {
+                                                        const updated = [...((config.spec as NetworkPolicySpec)?.egress || [])];
+                                                        const peers = [...(rule.peers || [])];
+                                                        const exprs = [...(peer.podSelector?.matchExpressions || [])];
+                                                        const values = (expr.values || []).filter((_, i) => i !== valIdx);
+                                                        exprs[exprIdx] = { ...expr, values: values.length > 0 ? values : undefined };
+                                                        peers[peerIdx] = {
+                                                          ...peer,
+                                                          podSelector: { ...peer.podSelector, matchExpressions: exprs },
+                                                        };
+                                                        updated[ruleIdx] = { ...rule, peers };
+                                                        onConfigChange("spec", { ...(config.spec as NetworkPolicySpec || {}), egress: updated });
+                                                      }}
+                                                      className="text-destructive hover:opacity-70"
+                                                    >
+                                                      <X className="w-4 h-4" />
+                                                    </button>
+                                                  </div>
+                                                ))}
+                                                <button
+                                                  onClick={() => {
+                                                    const updated = [...((config.spec as NetworkPolicySpec)?.egress || [])];
+                                                    const peers = [...(rule.peers || [])];
+                                                    const exprs = [...(peer.podSelector?.matchExpressions || [])];
+                                                    exprs[exprIdx] = { ...expr, values: [...(expr.values || []), ""] };
+                                                    peers[peerIdx] = {
+                                                      ...peer,
+                                                      podSelector: { ...peer.podSelector, matchExpressions: exprs },
+                                                    };
+                                                    updated[ruleIdx] = { ...rule, peers };
+                                                    onConfigChange("spec", { ...(config.spec as NetworkPolicySpec || {}), egress: updated });
+                                                  }}
+                                                  className="text-primary hover:opacity-70 text-xs"
+                                                >
+                                                  + Add Value
+                                                </button>
+                                              </div>
+                                            </div>
+                                            <button
+                                              onClick={() => {
+                                                const updated = [...((config.spec as NetworkPolicySpec)?.egress || [])];
+                                                const peers = [...(rule.peers || [])];
+                                                const exprs = (peer.podSelector?.matchExpressions || []).filter((_, i) => i !== exprIdx);
+                                                peers[peerIdx] = {
+                                                  ...peer,
+                                                  podSelector: { ...peer.podSelector, matchExpressions: exprs.length > 0 ? exprs : undefined },
+                                                };
+                                                updated[ruleIdx] = { ...rule, peers };
+                                                onConfigChange("spec", { ...(config.spec as NetworkPolicySpec || {}), egress: updated });
+                                              }}
+                                              className="w-full text-xs text-destructive hover:bg-destructive/10 py-1 rounded transition-colors"
+                                            >
+                                              Remove Expression
+                                            </button>
+                                          </div>
+                                        ))}
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
