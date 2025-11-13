@@ -468,14 +468,38 @@ export default function CreateChart() {
     return !!(container.name && container.image);
   };
 
-  const handleStandardSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleStandardSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsCreating(true);
-    setTimeout(() => {
-      alert("Standard chart created successfully!");
+    setDeploymentResult("");
+    setDeploymentError("");
+
+    try {
+      const response = await fetch("/api/deploy", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          repository,
+          helmInstall,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setDeploymentResult(data.output);
+      } else {
+        setDeploymentError(data.error || "Deployment failed");
+      }
+    } catch (error) {
+      setDeploymentError(
+        error instanceof Error ? error.message : "An error occurred"
+      );
+    } finally {
       setIsCreating(false);
-      setMode("standard");
-    }, 2000);
+    }
   };
 
   const handleAdvancedSubmit = () => {
