@@ -267,6 +267,10 @@ export default function CreateChart() {
   const [helmInstall, setHelmInstall] = useState<string>("");
   const [deploymentResult, setDeploymentResult] = useState<string>("");
   const [deploymentError, setDeploymentError] = useState<string>("");
+  const [advancedDeploymentResult, setAdvancedDeploymentResult] =
+    useState<string>("");
+  const [advancedDeploymentError, setAdvancedDeploymentError] =
+    useState<string>("");
 
   const activeWorkload = workloads.find((w) => w.id === activeWorkloadId);
   const activeResource = resources.find((r) => r.id === activeResourceId);
