@@ -661,6 +661,16 @@ export default function ResourceConfiguration({ config, onConfigChange }: Resour
             </div>
           )}
 
+          {/* Gateway Warning Section */}
+          {expandedSections.has(section.id) && section.id === "warning" && config.type === "Gateway" && (
+            <div className="px-4 py-4 border-t border-border bg-muted/10">
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+                <p className="text-sm text-amber-900 font-medium">⚠️ Important: Gateway should not be configured unless necessary</p>
+                <p className="text-xs text-amber-800 mt-2">Only configure if you're managing gateway infrastructure for your cluster.</p>
+              </div>
+            </div>
+          )}
+
           {/* HTTPRoute Spec Section */}
           {expandedSections.has(section.id) && section.id === "spec" && config.type === "HTTPRoute" && (
             <div className="px-4 py-4 border-t border-border bg-muted/10 space-y-4">
