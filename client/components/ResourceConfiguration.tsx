@@ -337,6 +337,29 @@ interface LimitRangeSpec {
   limits?: LimitRangeItem[];
 }
 
+interface Toleration {
+  effect?: string;
+  key?: string;
+  operator?: string;
+  tolerationSeconds?: number;
+  value?: string;
+}
+
+interface RuntimeClassScheduling {
+  nodeSelector?: Record<string, string>;
+  tolerations?: Toleration[];
+}
+
+interface RuntimeClassOverhead {
+  podFixed?: Record<string, string>;
+}
+
+interface RuntimeClassSpec {
+  handler?: string;
+  overhead?: RuntimeClassOverhead;
+  scheduling?: RuntimeClassScheduling;
+}
+
 interface ResourceConfig {
   id: string;
   name?: string;
