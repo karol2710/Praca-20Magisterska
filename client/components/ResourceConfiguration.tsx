@@ -317,6 +317,13 @@ interface ConfigMapSpec {
   immutable?: boolean;
 }
 
+interface SecretSpec {
+  data?: Record<string, string>;
+  immutable?: boolean;
+  stringData?: Record<string, string>;
+  type?: string;
+}
+
 interface ResourceConfig {
   id: string;
   name?: string;
