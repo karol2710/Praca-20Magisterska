@@ -5528,12 +5528,6 @@ export default function ResourceConfiguration({ config, onConfigChange }: Resour
           {/* Gateway Spec Section */}
           {expandedSections.has(section.id) && section.id === "spec" && config.type === "Gateway" && (
             <div className="px-4 py-4 border-t border-border bg-muted/10 space-y-4">
-              {/* Warning Note */}
-              <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-4">
-                <p className="text-sm text-amber-900 font-medium">⚠️ Important: Gateway configuration should not be configured unless necessary</p>
-                <p className="text-xs text-amber-800 mt-1">Only configure if you're managing gateway infrastructure for your cluster.</p>
-              </div>
-
               {/* Gateway Class Name */}
               <div>
                 <label className="block text-sm font-medium text-foreground mb-2">Gateway Class Name*</label>
