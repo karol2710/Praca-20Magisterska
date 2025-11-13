@@ -223,7 +223,7 @@ interface ResourceConfig {
   deletionGracePeriodSeconds?: number;
   ownerReferences?: OwnerReference[];
   data?: Record<string, any>;
-  spec?: ServiceSpec | HTTPRouteSpec | GRPCRouteSpec | GatewaySpec | Record<string, any>;
+  spec?: ServiceSpec | HTTPRouteSpec | GRPCRouteSpec | GatewaySpec | NetworkPolicySpec | Record<string, any>;
 }
 
 interface ResourceConfigurationProps {
