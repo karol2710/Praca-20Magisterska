@@ -438,9 +438,9 @@ const configSections: { [key: string]: { id: string; title: string; description:
       description: "Configure VolumeAttributesClass metadata",
     },
     {
-      id: "driverName",
-      title: "Driver Name",
-      description: "Configure driver and parameters",
+      id: "spec",
+      title: "Specification",
+      description: "Configure VolumeAttributesClass specification",
     },
   ],
   ConfigMap: [
