@@ -177,6 +177,42 @@ interface GatewaySpec {
   infrastructure?: GatewayInfrastructure;
 }
 
+interface LabelSelector {
+  matchLabels?: Record<string, string>;
+  matchExpressions?: {
+    key?: string;
+    operator?: string;
+    values?: string[];
+  }[];
+}
+
+interface NetworkPolicyPort {
+  protocol?: string;
+  port?: number | string;
+  endPort?: number;
+}
+
+interface NetworkPolicyPeer {
+  ipBlock?: {
+    cidr?: string;
+    except?: string[];
+  };
+  namespaceSelector?: LabelSelector;
+  podSelector?: LabelSelector;
+}
+
+interface NetworkPolicyRule {
+  ports?: NetworkPolicyPort[];
+  peers?: NetworkPolicyPeer[];
+}
+
+interface NetworkPolicySpec {
+  podSelector?: LabelSelector;
+  policyTypes?: string[];
+  ingress?: NetworkPolicyRule[];
+  egress?: NetworkPolicyRule[];
+}
+
 interface ResourceConfig {
   id: string;
   name?: string;
