@@ -1405,6 +1405,24 @@ export default function CreateChart() {
                   </button>
                 </div>
               )}
+
+              {advancedDeploymentResult && (
+                <div className="bg-card border border-border rounded-xl p-8">
+                  <h3 className="text-lg font-bold text-foreground mb-4">Deployment Result</h3>
+                  <pre className="bg-muted p-4 rounded-lg overflow-auto max-h-96 text-sm text-foreground whitespace-pre-wrap break-words">
+                    {advancedDeploymentResult}
+                  </pre>
+                </div>
+              )}
+
+              {advancedDeploymentError && (
+                <div className="bg-card border border-destructive rounded-xl p-8">
+                  <h3 className="text-lg font-bold text-destructive mb-4">Deployment Error</h3>
+                  <p className="text-sm text-foreground whitespace-pre-wrap break-words">
+                    {advancedDeploymentError}
+                  </p>
+                </div>
+              )}
             </div>
           )}
         </div>
