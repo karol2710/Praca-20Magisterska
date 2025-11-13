@@ -3,6 +3,7 @@ import express from "express";
 import cors from "cors";
 import { handleDemo } from "./routes/demo";
 import { handleDeploy } from "./routes/deploy";
+import { handleAdvancedDeploy } from "./routes/advanced-deploy";
 import {
   handleSignup,
   handleLogin,
