@@ -268,6 +268,8 @@ export default function CreateChart() {
   const [chartVersion, setChartVersion] = useState<string>("1.0.0");
   const [chartAuthor, setChartAuthor] = useState<string>("");
   const [kubectlCommand, setKubectlCommand] = useState<string>("");
+  const [repository, setRepository] = useState<string>("");
+  const [helmInstall, setHelmInstall] = useState<string>("");
 
   const activeWorkload = workloads.find((w) => w.id === activeWorkloadId);
   const activeResource = resources.find((r) => r.id === activeResourceId);
