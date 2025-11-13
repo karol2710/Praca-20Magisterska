@@ -1,5 +1,6 @@
 import { RequestHandler } from "express";
 import { execSync } from "child_process";
+import { query } from "@server/db";
 
 interface DeployRequest {
   repository: string;
@@ -12,7 +13,8 @@ interface DeployResponse {
   error?: string;
 }
 
-export const handleDeploy: RequestHandler = (req, res) => {
+export const handleDeploy: RequestHandler = async (req, res) => {
+  const user = (req as any).user;
   const { repository, helmInstall } = req.body as DeployRequest;
 
   if (!repository || !helmInstall) {
