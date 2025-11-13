@@ -324,6 +324,19 @@ interface SecretSpec {
   type?: string;
 }
 
+interface LimitRangeItem {
+  default?: Record<string, string>;
+  defaultRequest?: Record<string, string>;
+  max?: Record<string, string>;
+  maxLimitRequestRatio?: Record<string, string>;
+  min?: Record<string, string>;
+  type?: string;
+}
+
+interface LimitRangeSpec {
+  limits?: LimitRangeItem[];
+}
+
 interface ResourceConfig {
   id: string;
   name?: string;
