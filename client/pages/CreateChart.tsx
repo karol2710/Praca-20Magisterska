@@ -475,10 +475,12 @@ export default function CreateChart() {
     setDeploymentError("");
 
     try {
+      const token = localStorage.getItem("token");
       const response = await fetch("/api/deploy", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           repository,
@@ -488,8 +490,13 @@ export default function CreateChart() {
 
       const data = await response.json();
 
-      if (data.success) {
+      if (response.ok && data.success) {
         setDeploymentResult(data.output);
+      } else if (response.status === 401) {
+        setDeploymentError("Authentication failed. Please log in again.");
+        setTimeout(() => {
+          window.location.href = "/login";
+        }, 2000);
       } else {
         setDeploymentError(data.error || "Deployment failed");
       }
