@@ -180,7 +180,7 @@ export default function Index() {
             to="/signup"
             className="btn-primary inline-flex items-center justify-center gap-2"
           >
-            Create Your First Chart <ArrowRight className="w-5 h-5" />
+            Deploy Your First Configuration <ArrowRight className="w-5 h-5" />
           </Link>
         </div>
       </section>
