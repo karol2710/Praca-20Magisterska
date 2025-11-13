@@ -500,7 +500,7 @@ const configSections: { [key: string]: { id: string; title: string; description:
       description: "Configure LimitRange metadata",
     },
     {
-      id: "limits",
+      id: "spec",
       title: "Limits",
       description: "Configure resource limits",
     },
