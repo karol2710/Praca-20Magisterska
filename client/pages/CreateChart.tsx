@@ -509,15 +509,49 @@ export default function CreateChart() {
     }
   };
 
-  const handleAdvancedSubmit = () => {
+  const [advancedDeploymentResult, setAdvancedDeploymentResult] =
+    useState<string>("");
+  const [advancedDeploymentError, setAdvancedDeploymentError] =
+    useState<string>("");
+
+  const handleAdvancedSubmit = async () => {
+    setAdvancedDeploymentResult("");
+    setAdvancedDeploymentError("");
     setIsCreating(true);
-    setTimeout(() => {
-      alert("Advanced chart created successfully!");
+
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch("/api/deploy-advanced", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          workloads,
+          resources,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        setAdvancedDeploymentResult(data.output);
+      } else if (response.status === 401) {
+        setAdvancedDeploymentError("Authentication failed. Please log in again.");
+        setTimeout(() => {
+          window.location.href = "/login";
+        }, 2000);
+      } else {
+        setAdvancedDeploymentError(data.error || "Deployment failed");
+      }
+    } catch (error) {
+      setAdvancedDeploymentError(
+        error instanceof Error ? error.message : "An error occurred"
+      );
+    } finally {
       setIsCreating(false);
-      setWorkloads([]);
-      setResources([]);
-      setMode("standard");
-    }, 2000);
+    }
   };
 
   return (
