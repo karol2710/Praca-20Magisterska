@@ -9640,8 +9640,222 @@ export default function ResourceConfiguration({ config, onConfigChange }: Resour
             </div>
           )}
 
+          {/* LimitRange Spec Section */}
+          {expandedSections.has(section.id) && section.id === "spec" && config.type === "LimitRange" && (
+            <div className="px-4 py-4 border-t border-border bg-muted/10 space-y-4">
+              {/* Limits */}
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <label className="block text-sm font-medium text-foreground">Limits</label>
+                  <button
+                    onClick={() => {
+                      const limits = (config.spec as LimitRangeSpec)?.limits || [];
+                      onConfigChange("spec", {
+                        ...(config.spec as LimitRangeSpec || {}),
+                        limits: [...limits, { type: "" }],
+                      });
+                    }}
+                    className="text-primary hover:opacity-70 text-sm"
+                  >
+                    + Add Limit
+                  </button>
+                </div>
+
+                {((config.spec as LimitRangeSpec)?.limits && (config.spec as LimitRangeSpec)?.limits!.length > 0) ? (
+                  <div className="space-y-4">
+                    {((config.spec as LimitRangeSpec)?.limits || []).map((limit, limitIdx) => (
+                      <div key={limitIdx} className="border border-border rounded-lg p-4 bg-background/50 space-y-3">
+                        {/* Type */}
+                        <div>
+                          <label htmlFor={`limitType-${limitIdx}`} className="block text-xs font-medium text-foreground/70 mb-1">
+                            Type
+                          </label>
+                          <select
+                            id={`limitType-${limitIdx}`}
+                            value={limit.type || ""}
+                            onChange={(e) => {
+                              const limits = [...((config.spec as LimitRangeSpec)?.limits || [])];
+                              limits[limitIdx] = { ...limit, type: e.target.value || undefined };
+                              onConfigChange("spec", { ...(config.spec as LimitRangeSpec || {}), limits });
+                            }}
+                            className="input-field text-sm"
+                          >
+                            <option value="">Select Type</option>
+                            <option value="Pod">Pod</option>
+                            <option value="Container">Container</option>
+                            <option value="PersistentVolumeClaim">PersistentVolumeClaim</option>
+                          </select>
+                        </div>
+
+                        {/* Min */}
+                        <div className="border-t border-border/30 pt-3">
+                          <label className="block text-xs font-medium text-foreground/70 mb-2">Min</label>
+                          <div className="space-y-1">
+                            {["cpu", "memory", "storage"].map((resource) => (
+                              <div key={resource} className="flex gap-2 items-center">
+                                <span className="text-xs text-foreground/60 w-16">{resource}:</span>
+                                <input
+                                  type="text"
+                                  value={limit.min?.[resource] || ""}
+                                  onChange={(e) => {
+                                    const limits = [...((config.spec as LimitRangeSpec)?.limits || [])];
+                                    const min = { ...(limit.min || {}) };
+                                    if (e.target.value) {
+                                      min[resource] = e.target.value;
+                                    } else {
+                                      delete min[resource];
+                                    }
+                                    limits[limitIdx] = { ...limit, min: Object.keys(min).length > 0 ? min : undefined };
+                                    onConfigChange("spec", { ...(config.spec as LimitRangeSpec || {}), limits });
+                                  }}
+                                  placeholder="e.g., 100m"
+                                  className="input-field text-xs flex-1"
+                                />
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Max */}
+                        <div className="border-t border-border/30 pt-3">
+                          <label className="block text-xs font-medium text-foreground/70 mb-2">Max</label>
+                          <div className="space-y-1">
+                            {["cpu", "memory", "storage"].map((resource) => (
+                              <div key={resource} className="flex gap-2 items-center">
+                                <span className="text-xs text-foreground/60 w-16">{resource}:</span>
+                                <input
+                                  type="text"
+                                  value={limit.max?.[resource] || ""}
+                                  onChange={(e) => {
+                                    const limits = [...((config.spec as LimitRangeSpec)?.limits || [])];
+                                    const max = { ...(limit.max || {}) };
+                                    if (e.target.value) {
+                                      max[resource] = e.target.value;
+                                    } else {
+                                      delete max[resource];
+                                    }
+                                    limits[limitIdx] = { ...limit, max: Object.keys(max).length > 0 ? max : undefined };
+                                    onConfigChange("spec", { ...(config.spec as LimitRangeSpec || {}), limits });
+                                  }}
+                                  placeholder="e.g., 1"
+                                  className="input-field text-xs flex-1"
+                                />
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Default Request */}
+                        <div className="border-t border-border/30 pt-3">
+                          <label className="block text-xs font-medium text-foreground/70 mb-2">Default Request</label>
+                          <div className="space-y-1">
+                            {["cpu", "memory", "storage"].map((resource) => (
+                              <div key={resource} className="flex gap-2 items-center">
+                                <span className="text-xs text-foreground/60 w-16">{resource}:</span>
+                                <input
+                                  type="text"
+                                  value={limit.defaultRequest?.[resource] || ""}
+                                  onChange={(e) => {
+                                    const limits = [...((config.spec as LimitRangeSpec)?.limits || [])];
+                                    const defaultRequest = { ...(limit.defaultRequest || {}) };
+                                    if (e.target.value) {
+                                      defaultRequest[resource] = e.target.value;
+                                    } else {
+                                      delete defaultRequest[resource];
+                                    }
+                                    limits[limitIdx] = { ...limit, defaultRequest: Object.keys(defaultRequest).length > 0 ? defaultRequest : undefined };
+                                    onConfigChange("spec", { ...(config.spec as LimitRangeSpec || {}), limits });
+                                  }}
+                                  placeholder="e.g., 50m"
+                                  className="input-field text-xs flex-1"
+                                />
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Default */}
+                        <div className="border-t border-border/30 pt-3">
+                          <label className="block text-xs font-medium text-foreground/70 mb-2">Default</label>
+                          <div className="space-y-1">
+                            {["cpu", "memory", "storage"].map((resource) => (
+                              <div key={resource} className="flex gap-2 items-center">
+                                <span className="text-xs text-foreground/60 w-16">{resource}:</span>
+                                <input
+                                  type="text"
+                                  value={limit.default?.[resource] || ""}
+                                  onChange={(e) => {
+                                    const limits = [...((config.spec as LimitRangeSpec)?.limits || [])];
+                                    const defaultVal = { ...(limit.default || {}) };
+                                    if (e.target.value) {
+                                      defaultVal[resource] = e.target.value;
+                                    } else {
+                                      delete defaultVal[resource];
+                                    }
+                                    limits[limitIdx] = { ...limit, default: Object.keys(defaultVal).length > 0 ? defaultVal : undefined };
+                                    onConfigChange("spec", { ...(config.spec as LimitRangeSpec || {}), limits });
+                                  }}
+                                  placeholder="e.g., 500m"
+                                  className="input-field text-xs flex-1"
+                                />
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Max Limit Request Ratio */}
+                        <div className="border-t border-border/30 pt-3">
+                          <label className="block text-xs font-medium text-foreground/70 mb-2">Max Limit Request Ratio</label>
+                          <div className="space-y-1">
+                            {["cpu", "memory", "storage"].map((resource) => (
+                              <div key={resource} className="flex gap-2 items-center">
+                                <span className="text-xs text-foreground/60 w-16">{resource}:</span>
+                                <input
+                                  type="text"
+                                  value={limit.maxLimitRequestRatio?.[resource] || ""}
+                                  onChange={(e) => {
+                                    const limits = [...((config.spec as LimitRangeSpec)?.limits || [])];
+                                    const ratio = { ...(limit.maxLimitRequestRatio || {}) };
+                                    if (e.target.value) {
+                                      ratio[resource] = e.target.value;
+                                    } else {
+                                      delete ratio[resource];
+                                    }
+                                    limits[limitIdx] = { ...limit, maxLimitRequestRatio: Object.keys(ratio).length > 0 ? ratio : undefined };
+                                    onConfigChange("spec", { ...(config.spec as LimitRangeSpec || {}), limits });
+                                  }}
+                                  placeholder="e.g., 2"
+                                  className="input-field text-xs flex-1"
+                                />
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        <button
+                          onClick={() => {
+                            const limits = ((config.spec as LimitRangeSpec)?.limits || []).filter((_, i) => i !== limitIdx);
+                            onConfigChange("spec", {
+                              ...(config.spec as LimitRangeSpec || {}),
+                              limits: limits.length > 0 ? limits : undefined,
+                            });
+                          }}
+                          className="w-full text-xs text-destructive hover:bg-destructive/10 py-1.5 rounded transition-colors border-t border-border/50"
+                        >
+                          Remove Limit
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-foreground/60 text-sm py-2">No limits defined</p>
+                )}
+              </div>
+            </div>
+          )}
+
           {/* Resource-specific sections will be rendered here based on type */}
-          {expandedSections.has(section.id) && section.id !== "metadata" && config.type !== "Service" && config.type !== "HTTPRoute" && config.type !== "GRPCRoute" && config.type !== "Gateway" && config.type !== "NetworkPolicy" && config.type !== "StorageClass" && config.type !== "PersistentVolume" && config.type !== "PersistentVolumeClaim" && config.type !== "VolumeAttributesClass" && config.type !== "ConfigMap" && config.type !== "Secret" && (
+          {expandedSections.has(section.id) && section.id !== "metadata" && config.type !== "Service" && config.type !== "HTTPRoute" && config.type !== "GRPCRoute" && config.type !== "Gateway" && config.type !== "NetworkPolicy" && config.type !== "StorageClass" && config.type !== "PersistentVolume" && config.type !== "PersistentVolumeClaim" && config.type !== "VolumeAttributesClass" && config.type !== "ConfigMap" && config.type !== "Secret" && config.type !== "LimitRange" && (
             <div className="px-4 py-4 border-t border-border bg-muted/10 space-y-4">
               <div className="bg-muted/20 border border-border rounded-lg p-4">
                 <p className="text-sm font-medium text-foreground mb-3">{section.title}</p>
