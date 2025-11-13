@@ -9477,36 +9477,152 @@ export default function ResourceConfiguration({ config, onConfigChange }: Resour
 
               {/* String Data */}
               <div className="border-t border-border pt-4">
-                <label className="block text-sm font-medium text-foreground mb-2">String Data</label>
-                {renderTagsField(
-                  (config.spec as SecretSpec)?.stringData,
-                  (value) => {
-                    onConfigChange("spec", {
-                      ...(config.spec as SecretSpec || {}),
-                      stringData: value,
-                    });
-                  },
-                  "Secret String Data",
-                  "Add string data (key=value)"
+                <div className="flex items-center justify-between mb-3">
+                  <label className="block text-sm font-medium text-foreground">String Data</label>
+                  <button
+                    onClick={() => {
+                      const stringData = (config.spec as SecretSpec)?.stringData || {};
+                      onConfigChange("spec", {
+                        ...(config.spec as SecretSpec || {}),
+                        stringData: { ...stringData, [""]: "" },
+                      });
+                    }}
+                    className="text-primary hover:opacity-70 text-sm"
+                  >
+                    + Add String Data
+                  </button>
+                </div>
+
+                {((config.spec as SecretSpec)?.stringData && Object.keys((config.spec as SecretSpec)?.stringData || {}).length > 0) ? (
+                  <div className="space-y-3">
+                    {Object.entries((config.spec as SecretSpec)?.stringData || {}).map(([key, value], idx) => (
+                      <div key={idx} className="border border-border rounded-lg p-3 bg-background/50 space-y-2">
+                        <div className="flex gap-2 items-start">
+                          <input
+                            type="text"
+                            value={key}
+                            onChange={(e) => {
+                              const stringData = { ...(config.spec as SecretSpec)?.stringData };
+                              delete stringData[key];
+                              stringData[e.target.value || ""] = value;
+                              onConfigChange("spec", {
+                                ...(config.spec as SecretSpec || {}),
+                                stringData,
+                              });
+                            }}
+                            placeholder="key"
+                            className="input-field text-sm flex-1"
+                          />
+                          <button
+                            onClick={() => {
+                              const stringData = { ...(config.spec as SecretSpec)?.stringData };
+                              delete stringData[key];
+                              onConfigChange("spec", {
+                                ...(config.spec as SecretSpec || {}),
+                                stringData: Object.keys(stringData).length > 0 ? stringData : undefined,
+                              });
+                            }}
+                            className="text-destructive hover:opacity-70 mt-1"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
+                        <textarea
+                          value={value}
+                          onChange={(e) => {
+                            const stringData = { ...(config.spec as SecretSpec)?.stringData };
+                            stringData[key] = e.target.value;
+                            onConfigChange("spec", {
+                              ...(config.spec as SecretSpec || {}),
+                              stringData,
+                            });
+                          }}
+                          placeholder="value (supports multi-line)"
+                          rows={value && value.includes("\n") ? Math.min(Math.max(value.split("\n").length, 3), 8) : 3}
+                          className="input-field text-sm w-full font-mono text-xs"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-foreground/60 text-sm py-2">No string data entries defined</p>
                 )}
-                <p className="text-xs text-foreground/50 mt-1">Unencoded secret data (will be encoded when created)</p>
+                <p className="text-xs text-foreground/50 mt-2">Unencoded secret data (will be encoded when created, supports multi-line values)</p>
               </div>
 
               {/* Data */}
               <div className="border-t border-border pt-4">
-                <label className="block text-sm font-medium text-foreground mb-2">Data</label>
-                {renderTagsField(
-                  (config.spec as SecretSpec)?.data,
-                  (value) => {
-                    onConfigChange("spec", {
-                      ...(config.spec as SecretSpec || {}),
-                      data: value,
-                    });
-                  },
-                  "Secret Data",
-                  "Add data (key=base64value)"
+                <div className="flex items-center justify-between mb-3">
+                  <label className="block text-sm font-medium text-foreground">Data</label>
+                  <button
+                    onClick={() => {
+                      const data = (config.spec as SecretSpec)?.data || {};
+                      onConfigChange("spec", {
+                        ...(config.spec as SecretSpec || {}),
+                        data: { ...data, [""]: "" },
+                      });
+                    }}
+                    className="text-primary hover:opacity-70 text-sm"
+                  >
+                    + Add Data
+                  </button>
+                </div>
+
+                {((config.spec as SecretSpec)?.data && Object.keys((config.spec as SecretSpec)?.data || {}).length > 0) ? (
+                  <div className="space-y-3">
+                    {Object.entries((config.spec as SecretSpec)?.data || {}).map(([key, value], idx) => (
+                      <div key={idx} className="border border-border rounded-lg p-3 bg-background/50 space-y-2">
+                        <div className="flex gap-2 items-start">
+                          <input
+                            type="text"
+                            value={key}
+                            onChange={(e) => {
+                              const data = { ...(config.spec as SecretSpec)?.data };
+                              delete data[key];
+                              data[e.target.value || ""] = value;
+                              onConfigChange("spec", {
+                                ...(config.spec as SecretSpec || {}),
+                                data,
+                              });
+                            }}
+                            placeholder="key"
+                            className="input-field text-sm flex-1"
+                          />
+                          <button
+                            onClick={() => {
+                              const data = { ...(config.spec as SecretSpec)?.data };
+                              delete data[key];
+                              onConfigChange("spec", {
+                                ...(config.spec as SecretSpec || {}),
+                                data: Object.keys(data).length > 0 ? data : undefined,
+                              });
+                            }}
+                            className="text-destructive hover:opacity-70 mt-1"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
+                        <textarea
+                          value={value}
+                          onChange={(e) => {
+                            const data = { ...(config.spec as SecretSpec)?.data };
+                            data[key] = e.target.value;
+                            onConfigChange("spec", {
+                              ...(config.spec as SecretSpec || {}),
+                              data,
+                            });
+                          }}
+                          placeholder="value (base64 encoded, supports multi-line)"
+                          rows={value && value.includes("\n") ? Math.min(Math.max(value.split("\n").length, 3), 8) : 3}
+                          className="input-field text-sm w-full font-mono text-xs"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-foreground/60 text-sm py-2">No data entries defined</p>
                 )}
-                <p className="text-xs text-foreground/50 mt-1">Base64 encoded secret data</p>
+                <p className="text-xs text-foreground/50 mt-2">Base64 encoded secret data (supports multi-line values)</p>
               </div>
             </div>
           )}
