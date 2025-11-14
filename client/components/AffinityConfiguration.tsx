@@ -492,17 +492,144 @@ export default function AffinityConfiguration({
     );
   };
 
+  const ExpressionFieldComponent = ({
+    items,
+    onItemsChange,
+    label,
+  }: {
+    items: NodeAffinityExpr[];
+    onItemsChange: (items: NodeAffinityExpr[]) => void;
+    label: string;
+  }) => (
+    <div className="space-y-3 p-3 bg-muted/20 rounded-lg border border-border">
+      <div className="flex items-center justify-between">
+        <label className="block text-xs font-medium text-foreground">{label}</label>
+        <button
+          onClick={() => {
+            const newExpr: NodeAffinityExpr = {
+              id: Date.now().toString(),
+              key: "",
+              operator: "In",
+              values: [],
+            };
+            onItemsChange([...items, newExpr]);
+          }}
+          className="text-primary hover:opacity-70 text-xs flex items-center gap-1"
+        >
+          <Plus className="w-3 h-3" />
+          Add {label}
+        </button>
+      </div>
+
+      <div className="space-y-3">
+        {items.map((expr) => (
+          <div key={expr.id} className="p-3 bg-muted/30 border border-border rounded space-y-2">
+            <div className="grid grid-cols-3 gap-2">
+              <div>
+                <label className="block text-xs font-medium text-foreground mb-1">Key</label>
+                <input
+                  type="text"
+                  value={expr.key}
+                  onChange={(e) =>
+                    onItemsChange(
+                      items.map((x) =>
+                        x.id === expr.id ? { ...x, key: e.target.value } : x
+                      )
+                    )
+                  }
+                  placeholder="kubernetes.io/hostname"
+                  className="input-field text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-foreground mb-1">Operator</label>
+                <select
+                  value={expr.operator}
+                  onChange={(e) =>
+                    onItemsChange(
+                      items.map((x) =>
+                        x.id === expr.id ? { ...x, operator: e.target.value as Operator } : x
+                      )
+                    )
+                  }
+                  className="input-field text-sm"
+                >
+                  {operators.map((op) => (
+                    <option key={op} value={op}>
+                      {op}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <button
+                onClick={() => onItemsChange(items.filter((x) => x.id !== expr.id))}
+                className="text-destructive hover:opacity-70 mt-6"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div>
+              <label className="block text-xs font-medium text-foreground mb-1">Values</label>
+              <div className="flex flex-wrap gap-1 mb-2">
+                {expr.values.map((val, idx) => (
+                  <div key={idx} className="bg-primary/10 text-primary px-2 py-1 rounded text-xs flex items-center gap-1">
+                    {val}
+                    <button
+                      onClick={() => {
+                        const newValues = expr.values.filter((_, i) => i !== idx);
+                        onItemsChange(
+                          items.map((x) =>
+                            x.id === expr.id ? { ...x, values: newValues } : x
+                          )
+                        );
+                      }}
+                      className="hover:opacity-70"
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+              </div>
+              <input
+                type="text"
+                placeholder="Add value and press Enter"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && e.currentTarget.value.trim()) {
+                    onItemsChange(
+                      items.map((x) =>
+                        x.id === expr.id
+                          ? { ...x, values: [...x.values, e.currentTarget.value.trim()] }
+                          : x
+                      )
+                    );
+                    e.currentTarget.value = "";
+                  }
+                }}
+                className="input-field text-sm"
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
   const NodeAffinitySchedulingSection = ({
     title,
-    expressions,
-    onExpressionsChange,
+    matchExpressions,
+    matchFields,
+    onMatchExpressionsChange,
+    onMatchFieldsChange,
     showWeight,
     weight,
     onWeightChange,
   }: {
     title: string;
-    expressions: NodeAffinityExpr[];
-    onExpressionsChange: (exprs: NodeAffinityExpr[]) => void;
+    matchExpressions: NodeAffinityExpr[];
+    matchFields: NodeAffinityExpr[];
+    onMatchExpressionsChange: (exprs: NodeAffinityExpr[]) => void;
+    onMatchFieldsChange: (fields: NodeAffinityExpr[]) => void;
     showWeight?: boolean;
     weight?: number;
     onWeightChange?: (weight: number) => void;
@@ -511,107 +638,17 @@ export default function AffinityConfiguration({
       <h5 className="font-medium text-foreground text-sm">{title}</h5>
 
       <div className="space-y-3">
-        {expressions.length > 0 ? (
-          expressions.map((expr) => (
-            <div key={expr.id} className="p-4 bg-muted/20 border border-border rounded-lg space-y-3">
-              <div className="grid grid-cols-3 gap-3">
-                <div>
-                  <label className="block text-xs font-medium text-foreground mb-1">Key</label>
-                  <input
-                    type="text"
-                    value={expr.key}
-                    onChange={(e) =>
-                      onExpressionsChange(
-                        expressions.map((x) =>
-                          x.id === expr.id ? { ...x, key: e.target.value } : x
-                        )
-                      )
-                    }
-                    placeholder="kubernetes.io/hostname"
-                    className="input-field text-sm"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-foreground mb-1">Operator</label>
-                  <select
-                    value={expr.operator}
-                    onChange={(e) =>
-                      onExpressionsChange(
-                        expressions.map((x) =>
-                          x.id === expr.id ? { ...x, operator: e.target.value as Operator } : x
-                        )
-                      )
-                    }
-                    className="input-field text-sm"
-                  >
-                    {operators.map((op) => (
-                      <option key={op} value={op}>
-                        {op}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
+        <ExpressionFieldComponent
+          items={matchExpressions}
+          onItemsChange={onMatchExpressionsChange}
+          label="Match Expression"
+        />
 
-              <div>
-                <label className="block text-xs font-medium text-foreground mb-2">Values</label>
-                <div className="flex flex-wrap gap-2 mb-2">
-                  {expr.values.map((val, idx) => (
-                    <div key={idx} className="bg-primary/10 text-primary px-2 py-1 rounded text-xs flex items-center gap-1">
-                      {val}
-                      <button
-                        onClick={() => {
-                          const newValues = expr.values.filter((_, i) => i !== idx);
-                          onExpressionsChange(
-                            expressions.map((x) =>
-                              x.id === expr.id ? { ...x, values: newValues } : x
-                            )
-                          );
-                        }}
-                        className="hover:opacity-70"
-                      >
-                        ×
-                      </button>
-                    </div>
-                  ))}
-                </div>
-                <input
-                  type="text"
-                  placeholder="Add value and press Enter"
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" && e.currentTarget.value.trim()) {
-                      onExpressionsChange(
-                        expressions.map((x) =>
-                          x.id === expr.id
-                            ? { ...x, values: [...x.values, e.currentTarget.value.trim()] }
-                            : x
-                        )
-                      );
-                      e.currentTarget.value = "";
-                    }
-                  }}
-                  className="input-field text-sm"
-                />
-              </div>
-            </div>
-          ))
-        ) : (
-          <button
-            onClick={() => {
-              const newExpr: NodeAffinityExpr = {
-                id: Date.now().toString(),
-                key: "",
-                operator: "In",
-                values: [],
-              };
-              onExpressionsChange([newExpr]);
-            }}
-            className="text-primary hover:opacity-70 text-sm flex items-center gap-1"
-          >
-            <Plus className="w-4 h-4" />
-            Add Expression
-          </button>
-        )}
+        <ExpressionFieldComponent
+          items={matchFields}
+          onItemsChange={onMatchFieldsChange}
+          label="Match Field"
+        />
       </div>
 
       {showWeight && (
