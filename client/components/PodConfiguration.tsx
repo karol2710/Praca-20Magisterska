@@ -153,6 +153,8 @@ interface PodConfig {
   name?: string;
   podDeathTime?: number;
   terminationGracePeriodSeconds?: number;
+  deletionGracePeriodSeconds?: number;
+  ownerReferences?: OwnerReference[];
   nodeName?: string;
   nodeSelector?: Record<string, string>;
   priority?: number;
@@ -222,6 +224,7 @@ const configSections: ConfigSection[] = [
       { key: "labels", label: "Labels", type: "tags", description: "Key-value labels for Pod selection" },
       { key: "annotations", label: "Annotations", type: "tags", description: "Metadata annotations" },
       { key: "namespace", label: "Namespace", type: "text", placeholder: "default", description: "The namespace where the Pod will be created" },
+      { key: "deletionGracePeriodSeconds", label: "Deletion Grace Period (seconds)", type: "number", placeholder: "30", description: "Grace period in seconds before the Pod is forcefully terminated" },
     ],
   },
   {
