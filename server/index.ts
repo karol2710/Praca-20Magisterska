@@ -16,12 +16,10 @@ import { initializeDatabase } from "./db.js";
 export async function createServer() {
   const app = express();
 
-  // Initialize database
-  try {
-    await initializeDatabase();
-  } catch (error) {
-    console.error("Failed to initialize database:", error);
-  }
+  // Initialize database (non-blocking)
+  initializeDatabase().catch((error) => {
+    console.error("Database initialization error:", error);
+  });
 
   // Middleware
   app.use(cors());
