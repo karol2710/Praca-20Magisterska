@@ -1,6 +1,6 @@
 import { RequestHandler } from "express";
 import { execSync } from "child_process";
-import { query } from "@server/db";
+import { query } from "../db";
 
 interface DeployRequest {
   repository: string;
