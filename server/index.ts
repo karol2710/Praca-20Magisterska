@@ -1,17 +1,17 @@
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
-import { handleDemo } from "./routes/demo";
-import { handleDeploy } from "./routes/deploy";
-import { handleAdvancedDeploy } from "./routes/advanced-deploy";
+import { handleDemo } from "./routes/demo.js";
+import { handleDeploy } from "./routes/deploy.js";
+import { handleAdvancedDeploy } from "./routes/advanced-deploy.js";
 import {
   handleSignup,
   handleLogin,
   handleGetCurrentUser,
   handleLogout,
-} from "./routes/auth";
-import { authMiddleware } from "./auth";
-import { initializeDatabase } from "./db";
+} from "./routes/auth.js";
+import { authMiddleware } from "./auth.js";
+import { initializeDatabase } from "./db.js";
 
 export async function createServer() {
   const app = express();
