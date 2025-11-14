@@ -1011,6 +1011,7 @@ export default function CreateChart() {
                                       onClick={(e) => {
                                         e.stopPropagation();
                                         deleteInitContainer(activeWorkload.id, container.id);
+                                        setEditingInitContainerId("");
                                       }}
                                       className="text-destructive hover:bg-destructive/10 p-1 rounded hover:opacity-75 transition-opacity"
                                     >
@@ -1072,6 +1073,7 @@ export default function CreateChart() {
                                       onClick={(e) => {
                                         e.stopPropagation();
                                         deleteContainer(activeWorkload.id, container.id);
+                                        setEditingContainerId("");
                                       }}
                                       className="text-destructive hover:bg-destructive/10 p-1 rounded hover:opacity-75 transition-opacity"
                                     >
@@ -1188,6 +1190,7 @@ export default function CreateChart() {
                                       onClick={(e) => {
                                         e.stopPropagation();
                                         deleteEphemeralContainer(activeWorkload.id, container.id);
+                                        setEditingEphemeralContainerId("");
                                       }}
                                       className="text-destructive hover:bg-destructive/10 p-1 rounded hover:opacity-75 transition-opacity"
                                     >
