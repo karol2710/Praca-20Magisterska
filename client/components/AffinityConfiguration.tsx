@@ -44,13 +44,15 @@ interface NodeAffinityExpr {
 
 interface RequiredSchedulingNode {
   nodeAffinityTerm?: {
-    matchExpressions: NodeAffinityExpr[];
+    matchExpressions?: NodeAffinityExpr[];
+    matchFields?: NodeAffinityExpr[];
   };
 }
 
 interface PreferredSchedulingNode {
   nodeAffinityTerm?: {
-    matchExpressions: NodeAffinityExpr[];
+    matchExpressions?: NodeAffinityExpr[];
+    matchFields?: NodeAffinityExpr[];
     weight?: number;
   };
 }
