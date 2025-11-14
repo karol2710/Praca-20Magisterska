@@ -1,6 +1,6 @@
 import { RequestHandler } from "express";
-import { query } from "@server/db";
-import { generateYAMLManifest } from "@server/yaml-generator";
+import { query } from "../db";
+import { generateYAMLManifest } from "../yaml-generator";
 
 interface AdvancedDeployRequest {
   workloads: any[];
