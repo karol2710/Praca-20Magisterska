@@ -175,13 +175,6 @@ interface PodConfig {
     ip: string;
     hostnames: string[];
   }[];
-  resourceClaims?: {
-    name: string;
-    source?: {
-      resourceClaimName?: string;
-      resourceClaimTemplateName?: string;
-    };
-  }[];
   securityContext?: PodSecurityContext;
   tolerations?: Toleration[];
   topologySpreadConstraints?: TopologySpreadConstraint[];
@@ -312,12 +305,6 @@ const configSections: ConfigSection[] = [
     id: "hostAliases",
     title: "Host Aliases",
     description: "Static host entries for DNS resolution",
-    fields: [],
-  },
-  {
-    id: "resourceClaims",
-    title: "Resource Claims",
-    description: "Resource claims for the Pod",
     fields: [],
   },
   {
@@ -959,100 +946,6 @@ export default function PodConfiguration({ config, onConfigChange }: PodConfigur
                           className="w-full text-xs text-destructive hover:bg-destructive/10 py-1.5 rounded transition-colors"
                         >
                           Remove Constraint
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ) : section.id === "resourceClaims" ? (
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between mb-4">
-                    <h5 className="font-medium text-foreground text-sm">Resource Claims</h5>
-                    <button
-                      onClick={() => {
-                        const claims = config.resourceClaims || [];
-                        onConfigChange("resourceClaims", [...claims, { name: "", source: {} }]);
-                      }}
-                      className="text-primary hover:opacity-70 text-sm"
-                    >
-                      + Add Claim
-                    </button>
-                  </div>
-                  <div className="space-y-3">
-                    {(config.resourceClaims || []).map((claim, idx) => (
-                      <div key={idx} className="p-4 bg-muted/20 border border-border rounded-lg space-y-3">
-                        <div>
-                          <label className="block text-xs font-medium text-foreground mb-1">Name*</label>
-                          <input
-                            type="text"
-                            value={claim.name}
-                            onChange={(e) => {
-                              const updated = [...(config.resourceClaims || [])];
-                              updated[idx] = { ...claim, name: e.target.value };
-                              onConfigChange("resourceClaims", updated);
-                            }}
-                            placeholder="claim-name"
-                            className="input-field text-sm"
-                          />
-                        </div>
-
-                        <div className="border-t border-border pt-3">
-                          <h6 className="text-xs font-semibold text-foreground mb-3">Source</h6>
-                          <div className="space-y-3">
-                            <div>
-                              <label className="block text-xs font-medium text-foreground mb-1">Resource Claim Name</label>
-                              <input
-                                type="text"
-                                value={claim.source?.resourceClaimName || ""}
-                                onChange={(e) => {
-                                  const updated = [...(config.resourceClaims || [])];
-                                  updated[idx] = {
-                                    ...claim,
-                                    source: {
-                                      ...claim.source,
-                                      resourceClaimName: e.target.value || undefined,
-                                    },
-                                  };
-                                  onConfigChange("resourceClaims", updated);
-                                }}
-                                placeholder="existing-claim"
-                                className="input-field text-sm"
-                              />
-                            </div>
-
-                            <div>
-                              <label className="block text-xs font-medium text-foreground mb-1">Resource Claim Template Name</label>
-                              <input
-                                type="text"
-                                value={claim.source?.resourceClaimTemplateName || ""}
-                                onChange={(e) => {
-                                  const updated = [...(config.resourceClaims || [])];
-                                  updated[idx] = {
-                                    ...claim,
-                                    source: {
-                                      ...claim.source,
-                                      resourceClaimTemplateName: e.target.value || undefined,
-                                    },
-                                  };
-                                  onConfigChange("resourceClaims", updated);
-                                }}
-                                placeholder="claim-template"
-                                className="input-field text-sm"
-                              />
-                            </div>
-                          </div>
-                        </div>
-
-                        <button
-                          onClick={() => {
-                            onConfigChange(
-                              "resourceClaims",
-                              config.resourceClaims?.filter((_, i) => i !== idx)
-                            );
-                          }}
-                          className="w-full text-xs text-destructive hover:bg-destructive/10 py-1.5 rounded transition-colors"
-                        >
-                          Remove Claim
                         </button>
                       </div>
                     ))}
