@@ -5,16 +5,15 @@ import ContainerConfiguration, { ContainerConfig } from "@/components/ContainerC
 import DeploymentConfiguration from "@/components/DeploymentConfiguration";
 import ReplicaSetConfiguration from "@/components/ReplicaSetConfiguration";
 import StatefulSetConfiguration from "@/components/StatefulSetConfiguration";
-import DaemonSetConfiguration from "@/components/DaemonSetConfiguration";
 import JobConfiguration from "@/components/JobConfiguration";
 import CronJobConfiguration from "@/components/CronJobConfiguration";
 import ResourceConfiguration from "@/components/ResourceConfiguration";
 import { Upload, Plus, X, Zap, Copy, Download } from "lucide-react";
-import { generatePodYAML, generateDeploymentYAML, generateReplicaSetYAML, generateStatefulSetYAML, generateDaemonSetYAML, generateJobYAML, generateCronJobYAML } from "@/lib/yaml-builder";
+import { generatePodYAML, generateDeploymentYAML, generateReplicaSetYAML, generateStatefulSetYAML, generateJobYAML, generateCronJobYAML } from "@/lib/yaml-builder";
 
 type ChartMode = "standard" | "advanced";
 type InputType = "file" | "repo";
-type WorkloadType = "Pod" | "Deployment" | "ReplicaSet" | "StatefulSet" | "DaemonSet" | "Job" | "CronJob";
+type WorkloadType = "Pod" | "Deployment" | "ReplicaSet" | "StatefulSet" | "Job" | "CronJob";
 type ResourceType = "Service" | "HTTPRoute" | "GRPCRoute" | "Gateway" | "NetworkPolicy" | "StorageClass" | "PersistentVolume" | "PersistentVolumeClaim" | "VolumeAttributesClass" | "ConfigMap" | "Secret" | "LimitRange" | "RuntimeClass";
 type RestartPolicy = "Always" | "OnFailure" | "Never";
 type DNSPolicy = "ClusterFirstWithHostNet" | "ClusterFirst" | "Default" | "None";
@@ -244,7 +243,7 @@ interface Resource {
   data?: Record<string, any>;
 }
 
-const workloadTypes: WorkloadType[] = ["Pod", "Deployment", "ReplicaSet", "StatefulSet", "DaemonSet", "Job", "CronJob"];
+const workloadTypes: WorkloadType[] = ["Pod", "Deployment", "ReplicaSet", "StatefulSet", "Job", "CronJob"];
 const resourceTypes: ResourceType[] = ["Service", "HTTPRoute", "GRPCRoute", "Gateway", "NetworkPolicy", "StorageClass", "PersistentVolume", "PersistentVolumeClaim", "VolumeAttributesClass", "ConfigMap", "Secret", "LimitRange", "RuntimeClass"];
 
 export default function CreateChart() {
