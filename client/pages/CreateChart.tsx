@@ -905,6 +905,7 @@ export default function CreateChart() {
                             <p className="text-foreground/60 text-sm font-medium mb-4">Pod Configuration</p>
                             <PodConfiguration
                               config={activeWorkload.config}
+                              globalNamespace={globalNamespace}
                               onConfigChange={(key, value) => updateWorkloadConfig(activeWorkload.id, key, value)}
                             />
                           </div>
