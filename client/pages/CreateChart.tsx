@@ -993,7 +993,7 @@ export default function CreateChart() {
                             <p className="text-foreground/60 text-sm font-medium mb-4">Job Configuration</p>
                             <JobConfiguration
                               config={{
-                                namespace: activeWorkload.config.jobNamespace,
+                                namespace: globalNamespace,
                                 labels: activeWorkload.config.jobLabels,
                                 annotations: activeWorkload.config.jobAnnotations,
                                 deletionGracePeriodSeconds: activeWorkload.config.jobDeletionGracePeriodSeconds,
@@ -1001,6 +1001,7 @@ export default function CreateChart() {
                                 spec: activeWorkload.config.jobSpec,
                                 template: activeWorkload.config.jobTemplate,
                               }}
+                              globalNamespace={globalNamespace}
                               onConfigChange={(key, value) => {
                                 if (key === "spec") {
                                   updateWorkloadConfig(activeWorkload.id, "jobSpec", value);
