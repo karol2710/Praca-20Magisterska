@@ -281,18 +281,42 @@ export default function CreateChart() {
     if (!activeWorkload) return;
 
     let yamlString = "";
-    if (activeWorkload.type === "Pod") {
-      yamlString = generatePodYAML(
-        activeWorkload.name,
-        activeWorkload.config,
-        activeWorkload.containers
-      );
-    } else if (activeWorkload.type === "Deployment") {
-      yamlString = generateDeploymentYAML(
-        activeWorkload.name,
-        activeWorkload.config,
-        activeWorkload.containers
-      );
+    switch (activeWorkload.type) {
+      case "Pod":
+        yamlString = generatePodYAML(
+          activeWorkload.name,
+          activeWorkload.config,
+          activeWorkload.containers
+        );
+        break;
+      case "Deployment":
+        yamlString = generateDeploymentYAML(
+          activeWorkload.name,
+          activeWorkload.config,
+          activeWorkload.containers
+        );
+        break;
+      case "ReplicaSet":
+        yamlString = generateReplicaSetYAML(
+          activeWorkload.name,
+          activeWorkload.config,
+          activeWorkload.containers
+        );
+        break;
+      case "StatefulSet":
+        yamlString = generateStatefulSetYAML(
+          activeWorkload.name,
+          activeWorkload.config,
+          activeWorkload.containers
+        );
+        break;
+      case "DaemonSet":
+        yamlString = generateDaemonSetYAML(
+          activeWorkload.name,
+          activeWorkload.config,
+          activeWorkload.containers
+        );
+        break;
     }
 
     if (yamlString) {
