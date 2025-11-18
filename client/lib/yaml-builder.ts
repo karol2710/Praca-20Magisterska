@@ -273,7 +273,6 @@ function buildWorkloadYAML(
     name,
   };
 
-  if (config.namespace) metadata.namespace = config.namespace;
   if (config.deletionGracePeriodSeconds) metadata.deletionGracePeriodSeconds = config.deletionGracePeriodSeconds;
 
   if (config.annotations && Object.keys(config.annotations).length > 0) {
