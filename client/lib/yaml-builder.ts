@@ -144,20 +144,40 @@ function buildPodSpec(config: Record<string, any>, containers: Container[]): Rec
     const affinity: Record<string, any> = {};
 
     if (config.affinity.nodeAffinity) {
-      affinity.nodeAffinity = config.affinity.nodeAffinity;
+      const nodeAffinity: Record<string, any> = {};
+
+      const requiredTerms = config.affinity.nodeAffinity.requiredDuringScheduling?.nodeAffinityTerm;
+      if (requiredTerms) {
+        nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution = { nodeSelectorTerms: [requiredTerms] };
+      }
+
+      const preferredTerms = config.affinity.nodeAffinity.preferredDuringScheduling?.nodeAffinityTerm;
+      if (preferredTerms) {
+        const weight = config.affinity.nodeAffinity.preferredDuringScheduling?.weight || 1;
+        nodeAffinity.preferredDuringSchedulingIgnoredDuringExecution = [{
+          weight,
+          preference: preferredTerms,
+        }];
+      }
+
+      if (Object.keys(nodeAffinity).length > 0) {
+        affinity.nodeAffinity = nodeAffinity;
+      }
     }
 
     if (config.affinity.podAffinity) {
       const podAffinity: Record<string, any> = {};
 
-      if (config.affinity.podAffinity.requiredDuringScheduling?.podAffinityTerm?.topologyKey) {
-        podAffinity.requiredDuringScheduling = [config.affinity.podAffinity.requiredDuringScheduling.podAffinityTerm];
+      const requiredTerm = config.affinity.podAffinity.requiredDuringScheduling?.podAffinityTerm;
+      if (requiredTerm?.topologyKey) {
+        podAffinity.requiredDuringSchedulingIgnoredDuringExecution = [requiredTerm];
       }
 
-      if (config.affinity.podAffinity.preferredDuringScheduling?.podAffinityTerm?.topologyKey) {
-        podAffinity.preferredDuringScheduling = [{
-          weight: config.affinity.podAffinity.preferredDuringScheduling.podAffinityTerm.weight || 1,
-          podAffinityTerm: config.affinity.podAffinity.preferredDuringScheduling.podAffinityTerm,
+      const preferredTerm = config.affinity.podAffinity.preferredDuringScheduling?.podAffinityTerm;
+      if (preferredTerm?.topologyKey) {
+        podAffinity.preferredDuringSchedulingIgnoredDuringExecution = [{
+          weight: config.affinity.podAffinity.preferredDuringScheduling?.weight || 1,
+          podAffinityTerm: preferredTerm,
         }];
       }
 
@@ -169,14 +189,16 @@ function buildPodSpec(config: Record<string, any>, containers: Container[]): Rec
     if (config.affinity.podAntiAffinity) {
       const podAntiAffinity: Record<string, any> = {};
 
-      if (config.affinity.podAntiAffinity.requiredDuringScheduling?.podAffinityTerm?.topologyKey) {
-        podAntiAffinity.requiredDuringScheduling = [config.affinity.podAntiAffinity.requiredDuringScheduling.podAffinityTerm];
+      const requiredTerm = config.affinity.podAntiAffinity.requiredDuringScheduling?.podAffinityTerm;
+      if (requiredTerm?.topologyKey) {
+        podAntiAffinity.requiredDuringSchedulingIgnoredDuringExecution = [requiredTerm];
       }
 
-      if (config.affinity.podAntiAffinity.preferredDuringScheduling?.podAffinityTerm?.topologyKey) {
-        podAntiAffinity.preferredDuringScheduling = [{
-          weight: config.affinity.podAntiAffinity.preferredDuringScheduling.podAffinityTerm.weight || 1,
-          podAffinityTerm: config.affinity.podAntiAffinity.preferredDuringScheduling.podAffinityTerm,
+      const preferredTerm = config.affinity.podAntiAffinity.preferredDuringScheduling?.podAffinityTerm;
+      if (preferredTerm?.topologyKey) {
+        podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution = [{
+          weight: config.affinity.podAntiAffinity.preferredDuringScheduling?.weight || 1,
+          podAffinityTerm: preferredTerm,
         }];
       }
 
