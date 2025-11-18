@@ -279,12 +279,11 @@ export default function CreateChart() {
 
   const handleViewYaml = () => {
     if (activeWorkload && activeWorkload.type === "Pod") {
-      const yaml = generatePodYAML(
+      const yamlString = generatePodYAML(
         activeWorkload.name,
         activeWorkload.config,
         activeWorkload.containers
       );
-      const yamlString = require("js-yaml").dump(yaml, { indent: 2 });
       setGeneratedYaml(yamlString);
       setShowYamlModal(true);
     }
