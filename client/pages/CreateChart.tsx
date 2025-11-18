@@ -909,7 +909,7 @@ export default function CreateChart() {
                             <p className="text-foreground/60 text-sm font-medium mb-4">Deployment Configuration</p>
                             <DeploymentConfiguration
                               config={{
-                                namespace: activeWorkload.config.deploymentNamespace,
+                                namespace: globalNamespace,
                                 labels: activeWorkload.config.deploymentLabels,
                                 annotations: activeWorkload.config.deploymentAnnotations,
                                 deletionGracePeriodSeconds: activeWorkload.config.deploymentDeletionGracePeriodSeconds,
@@ -917,6 +917,7 @@ export default function CreateChart() {
                                 spec: activeWorkload.config.deploymentSpec,
                                 template: activeWorkload.config.deploymentTemplate,
                               }}
+                              globalNamespace={globalNamespace}
                               onConfigChange={(key, value) => {
                                 if (key === "spec") {
                                   updateWorkloadConfig(activeWorkload.id, "deploymentSpec", value);
