@@ -274,7 +274,6 @@ export default function CreateChart() {
     const prefix = type === "Deployment" ? "deployment"
       : type === "ReplicaSet" ? "replicaSet"
       : type === "StatefulSet" ? "statefulSet"
-      : type === "DaemonSet" ? "daemonSet"
       : type === "Job" ? "job"
       : type === "CronJob" ? "cronJob"
       : "";
