@@ -725,6 +725,12 @@ export default function AffinityConfiguration({
                     requiredDuringScheduling: { podAffinityTerm: term },
                   });
                 }}
+                onDelete={() => {
+                  onConfigChange({
+                    ...config,
+                    requiredDuringScheduling: undefined,
+                  });
+                }}
               />
 
               <SchedulingSection
@@ -737,6 +743,12 @@ export default function AffinityConfiguration({
                   });
                 }}
                 showWeight={true}
+                onDelete={() => {
+                  onConfigChange({
+                    ...config,
+                    preferredDuringScheduling: undefined,
+                  });
+                }}
               />
             </>
           ) : (
