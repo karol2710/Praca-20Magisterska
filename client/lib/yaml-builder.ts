@@ -392,6 +392,7 @@ export function generateStatefulSetYAML(statefulSetName: string, statefulSetConf
     name: statefulSetName,
   };
 
+  if (namespace) metadata.namespace = namespace;
   if (statefulSetConfig.deletionGracePeriodSeconds) metadata.deletionGracePeriodSeconds = statefulSetConfig.deletionGracePeriodSeconds;
 
   if (statefulSetConfig.annotations && Object.keys(statefulSetConfig.annotations).length > 0) {
