@@ -108,6 +108,7 @@ interface StatefulSetConfig {
 interface StatefulSetConfigurationProps {
   config: StatefulSetConfig;
   onConfigChange: (key: keyof StatefulSetConfig, value: any) => void;
+  globalNamespace?: string;
 }
 
 interface ConfigSection {
