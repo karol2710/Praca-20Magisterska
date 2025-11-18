@@ -302,42 +302,48 @@ export default function CreateChart() {
         yamlString = generatePodYAML(
           activeWorkload.name,
           transformedConfig,
-          activeWorkload.containers
+          activeWorkload.containers,
+          globalNamespace
         );
         break;
       case "Deployment":
         yamlString = generateDeploymentYAML(
           activeWorkload.name,
           transformedConfig,
-          activeWorkload.containers
+          activeWorkload.containers,
+          globalNamespace
         );
         break;
       case "ReplicaSet":
         yamlString = generateReplicaSetYAML(
           activeWorkload.name,
           transformedConfig,
-          activeWorkload.containers
+          activeWorkload.containers,
+          globalNamespace
         );
         break;
       case "StatefulSet":
         yamlString = generateStatefulSetYAML(
           activeWorkload.name,
           transformedConfig,
-          activeWorkload.containers
+          activeWorkload.containers,
+          globalNamespace
         );
         break;
       case "Job":
         yamlString = generateJobYAML(
           activeWorkload.name,
           transformedConfig,
-          activeWorkload.containers
+          activeWorkload.containers,
+          globalNamespace
         );
         break;
       case "CronJob":
         yamlString = generateCronJobYAML(
           activeWorkload.name,
           transformedConfig,
-          activeWorkload.containers
+          activeWorkload.containers,
+          globalNamespace
         );
         break;
     }
