@@ -970,33 +970,6 @@ export default function CreateChart() {
                           </div>
                         )}
 
-                        {activeWorkload.type === "DaemonSet" && (
-                          <div className="space-y-4">
-                            <p className="text-foreground/60 text-sm font-medium mb-4">DaemonSet Configuration</p>
-                            <DaemonSetConfiguration
-                              config={{
-                                namespace: activeWorkload.config.daemonSetNamespace,
-                                labels: activeWorkload.config.daemonSetLabels,
-                                annotations: activeWorkload.config.daemonSetAnnotations,
-                                deletionGracePeriodSeconds: activeWorkload.config.daemonSetDeletionGracePeriodSeconds,
-                                ownerReferences: activeWorkload.config.daemonSetOwnerReferences,
-                                spec: activeWorkload.config.daemonSetSpec,
-                                template: activeWorkload.config.daemonSetTemplate,
-                              }}
-                              onConfigChange={(key, value) => {
-                                if (key === "spec") {
-                                  updateWorkloadConfig(activeWorkload.id, "daemonSetSpec", value);
-                                } else if (key === "template") {
-                                  updateWorkloadConfig(activeWorkload.id, "daemonSetTemplate", value);
-                                } else {
-                                  const configKey: keyof WorkloadConfig = `daemonSet${key.charAt(0).toUpperCase() + key.slice(1)}` as any;
-                                  updateWorkloadConfig(activeWorkload.id, configKey, value);
-                                }
-                              }}
-                            />
-                          </div>
-                        )}
-
                         {activeWorkload.type === "Job" && (
                           <div className="space-y-4">
                             <p className="text-foreground/60 text-sm font-medium mb-4">Job Configuration</p>
