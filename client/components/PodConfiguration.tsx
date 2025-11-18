@@ -1241,6 +1241,21 @@ export default function PodConfiguration({ config, onConfigChange }: PodConfigur
                   ))}
 
                   <div className="border-t border-border pt-4">
+                    <label htmlFor="namespace" className="block text-sm font-medium text-foreground mb-2">
+                      Namespace
+                    </label>
+                    <input
+                      id="namespace"
+                      type="text"
+                      value={globalNamespace || ""}
+                      disabled
+                      placeholder="default"
+                      className="input-field bg-muted cursor-not-allowed"
+                    />
+                    <p className="text-xs text-foreground/50 mt-1">Set in Global Configuration</p>
+                  </div>
+
+                  <div className="border-t border-border pt-4">
                     <div className="flex items-center justify-between mb-3">
                       <label className="block text-sm font-medium text-foreground">Owner References</label>
                       <button
