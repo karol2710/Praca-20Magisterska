@@ -61,6 +61,7 @@ interface DeploymentConfig {
 interface DeploymentConfigurationProps {
   config: DeploymentConfig;
   onConfigChange: (key: keyof DeploymentConfig, value: any) => void;
+  globalNamespace?: string;
 }
 
 interface ConfigSection {
