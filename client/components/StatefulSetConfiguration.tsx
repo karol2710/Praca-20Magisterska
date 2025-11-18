@@ -921,24 +921,6 @@ export default function StatefulSetConfiguration({ config, onConfigChange }: Sta
                           </div>
 
                           <div>
-                            <label className="block text-xs font-medium text-foreground mb-1">Namespace</label>
-                            <input
-                              type="text"
-                              value={template.metadata?.namespace || ""}
-                              onChange={(e) => {
-                                const updated = [...(config.spec?.volumeClaimTemplates || [])];
-                                updated[idx] = {
-                                  ...template,
-                                  metadata: { ...template.metadata, namespace: e.target.value || undefined },
-                                };
-                                onConfigChange("spec", { ...config.spec, volumeClaimTemplates: updated });
-                              }}
-                              placeholder="default"
-                              className="input-field text-xs"
-                            />
-                          </div>
-
-                          <div>
                             <label className="block text-xs font-medium text-foreground mb-1">Annotations</label>
                             {renderTagsField(
                               template.metadata?.annotations,
