@@ -393,3 +393,114 @@ export function generateStatefulSetYAML(statefulSetName: string, statefulSetConf
 export function generateDaemonSetYAML(daemonSetName: string, daemonSetConfig: Record<string, any>, containers: Container[]): string {
   return buildWorkloadYAML(daemonSetName, daemonSetConfig, containers, "DaemonSet", "apps/v1");
 }
+
+export function generateJobYAML(jobName: string, jobConfig: Record<string, any>, containers: Container[]): string {
+  const metadata: Record<string, any> = {
+    name: jobName,
+  };
+
+  if (jobConfig.namespace) metadata.namespace = jobConfig.namespace;
+  if (jobConfig.deletionGracePeriodSeconds) metadata.deletionGracePeriodSeconds = jobConfig.deletionGracePeriodSeconds;
+
+  if (jobConfig.annotations && Object.keys(jobConfig.annotations).length > 0) {
+    metadata.annotations = jobConfig.annotations;
+  }
+
+  if (jobConfig.labels && Object.keys(jobConfig.labels).length > 0) {
+    metadata.labels = jobConfig.labels;
+  }
+
+  if (jobConfig.ownerReferences && jobConfig.ownerReferences.length > 0) {
+    metadata.ownerReferences = jobConfig.ownerReferences;
+  }
+
+  const spec: Record<string, any> = {};
+
+  if (jobConfig.template) {
+    spec.template = {
+      metadata: {},
+      spec: cleanEmptyValues(buildPodSpec(jobConfig.template, containers)),
+    };
+
+    if (jobConfig.template.labels && Object.keys(jobConfig.template.labels).length > 0) {
+      spec.template.metadata.labels = jobConfig.template.labels;
+    }
+
+    if (jobConfig.template.annotations && Object.keys(jobConfig.template.annotations).length > 0) {
+      spec.template.metadata.annotations = jobConfig.template.annotations;
+    }
+
+    spec.template.metadata = cleanEmptyValues(spec.template.metadata);
+  }
+
+  const yaml: Record<string, any> = {
+    apiVersion: "batch/v1",
+    kind: "Job",
+    metadata: cleanEmptyValues(metadata),
+    spec: cleanEmptyValues(spec),
+  };
+
+  const cleaned = cleanEmptyValues(yaml);
+  return YAML.dump(cleaned, { indent: 2 });
+}
+
+export function generateCronJobYAML(cronJobName: string, cronJobConfig: Record<string, any>, containers: Container[]): string {
+  const metadata: Record<string, any> = {
+    name: cronJobName,
+  };
+
+  if (cronJobConfig.namespace) metadata.namespace = cronJobConfig.namespace;
+  if (cronJobConfig.deletionGracePeriodSeconds) metadata.deletionGracePeriodSeconds = cronJobConfig.deletionGracePeriodSeconds;
+
+  if (cronJobConfig.annotations && Object.keys(cronJobConfig.annotations).length > 0) {
+    metadata.annotations = cronJobConfig.annotations;
+  }
+
+  if (cronJobConfig.labels && Object.keys(cronJobConfig.labels).length > 0) {
+    metadata.labels = cronJobConfig.labels;
+  }
+
+  if (cronJobConfig.ownerReferences && cronJobConfig.ownerReferences.length > 0) {
+    metadata.ownerReferences = cronJobConfig.ownerReferences;
+  }
+
+  const spec: Record<string, any> = {};
+
+  if (cronJobConfig.spec?.schedule) spec.schedule = cronJobConfig.spec.schedule;
+
+  if (cronJobConfig.spec?.jobTemplate) {
+    spec.jobTemplate = {
+      metadata: {},
+      spec: {},
+    };
+
+    if (cronJobConfig.spec.jobTemplate.template) {
+      spec.jobTemplate.spec.template = {
+        metadata: {},
+        spec: cleanEmptyValues(buildPodSpec(cronJobConfig.spec.jobTemplate.template, containers)),
+      };
+
+      if (cronJobConfig.spec.jobTemplate.template.labels && Object.keys(cronJobConfig.spec.jobTemplate.template.labels).length > 0) {
+        spec.jobTemplate.spec.template.metadata.labels = cronJobConfig.spec.jobTemplate.template.labels;
+      }
+
+      if (cronJobConfig.spec.jobTemplate.template.annotations && Object.keys(cronJobConfig.spec.jobTemplate.template.annotations).length > 0) {
+        spec.jobTemplate.spec.template.metadata.annotations = cronJobConfig.spec.jobTemplate.template.annotations;
+      }
+
+      spec.jobTemplate.spec.template.metadata = cleanEmptyValues(spec.jobTemplate.spec.template.metadata);
+    }
+
+    spec.jobTemplate.metadata = cleanEmptyValues(spec.jobTemplate.metadata);
+  }
+
+  const yaml: Record<string, any> = {
+    apiVersion: "batch/v1",
+    kind: "CronJob",
+    metadata: cleanEmptyValues(metadata),
+    spec: cleanEmptyValues(spec),
+  };
+
+  const cleaned = cleanEmptyValues(yaml);
+  return YAML.dump(cleaned, { indent: 2 });
+}
