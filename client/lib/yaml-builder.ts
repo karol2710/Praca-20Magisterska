@@ -140,7 +140,55 @@ function buildPodSpec(config: Record<string, any>, containers: Container[]): Rec
 
   if (config.topologySpreadConstraints && config.topologySpreadConstraints.length > 0) spec.topologySpreadConstraints = config.topologySpreadConstraints;
 
-  if (config.affinity) spec.affinity = config.affinity;
+  if (config.affinity) {
+    const affinity: Record<string, any> = {};
+
+    if (config.affinity.nodeAffinity) {
+      affinity.nodeAffinity = config.affinity.nodeAffinity;
+    }
+
+    if (config.affinity.podAffinity) {
+      const podAffinity: Record<string, any> = {};
+
+      if (config.affinity.podAffinity.requiredDuringScheduling?.podAffinityTerm?.topologyKey) {
+        podAffinity.requiredDuringScheduling = [config.affinity.podAffinity.requiredDuringScheduling.podAffinityTerm];
+      }
+
+      if (config.affinity.podAffinity.preferredDuringScheduling?.podAffinityTerm?.topologyKey) {
+        podAffinity.preferredDuringScheduling = [{
+          weight: config.affinity.podAffinity.preferredDuringScheduling.podAffinityTerm.weight || 1,
+          podAffinityTerm: config.affinity.podAffinity.preferredDuringScheduling.podAffinityTerm,
+        }];
+      }
+
+      if (Object.keys(podAffinity).length > 0) {
+        affinity.podAffinity = podAffinity;
+      }
+    }
+
+    if (config.affinity.podAntiAffinity) {
+      const podAntiAffinity: Record<string, any> = {};
+
+      if (config.affinity.podAntiAffinity.requiredDuringScheduling?.podAffinityTerm?.topologyKey) {
+        podAntiAffinity.requiredDuringScheduling = [config.affinity.podAntiAffinity.requiredDuringScheduling.podAffinityTerm];
+      }
+
+      if (config.affinity.podAntiAffinity.preferredDuringScheduling?.podAffinityTerm?.topologyKey) {
+        podAntiAffinity.preferredDuringScheduling = [{
+          weight: config.affinity.podAntiAffinity.preferredDuringScheduling.podAffinityTerm.weight || 1,
+          podAffinityTerm: config.affinity.podAntiAffinity.preferredDuringScheduling.podAffinityTerm,
+        }];
+      }
+
+      if (Object.keys(podAntiAffinity).length > 0) {
+        affinity.podAntiAffinity = podAntiAffinity;
+      }
+    }
+
+    if (Object.keys(affinity).length > 0) {
+      spec.affinity = affinity;
+    }
+  }
 
   if (config.imagePullSecrets && typeof config.imagePullSecrets === "object" && Object.keys(config.imagePullSecrets).length > 0) {
     spec.imagePullSecrets = config.imagePullSecrets;
