@@ -48,6 +48,7 @@ interface ReplicaSetConfig {
 interface ReplicaSetConfigurationProps {
   config: ReplicaSetConfig;
   onConfigChange: (key: keyof ReplicaSetConfig, value: any) => void;
+  globalNamespace?: string;
 }
 
 interface ConfigSection {
