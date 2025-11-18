@@ -608,11 +608,12 @@ export function generateJobYAML(jobName: string, jobConfig: Record<string, any>,
   return YAML.dump(cleaned, { indent: 2 });
 }
 
-export function generateCronJobYAML(cronJobName: string, cronJobConfig: Record<string, any>, containers: Container[]): string {
+export function generateCronJobYAML(cronJobName: string, cronJobConfig: Record<string, any>, containers: Container[], namespace?: string): string {
   const metadata: Record<string, any> = {
     name: cronJobName,
   };
 
+  if (namespace) metadata.namespace = namespace;
   if (cronJobConfig.deletionGracePeriodSeconds) metadata.deletionGracePeriodSeconds = cronJobConfig.deletionGracePeriodSeconds;
 
   if (cronJobConfig.annotations && Object.keys(cronJobConfig.annotations).length > 0) {
