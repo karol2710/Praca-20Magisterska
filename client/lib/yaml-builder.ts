@@ -232,11 +232,12 @@ function buildPodSpec(config: Record<string, any>, containers: Container[]): Rec
   return spec;
 }
 
-export function generatePodYAML(podName: string, podConfig: Record<string, any>, containers: Container[]): string {
+export function generatePodYAML(podName: string, podConfig: Record<string, any>, containers: Container[], namespace?: string): string {
   const metadata: Record<string, any> = {
     name: podName,
   };
 
+  if (namespace) metadata.namespace = namespace;
   if (podConfig.deletionGracePeriodSeconds) metadata.deletionGracePeriodSeconds = podConfig.deletionGracePeriodSeconds;
 
   if (podConfig.annotations && Object.keys(podConfig.annotations).length > 0) {
