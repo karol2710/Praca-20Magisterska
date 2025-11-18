@@ -965,7 +965,7 @@ export default function CreateChart() {
                             <p className="text-foreground/60 text-sm font-medium mb-4">StatefulSet Configuration</p>
                             <StatefulSetConfiguration
                               config={{
-                                namespace: activeWorkload.config.statefulSetNamespace,
+                                namespace: globalNamespace,
                                 labels: activeWorkload.config.statefulSetLabels,
                                 annotations: activeWorkload.config.statefulSetAnnotations,
                                 deletionGracePeriodSeconds: activeWorkload.config.statefulSetDeletionGracePeriodSeconds,
@@ -973,6 +973,7 @@ export default function CreateChart() {
                                 spec: activeWorkload.config.statefulSetSpec,
                                 template: activeWorkload.config.statefulSetTemplate,
                               }}
+                              globalNamespace={globalNamespace}
                               onConfigChange={(key, value) => {
                                 if (key === "spec") {
                                   updateWorkloadConfig(activeWorkload.id, "statefulSetSpec", value);
