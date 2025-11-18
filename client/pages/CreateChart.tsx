@@ -1021,13 +1021,14 @@ export default function CreateChart() {
                             <p className="text-foreground/60 text-sm font-medium mb-4">CronJob Configuration</p>
                             <CronJobConfiguration
                               config={{
-                                namespace: activeWorkload.config.cronJobNamespace,
+                                namespace: globalNamespace,
                                 labels: activeWorkload.config.cronJobLabels,
                                 annotations: activeWorkload.config.cronJobAnnotations,
                                 deletionGracePeriodSeconds: activeWorkload.config.cronJobDeletionGracePeriodSeconds,
                                 ownerReferences: activeWorkload.config.cronJobOwnerReferences,
                                 spec: activeWorkload.config.cronJobSpec,
                               }}
+                              globalNamespace={globalNamespace}
                               onConfigChange={(key, value) => {
                                 if (key === "spec") {
                                   updateWorkloadConfig(activeWorkload.id, "cronJobSpec", value);
@@ -1037,7 +1038,7 @@ export default function CreateChart() {
                                 }
                               }}
                               jobConfig={{
-                                namespace: activeWorkload.config.jobNamespace,
+                                namespace: globalNamespace,
                                 labels: activeWorkload.config.jobLabels,
                                 annotations: activeWorkload.config.jobAnnotations,
                                 deletionGracePeriodSeconds: activeWorkload.config.jobDeletionGracePeriodSeconds,
