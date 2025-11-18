@@ -452,11 +452,13 @@ export default function AffinityConfiguration({
     term,
     onTermChange,
     showWeight,
+    onDelete,
   }: {
     title: string;
     term?: PodAffinityTerm;
     onTermChange: (term: PodAffinityTerm) => void;
     showWeight?: boolean;
+    onDelete?: () => void;
   }) => {
     const initialTerm: PodAffinityTerm = term || {
       id: Date.now().toString(),
@@ -471,22 +473,39 @@ export default function AffinityConfiguration({
 
     return (
       <div className="space-y-3 p-4 bg-muted/30 rounded-lg border border-border">
-        <h5 className="font-medium text-foreground text-sm">{title}</h5>
+        <div className="flex items-center justify-between">
+          <h5 className="font-medium text-foreground text-sm">{title}</h5>
+          {onDelete && (
+            <button
+              onClick={onDelete}
+              className="text-destructive hover:opacity-70 text-xs"
+              title="Clear this affinity section"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          )}
+        </div>
 
-        <PodAffinityTermComponent term={initialTerm} onUpdate={onTermChange} />
+        {term ? (
+          <>
+            <PodAffinityTermComponent term={initialTerm} onUpdate={onTermChange} />
 
-        {showWeight && (
-          <div>
-            <label className="block text-xs font-medium text-foreground mb-1">Weight</label>
-            <input
-              type="number"
-              min="1"
-              max="100"
-              value={initialTerm.weight || 1}
-              onChange={(e) => onTermChange({ ...initialTerm, weight: parseInt(e.target.value) || 1 })}
-              className="input-field text-sm"
-            />
-          </div>
+            {showWeight && (
+              <div>
+                <label className="block text-xs font-medium text-foreground mb-1">Weight</label>
+                <input
+                  type="number"
+                  min="1"
+                  max="100"
+                  value={initialTerm.weight || 1}
+                  onChange={(e) => onTermChange({ ...initialTerm, weight: parseInt(e.target.value) || 1 })}
+                  className="input-field text-sm"
+                />
+              </div>
+            )}
+          </>
+        ) : (
+          <p className="text-xs text-muted-foreground">Not configured</p>
         )}
       </div>
     );
