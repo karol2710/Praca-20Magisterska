@@ -211,22 +211,6 @@ export default function CronJobConfiguration({ config, onConfigChange, jobConfig
                 <p className="text-xs text-foreground/50 mt-1">Metadata annotations</p>
               </div>
 
-              {/* Namespace */}
-              <div className="border-t border-border pt-4">
-                <label htmlFor="namespace" className="block text-sm font-medium text-foreground mb-2">
-                  Namespace
-                </label>
-                <input
-                  id="namespace"
-                  type="text"
-                  value={config.namespace || ""}
-                  onChange={(e) => onConfigChange("namespace", e.target.value || undefined)}
-                  placeholder="default"
-                  className="input-field"
-                />
-                <p className="text-xs text-foreground/50 mt-1">The namespace where the CronJob will be created</p>
-              </div>
-
               {/* Deletion Grace Period */}
               <div className="border-t border-border pt-4">
                 <label htmlFor="deletionGracePeriodSeconds" className="block text-sm font-medium text-foreground mb-2">
