@@ -262,3 +262,86 @@ export function generatePodYAML(podName: string, podConfig: Record<string, any>,
   const cleaned = cleanEmptyValues(yaml);
   return YAML.dump(cleaned, { indent: 2 });
 }
+
+export function generateDeploymentYAML(deploymentName: string, deploymentConfig: Record<string, any>, containers: Container[]): string {
+  const metadata: Record<string, any> = {
+    name: deploymentName,
+  };
+
+  if (deploymentConfig.namespace) metadata.namespace = deploymentConfig.namespace;
+  if (deploymentConfig.deletionGracePeriodSeconds) metadata.deletionGracePeriodSeconds = deploymentConfig.deletionGracePeriodSeconds;
+
+  if (deploymentConfig.annotations && Object.keys(deploymentConfig.annotations).length > 0) {
+    metadata.annotations = deploymentConfig.annotations;
+  }
+
+  if (deploymentConfig.labels && Object.keys(deploymentConfig.labels).length > 0) {
+    metadata.labels = deploymentConfig.labels;
+  }
+
+  if (deploymentConfig.ownerReferences && deploymentConfig.ownerReferences.length > 0) {
+    metadata.ownerReferences = deploymentConfig.ownerReferences;
+  }
+
+  const spec: Record<string, any> = {};
+
+  if (deploymentConfig.spec?.replicas !== undefined) spec.replicas = deploymentConfig.spec.replicas;
+  if (deploymentConfig.spec?.minReadySeconds !== undefined) spec.minReadySeconds = deploymentConfig.spec.minReadySeconds;
+  if (deploymentConfig.spec?.progressDeadlineSeconds !== undefined) spec.progressDeadlineSeconds = deploymentConfig.spec.progressDeadlineSeconds;
+  if (deploymentConfig.spec?.revisionHistoryLimit !== undefined) spec.revisionHistoryLimit = deploymentConfig.spec.revisionHistoryLimit;
+
+  if (deploymentConfig.spec?.selector) {
+    spec.selector = deploymentConfig.spec.selector;
+  }
+
+  if (deploymentConfig.spec?.strategy) {
+    const strategy: Record<string, any> = {};
+    if (deploymentConfig.spec.strategy.type) strategy.type = deploymentConfig.spec.strategy.type;
+    if (deploymentConfig.spec.strategy.rollingUpdate) {
+      const rollingUpdate: Record<string, any> = {};
+      if (deploymentConfig.spec.strategy.rollingUpdate.maxSurge !== undefined) {
+        rollingUpdate.maxSurge = deploymentConfig.spec.strategy.rollingUpdate.maxSurge;
+      }
+      if (deploymentConfig.spec.strategy.rollingUpdate.maxUnavailable !== undefined) {
+        rollingUpdate.maxUnavailable = deploymentConfig.spec.strategy.rollingUpdate.maxUnavailable;
+      }
+      if (Object.keys(rollingUpdate).length > 0) {
+        strategy.rollingUpdate = rollingUpdate;
+      }
+    }
+    if (Object.keys(strategy).length > 0) {
+      spec.strategy = strategy;
+    }
+  }
+
+  if (deploymentConfig.template) {
+    spec.template = {
+      metadata: {},
+      spec: cleanEmptyValues(buildPodSpec(deploymentConfig.template, containers)),
+    };
+
+    if (deploymentConfig.template.labels && Object.keys(deploymentConfig.template.labels).length > 0) {
+      spec.template.metadata.labels = deploymentConfig.template.labels;
+    }
+
+    if (deploymentConfig.template.annotations && Object.keys(deploymentConfig.template.annotations).length > 0) {
+      spec.template.metadata.annotations = deploymentConfig.template.annotations;
+    }
+
+    if (deploymentConfig.template.namespace) {
+      spec.template.metadata.namespace = deploymentConfig.template.namespace;
+    }
+
+    spec.template.metadata = cleanEmptyValues(spec.template.metadata);
+  }
+
+  const yaml: Record<string, any> = {
+    apiVersion: "apps/v1",
+    kind: "Deployment",
+    metadata: cleanEmptyValues(metadata),
+    spec: cleanEmptyValues(spec),
+  };
+
+  const cleaned = cleanEmptyValues(yaml);
+  return YAML.dump(cleaned, { indent: 2 });
+}
