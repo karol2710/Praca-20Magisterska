@@ -937,7 +937,7 @@ export default function CreateChart() {
                             <p className="text-foreground/60 text-sm font-medium mb-4">ReplicaSet Configuration</p>
                             <ReplicaSetConfiguration
                               config={{
-                                namespace: activeWorkload.config.replicaSetNamespace,
+                                namespace: globalNamespace,
                                 labels: activeWorkload.config.replicaSetLabels,
                                 annotations: activeWorkload.config.replicaSetAnnotations,
                                 deletionGracePeriodSeconds: activeWorkload.config.replicaSetDeletionGracePeriodSeconds,
@@ -945,6 +945,7 @@ export default function CreateChart() {
                                 spec: activeWorkload.config.replicaSetSpec,
                                 template: activeWorkload.config.replicaSetTemplate,
                               }}
+                              globalNamespace={globalNamespace}
                               onConfigChange={(key, value) => {
                                 if (key === "spec") {
                                   updateWorkloadConfig(activeWorkload.id, "replicaSetSpec", value);
