@@ -155,11 +155,9 @@ interface PodConfig {
   terminationGracePeriodSeconds?: number;
   deletionGracePeriodSeconds?: number;
   ownerReferences?: OwnerReference[];
-  nodeName?: string;
   nodeSelector?: Record<string, string>;
   priority?: number;
   priorityClassName?: string;
-  schedulerName?: string;
   automountServiceAccountToken?: boolean;
   serviceAccountName?: string;
   hostname?: string;
@@ -251,10 +249,8 @@ const configSections: ConfigSection[] = [
     title: "Scheduling",
     description: "Node affinity and priority settings",
     fields: [
-      { key: "nodeName", label: "Node Name", type: "text", placeholder: "worker-node-1" },
       { key: "priority", label: "Priority", type: "number", placeholder: "0" },
       { key: "priorityClassName", label: "Priority Class Name", type: "text" },
-      { key: "schedulerName", label: "Scheduler Name", type: "text" },
     ],
   },
   {
