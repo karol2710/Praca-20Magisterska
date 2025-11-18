@@ -11,7 +11,7 @@ function cleanEmptyValues(obj: Record<string, any>): Record<string, any> {
   const cleaned: Record<string, any> = {};
 
   for (const [key, value] of Object.entries(obj)) {
-    if (value === null || value === undefined || value === "") {
+    if (value === null || value === undefined || value === "" || key === "id") {
       continue;
     }
 
