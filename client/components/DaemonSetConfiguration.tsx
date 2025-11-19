@@ -700,6 +700,7 @@ export default function DaemonSetConfiguration({ config, onConfigChange }: Daemo
                     [key]: value,
                   });
                 }}
+                isTemplate={true}
               />
             </div>
           )}
