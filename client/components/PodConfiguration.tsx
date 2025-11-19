@@ -472,7 +472,7 @@ export default function PodConfiguration({ config, onConfigChange, isTemplate }:
 
   return (
     <div className="space-y-3">
-      {configSections.map((section) => (
+      {getFilteredSections().map((section) => (
         <div key={section.id} className="bg-muted/20 border border-border rounded-lg overflow-hidden">
           {/* Section Header */}
           <button
