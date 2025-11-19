@@ -265,7 +265,19 @@ export default function CreateChart() {
   const activeWorkload = workloads.find((w) => w.id === activeWorkloadId);
 
   const transformWorkloadConfig = (type: string, config: Record<string, any>) => {
-    if (type === "Pod") return config;
+    if (type === "Pod") {
+      const transformed: Record<string, any> = {};
+      for (const [key, value] of Object.entries(config)) {
+        if (key.startsWith("pod")) {
+          const newKey = key.slice(3);
+          const lowerKey = newKey.charAt(0).toLowerCase() + newKey.slice(1);
+          transformed[lowerKey] = value;
+        } else {
+          transformed[key] = value;
+        }
+      }
+      return transformed;
+    }
 
     const prefix = type === "Deployment" ? "deployment"
       : type === "ReplicaSet" ? "replicaSet"
