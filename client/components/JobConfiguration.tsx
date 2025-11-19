@@ -1225,6 +1225,7 @@ export default function JobConfiguration({ config, onConfigChange }: JobConfigur
                     [key]: value,
                   });
                 }}
+                isTemplate={true}
               />
             </div>
           )}
