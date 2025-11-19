@@ -605,6 +605,7 @@ export default function ReplicaSetConfiguration({ config, onConfigChange }: Repl
                     [key]: value,
                   });
                 }}
+                isTemplate={true}
               />
             </div>
           )}
