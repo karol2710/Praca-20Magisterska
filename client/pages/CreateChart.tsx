@@ -940,9 +940,53 @@ export default function CreateChart() {
                           <div className="space-y-4">
                             <p className="text-foreground/60 text-sm font-medium mb-4">Pod Configuration</p>
                             <PodConfiguration
-                              config={activeWorkload.config}
+                              config={{
+                                namespace: globalNamespace,
+                                labels: activeWorkload.config.podLabels,
+                                annotations: activeWorkload.config.podAnnotations,
+                                deletionGracePeriodSeconds: activeWorkload.config.podDeletionGracePeriodSeconds,
+                                ownerReferences: activeWorkload.config.podOwnerReferences,
+                                name: activeWorkload.config.podName,
+                                containers: activeWorkload.config.containers,
+                                initContainers: activeWorkload.config.initContainers,
+                                ephemeralContainers: activeWorkload.config.ephemeralContainers,
+                                volumes: activeWorkload.config.volumes,
+                                podDeathTime: activeWorkload.config.podDeathTime,
+                                terminationGracePeriodSeconds: activeWorkload.config.terminationGracePeriodSeconds,
+                                restartPolicy: activeWorkload.config.restartPolicy,
+                                nodeName: activeWorkload.config.nodeName,
+                                priority: activeWorkload.config.priority,
+                                priorityClassName: activeWorkload.config.priorityClassName,
+                                serviceAccountName: activeWorkload.config.serviceAccountName,
+                                automountServiceAccountToken: activeWorkload.config.automountServiceAccountToken,
+                                hostname: activeWorkload.config.hostname,
+                                subdomain: activeWorkload.config.subdomain,
+                                dnsPolicy: activeWorkload.config.dnsPolicy,
+                                enableServiceLinks: activeWorkload.config.enableServiceLinks,
+                                hostIPC: activeWorkload.config.hostIPC,
+                                hostNetwork: activeWorkload.config.hostNetwork,
+                                hostPID: activeWorkload.config.hostPID,
+                                hostUsers: activeWorkload.config.hostUsers,
+                                shareProcessNamespace: activeWorkload.config.shareProcessNamespace,
+                                dnsConfig: activeWorkload.config.dnsConfig,
+                                hostAliases: activeWorkload.config.hostAliases,
+                                tolerations: activeWorkload.config.tolerations,
+                                topologySpreadConstraints: activeWorkload.config.topologySpreadConstraints,
+                                affinity: activeWorkload.config.affinity,
+                                imagePullSecrets: activeWorkload.config.imagePullSecrets,
+                                runtimeClassName: activeWorkload.config.runtimeClassName,
+                                securityContext: activeWorkload.config.securityContext,
+                              }}
                               globalNamespace={globalNamespace}
-                              onConfigChange={(key, value) => updateWorkloadConfig(activeWorkload.id, key, value)}
+                              onConfigChange={(key, value) => {
+                                const metadataKeys = ['labels', 'annotations', 'deletionGracePeriodSeconds', 'ownerReferences'];
+                                if (metadataKeys.includes(key)) {
+                                  const configKey = 'pod' + key.charAt(0).toUpperCase() + key.slice(1);
+                                  updateWorkloadConfig(activeWorkload.id, configKey, value);
+                                } else {
+                                  updateWorkloadConfig(activeWorkload.id, key, value);
+                                }
+                              }}
                             />
                           </div>
                         )}
