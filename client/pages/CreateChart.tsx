@@ -108,11 +108,8 @@ interface PodConfig {
 
 interface WorkloadConfig extends PodConfig {
   // Pod
-  podLabels?: Record<string, string>;
-  podAnnotations?: Record<string, string>;
   podDeletionGracePeriodSeconds?: number;
   podOwnerReferences?: OwnerReference[];
-  podName?: string;
 
   // Deployment
   deploymentLabels?: Record<string, string>;
