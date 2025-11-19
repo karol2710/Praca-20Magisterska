@@ -669,12 +669,72 @@ export function generateCronJobYAML(cronJobName: string, cronJobConfig: Record<s
   const spec: Record<string, any> = {};
 
   if (cronJobConfig.spec?.schedule) spec.schedule = cronJobConfig.spec.schedule;
+  if (cronJobConfig.spec?.concurrencyPolicy) spec.concurrencyPolicy = cronJobConfig.spec.concurrencyPolicy;
+  if (cronJobConfig.spec?.failedJobsHistoryLimit !== undefined) spec.failedJobsHistoryLimit = cronJobConfig.spec.failedJobsHistoryLimit;
+  if (cronJobConfig.spec?.startingDeadlineSeconds !== undefined) spec.startingDeadlineSeconds = cronJobConfig.spec.startingDeadlineSeconds;
+  if (cronJobConfig.spec?.successfulJobsHistoryLimit !== undefined) spec.successfulJobsHistoryLimit = cronJobConfig.spec.successfulJobsHistoryLimit;
+  if (cronJobConfig.spec?.timeZone) spec.timeZone = cronJobConfig.spec.timeZone;
 
   if (cronJobConfig.spec?.jobTemplate) {
     spec.jobTemplate = {
       metadata: {},
       spec: {},
     };
+
+    if (cronJobConfig.spec.jobTemplate.metadata?.labels && Object.keys(cronJobConfig.spec.jobTemplate.metadata.labels).length > 0) {
+      spec.jobTemplate.metadata.labels = cronJobConfig.spec.jobTemplate.metadata.labels;
+    }
+
+    if (cronJobConfig.spec.jobTemplate.metadata?.annotations && Object.keys(cronJobConfig.spec.jobTemplate.metadata.annotations).length > 0) {
+      spec.jobTemplate.metadata.annotations = cronJobConfig.spec.jobTemplate.metadata.annotations;
+    }
+
+    spec.jobTemplate.metadata = cleanEmptyValues(spec.jobTemplate.metadata);
+
+    if (cronJobConfig.spec.jobTemplate.spec) {
+      const jobSpec = cronJobConfig.spec.jobTemplate.spec;
+      const jobSpecObj: Record<string, any> = {};
+
+      if (jobSpec.activeDeadlineSeconds !== undefined) jobSpecObj.activeDeadlineSeconds = jobSpec.activeDeadlineSeconds;
+      if (jobSpec.backoffLimit !== undefined) jobSpecObj.backoffLimit = jobSpec.backoffLimit;
+      if (jobSpec.backoffLimitPerIndex !== undefined) jobSpecObj.backoffLimitPerIndex = jobSpec.backoffLimitPerIndex;
+      if (jobSpec.completionMode) jobSpecObj.completionMode = jobSpec.completionMode;
+      if (jobSpec.completions !== undefined) jobSpecObj.completions = jobSpec.completions;
+      if (jobSpec.manualSelector !== undefined) jobSpecObj.manualSelector = jobSpec.manualSelector;
+      if (jobSpec.maxFailedIndexes !== undefined) jobSpecObj.maxFailedIndexes = jobSpec.maxFailedIndexes;
+      if (jobSpec.parallelism !== undefined) jobSpecObj.parallelism = jobSpec.parallelism;
+      if (jobSpec.podReplacementPolicy) jobSpecObj.podReplacementPolicy = jobSpec.podReplacementPolicy;
+      if (jobSpec.ttlSecondsAfterFinished !== undefined) jobSpecObj.ttlSecondsAfterFinished = jobSpec.ttlSecondsAfterFinished;
+
+      if (jobSpec.selector) {
+        jobSpecObj.selector = jobSpec.selector;
+      }
+
+      if (jobSpec.podFailurePolicy?.rules && jobSpec.podFailurePolicy.rules.length > 0) {
+        jobSpecObj.podFailurePolicy = {
+          rules: jobSpec.podFailurePolicy.rules.map((rule: Record<string, any>) => {
+            const cleanedRule: Record<string, any> = {};
+            if (rule.action) cleanedRule.action = rule.action;
+            if (rule.onExitCodes) cleanedRule.onExitCodes = rule.onExitCodes;
+            if (rule.onPodConditions) cleanedRule.onPodConditions = rule.onPodConditions;
+            return cleanEmptyValues(cleanedRule);
+          }),
+        };
+      }
+
+      if (jobSpec.successPolicy?.rules && jobSpec.successPolicy.rules.length > 0) {
+        jobSpecObj.successPolicy = {
+          rules: jobSpec.successPolicy.rules.map((rule: Record<string, any>) => {
+            const cleanedRule: Record<string, any> = {};
+            if (rule.succeededCount !== undefined) cleanedRule.succeededCount = rule.succeededCount;
+            if (rule.succeededIndexes) cleanedRule.succeededIndexes = rule.succeededIndexes;
+            return cleanEmptyValues(cleanedRule);
+          }),
+        };
+      }
+
+      spec.jobTemplate.spec = jobSpecObj;
+    }
 
     if (cronJobConfig.spec.jobTemplate.template) {
       spec.jobTemplate.spec.template = {
@@ -692,8 +752,6 @@ export function generateCronJobYAML(cronJobName: string, cronJobConfig: Record<s
 
       spec.jobTemplate.spec.template.metadata = cleanEmptyValues(spec.jobTemplate.spec.template.metadata);
     }
-
-    spec.jobTemplate.metadata = cleanEmptyValues(spec.jobTemplate.metadata);
   }
 
   const yaml: Record<string, any> = {
