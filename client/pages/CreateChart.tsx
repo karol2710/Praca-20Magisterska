@@ -320,7 +320,7 @@ export default function CreateChart() {
             Object.assign(jobSpec, value);
           } else if (lowerKey === "template") {
             jobTemplate.template = value;
-          } else if (lowerKey === "labels" || lowerKey === "annotations" || lowerKey === "namespace") {
+          } else if (lowerKey === "labels" || lowerKey === "annotations" || lowerKey === "namespace" || lowerKey === "ownerReferences" || lowerKey === "deletionGracePeriodSeconds") {
             jobMetadata[lowerKey] = value;
           }
         }
