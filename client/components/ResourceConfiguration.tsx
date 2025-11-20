@@ -3641,23 +3641,6 @@ export default function ResourceConfiguration({ config, onConfigChange }: Resour
                             <option value="SCTP">SCTP</option>
                           </select>
                         </div>
-                        <div>
-                          <label className="block text-xs font-medium text-foreground mb-1">Node Port</label>
-                          <input
-                            type="number"
-                            value={port.nodePort || ""}
-                            onChange={(e) => {
-                              const updated = [...(config.spec?.ports || [])];
-                              updated[idx] = {
-                                ...port,
-                                nodePort: e.target.value ? parseInt(e.target.value) : undefined,
-                              };
-                              onConfigChange("spec", { ...(config.spec || {}), ports: updated });
-                            }}
-                            placeholder="30000"
-                            className="input-field text-sm"
-                          />
-                        </div>
                       </div>
                       <div>
                         <label className="block text-xs font-medium text-foreground mb-1">App Protocol</label>
