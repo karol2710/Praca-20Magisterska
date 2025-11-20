@@ -1901,25 +1901,9 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                           <label className="block text-xs font-medium text-foreground mb-1">Namespace</label>
                                           <input
                                             type="text"
-                                            value={filter.requestMirror?.backendRef?.namespace || globalNamespace || ""}
-                                            onChange={(e) => {
-                                              const updated = [...((config.spec as HTTPRouteSpec)?.rules || [])];
-                                              const filters = [...(updated[rIdx]?.filters || [])];
-                                              filters[fIdx] = {
-                                                ...filter,
-                                                requestMirror: {
-                                                  ...filter.requestMirror,
-                                                  backendRef: {
-                                                    ...filter.requestMirror?.backendRef,
-                                                    namespace: e.target.value || undefined,
-                                                  },
-                                                },
-                                              };
-                                              updated[rIdx] = { ...rule, filters };
-                                              onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
-                                            }}
-                                            placeholder={globalNamespace || "default"}
-                                            className="input-field text-xs"
+                                            value={globalNamespace || ""}
+                                            disabled
+                                            className="input-field text-xs opacity-60 cursor-not-allowed"
                                           />
                                         </div>
                                         <div>
@@ -2324,16 +2308,9 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                     <label className="block text-xs font-medium text-foreground mb-1">Namespace</label>
                                     <input
                                       type="text"
-                                      value={backend.namespace || globalNamespace || ""}
-                                      onChange={(e) => {
-                                        const updated = [...((config.spec as HTTPRouteSpec)?.rules || [])];
-                                        const backends = [...(updated[rIdx]?.backendRefs || [])];
-                                        backends[bIdx] = { ...backend, namespace: e.target.value || undefined };
-                                        updated[rIdx] = { ...rule, backendRefs: backends };
-                                        onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
-                                      }}
-                                      placeholder={globalNamespace || "default"}
-                                      className="input-field text-xs"
+                                      value={globalNamespace || ""}
+                                      disabled
+                                      className="input-field text-xs opacity-60 cursor-not-allowed"
                                     />
                                   </div>
                                   <div>
@@ -4747,25 +4724,9 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                         />
                                         <input
                                           type="text"
-                                          value={filter.requestMirror?.backendRef?.namespace || globalNamespace || ""}
-                                          onChange={(e) => {
-                                            const updated = [...((config.spec as GRPCRouteSpec)?.rules || [])];
-                                            const filters = [...(updated[rIdx]?.filters || [])];
-                                            filters[fIdx] = {
-                                              ...filter,
-                                              requestMirror: {
-                                                ...filter.requestMirror,
-                                                backendRef: {
-                                                  ...filter.requestMirror?.backendRef,
-                                                  namespace: e.target.value || undefined,
-                                                },
-                                              },
-                                            };
-                                            updated[rIdx] = { ...rule, filters };
-                                            onConfigChange("spec", { ...(config.spec as GRPCRouteSpec || {}), rules: updated });
-                                          }}
-                                          placeholder={globalNamespace || "Namespace"}
-                                          className="input-field text-xs"
+                                          value={globalNamespace || ""}
+                                          disabled
+                                          className="input-field text-xs opacity-60 cursor-not-allowed"
                                         />
                                         <input
                                           type="number"
@@ -4927,16 +4888,9 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                     <label className="block text-xs font-medium text-foreground mb-1">Namespace</label>
                                     <input
                                       type="text"
-                                      value={backend.namespace || globalNamespace || ""}
-                                      onChange={(e) => {
-                                        const updated = [...((config.spec as GRPCRouteSpec)?.rules || [])];
-                                        const backends = [...(updated[rIdx]?.backendRefs || [])];
-                                        backends[bIdx] = { ...backend, namespace: e.target.value || undefined };
-                                        updated[rIdx] = { ...rule, backendRefs: backends };
-                                        onConfigChange("spec", { ...(config.spec as GRPCRouteSpec || {}), rules: updated });
-                                      }}
-                                      placeholder={globalNamespace || "default"}
-                                      className="input-field text-xs"
+                                      value={globalNamespace || ""}
+                                      disabled
+                                      className="input-field text-xs opacity-60 cursor-not-allowed"
                                     />
                                   </div>
                                   <div>
@@ -5495,18 +5449,9 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                               />
                                               <input
                                                 type="text"
-                                                value={bFilter.requestMirror?.backendRef?.namespace || globalNamespace || ""}
-                                                onChange={(e) => {
-                                                  const updated = [...((config.spec as GRPCRouteSpec)?.rules || [])];
-                                                  const backends = [...(updated[rIdx]?.backendRefs || [])];
-                                                  const filters = [...(backends[bIdx]?.filters || [])];
-                                                  filters[bfIdx] = { ...bFilter, requestMirror: { ...bFilter.requestMirror, backendRef: { ...bFilter.requestMirror?.backendRef, namespace: e.target.value || undefined } } };
-                                                  backends[bIdx] = { ...backend, filters };
-                                                  updated[rIdx] = { ...rule, backendRefs: backends };
-                                                  onConfigChange("spec", { ...(config.spec as GRPCRouteSpec || {}), rules: updated });
-                                                }}
-                                                placeholder={globalNamespace || "Namespace"}
-                                                className="input-field text-xs"
+                                                value={globalNamespace || ""}
+                                                disabled
+                                                className="input-field text-xs opacity-60 cursor-not-allowed"
                                               />
                                               <input
                                                 type="number"
