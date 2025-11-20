@@ -821,6 +821,45 @@ export function generateResourceYAML(resourceName: string, resourceType: string,
         },
       };
     }
+  } else if (resourceType === "HTTPRoute" && resourceConfig.spec) {
+    // HTTPRoute-specific spec fields
+    const httpRouteSpec = resourceConfig.spec;
+
+    // Static parentRefs that should always be included
+    spec.parentRefs = [
+      {
+        name: "platform-gateway",
+        namespace: "envoy-gateway-system",
+      },
+    ];
+
+    if (httpRouteSpec.hostnames && httpRouteSpec.hostnames.length > 0) {
+      spec.hostnames = httpRouteSpec.hostnames;
+    }
+
+    if (httpRouteSpec.rules && httpRouteSpec.rules.length > 0) {
+      spec.rules = httpRouteSpec.rules.map((rule: Record<string, any>) => {
+        const ruleObj: Record<string, any> = {};
+        if (rule.sectionName) ruleObj.name = rule.sectionName;
+        if (rule.matches && rule.matches.length > 0) ruleObj.matches = rule.matches;
+        if (rule.filters && rule.filters.length > 0) ruleObj.filters = rule.filters;
+        if (rule.backendRefs && rule.backendRefs.length > 0) {
+          ruleObj.backendRefs = rule.backendRefs.map((backend: Record<string, any>) => {
+            const backendObj: Record<string, any> = {};
+            if (backend.name) backendObj.name = backend.name;
+            if (backend.weight !== undefined) backendObj.weight = backend.weight;
+            if (backend.group) backendObj.group = backend.group;
+            if (backend.kind) backendObj.kind = backend.kind;
+            if (backend.namespace) backendObj.namespace = backend.namespace;
+            if (backend.port !== undefined) backendObj.port = backend.port;
+            if (backend.filters && backend.filters.length > 0) backendObj.filters = backend.filters;
+            return cleanEmptyValues(backendObj);
+          });
+        }
+        if (rule.timeouts) ruleObj.timeouts = rule.timeouts;
+        return cleanEmptyValues(ruleObj);
+      });
+    }
   } else {
     // For other resource types, use spec as-is
     if (resourceConfig.spec) {
