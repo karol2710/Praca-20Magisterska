@@ -480,6 +480,25 @@ export default function CreateChart() {
         };
       }
 
+      // Initialize spec for LimitRange with default limits
+      if (selectedResourceType === "LimitRange") {
+        newResource.spec = {
+          limits: [
+            {
+              type: "Pod",
+              max: {
+                cpu: "1",
+                memory: "1Gi",
+              },
+              min: {
+                cpu: "100m",
+                memory: "128Mi",
+              },
+            },
+          ],
+        };
+      }
+
       setResources([...resources, newResource]);
       setNewResourceName("");
     }
