@@ -446,22 +446,21 @@ export default function CreateChart() {
 
   const addResource = () => {
     if (newResourceName.trim()) {
-      const data: any = {};
-
-      // Initialize spec for VolumeAttributesClass with default driverName
-      if (selectedResourceType === "VolumeAttributesClass") {
-        data.spec = {
-          driverName: "driver.longhorn.io",
-        };
-      }
-
-      const newResource: Resource = {
+      const newResource: any = {
         id: Date.now().toString(),
         name: newResourceName,
         type: selectedResourceType,
         namespace: globalNamespace,
-        data,
+        data: {},
       };
+
+      // Initialize spec for VolumeAttributesClass with default driverName
+      if (selectedResourceType === "VolumeAttributesClass") {
+        newResource.spec = {
+          driverName: "driver.longhorn.io",
+        };
+      }
+
       setResources([...resources, newResource]);
       setNewResourceName("");
     }
