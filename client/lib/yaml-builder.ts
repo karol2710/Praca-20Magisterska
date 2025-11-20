@@ -785,7 +785,48 @@ export function generateResourceYAML(resourceName: string, resourceType: string,
     metadata.ownerReferences = resourceConfig.ownerReferences;
   }
 
-  const spec: Record<string, any> = resourceConfig.spec || {};
+  const spec: Record<string, any> = {};
+
+  // Service-specific spec fields
+  if (resourceType === "Service" && resourceConfig.spec) {
+    const serviceSpec = resourceConfig.spec;
+
+    if (serviceSpec.type) spec.type = serviceSpec.type;
+    if (serviceSpec.externalName) spec.externalName = serviceSpec.externalName;
+    if (serviceSpec.ports && serviceSpec.ports.length > 0) {
+      spec.ports = serviceSpec.ports.map((port: Record<string, any>) => {
+        const portObj: Record<string, any> = {};
+        if (port.name) portObj.name = port.name;
+        if (port.port !== undefined) portObj.port = port.port;
+        if (port.targetPort !== undefined) portObj.targetPort = port.targetPort;
+        if (port.protocol) portObj.protocol = port.protocol;
+        if (port.appProtocol) portObj.appProtocol = port.appProtocol;
+        return cleanEmptyValues(portObj);
+      });
+    }
+
+    if (serviceSpec.selector && Object.keys(serviceSpec.selector).length > 0) {
+      spec.selector = serviceSpec.selector;
+    }
+
+    if (serviceSpec.publishNotReadyAddresses !== undefined) spec.publishNotReadyAddresses = serviceSpec.publishNotReadyAddresses;
+    if (serviceSpec.trafficDistribution) spec.trafficDistribution = serviceSpec.trafficDistribution;
+    if (serviceSpec.sessionAffinity) spec.sessionAffinity = serviceSpec.sessionAffinity;
+
+    // Handle sessionAffinityTimeout with nested structure
+    if (serviceSpec.sessionAffinityTimeout !== undefined && serviceSpec.sessionAffinity === "ClientIP") {
+      spec.sessionAffinityConfig = {
+        clientIP: {
+          timeoutSeconds: serviceSpec.sessionAffinityTimeout,
+        },
+      };
+    }
+  } else {
+    // For other resource types, use spec as-is
+    if (resourceConfig.spec) {
+      Object.assign(spec, resourceConfig.spec);
+    }
+  }
 
   const apiVersions: Record<string, string> = {
     Service: "v1",
