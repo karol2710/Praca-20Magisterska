@@ -439,6 +439,7 @@ export default function CreateChart() {
         id: Date.now().toString(),
         name: newResourceName,
         type: selectedResourceType,
+        namespace: globalNamespace,
         data: {},
       };
       setResources([...resources, newResource]);
