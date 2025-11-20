@@ -14,7 +14,7 @@ import { generatePodYAML, generateDeploymentYAML, generateReplicaSetYAML, genera
 type ChartMode = "standard" | "advanced";
 type InputType = "file" | "repo";
 type WorkloadType = "Pod" | "Deployment" | "ReplicaSet" | "StatefulSet" | "Job" | "CronJob";
-type ResourceType = "Service" | "HTTPRoute" | "GRPCRoute" | "StorageClass" | "PersistentVolume" | "PersistentVolumeClaim" | "VolumeAttributesClass" | "ConfigMap" | "Secret" | "LimitRange" | "RuntimeClass";
+type ResourceType = "Service" | "HTTPRoute" | "GRPCRoute" | "PersistentVolume" | "PersistentVolumeClaim" | "VolumeAttributesClass" | "ConfigMap" | "Secret" | "LimitRange" | "RuntimeClass";
 type RestartPolicy = "Always" | "OnFailure" | "Never";
 type DNSPolicy = "ClusterFirstWithHostNet" | "ClusterFirst" | "Default" | "None";
 
@@ -233,7 +233,7 @@ interface Resource {
 }
 
 const workloadTypes: WorkloadType[] = ["Pod", "Deployment", "ReplicaSet", "StatefulSet", "Job", "CronJob"];
-const resourceTypes: ResourceType[] = ["Service", "HTTPRoute", "GRPCRoute", "StorageClass", "PersistentVolume", "PersistentVolumeClaim", "VolumeAttributesClass", "ConfigMap", "Secret", "LimitRange", "RuntimeClass"];
+const resourceTypes: ResourceType[] = ["Service", "HTTPRoute", "GRPCRoute", "PersistentVolume", "PersistentVolumeClaim", "VolumeAttributesClass", "ConfigMap", "Secret", "LimitRange", "RuntimeClass"];
 
 export default function CreateChart() {
   const [mode, setMode] = useState<ChartMode>("standard");
