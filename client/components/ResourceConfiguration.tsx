@@ -3495,14 +3495,15 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                 </label>
                 <select
                   id="serviceType"
-                  value={config.spec?.type || "ClusterIP"}
+                  value={config.spec?.type || ""} // Default to empty string to represent "Select Type"
                   onChange={(e) => {
-                    const newType = e.target.value as "ClusterIP" | "ExternalName";
+                    const newType = e.target.value || undefined; // Use undefined if empty string is selected
                     const updatedSpec = { ...(config.spec || {}), type: newType };
                     onConfigChange("spec", updatedSpec);
                   }}
                   className="input-field"
                 >
+                  <option value="">Select Type</option> {/* Neutral default option */}
                   <option value="ClusterIP">ClusterIP</option>
                   <option value="ExternalName">ExternalName</option>
                 </select>
