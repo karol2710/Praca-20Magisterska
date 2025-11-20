@@ -26,6 +26,7 @@ interface ServiceSpec {
   publishNotReadyAddresses?: boolean;
   selector?: Record<string, string>;
   sessionAffinity?: "ClientIP" | "None";
+  sessionAffinityTimeout?: number;
   trafficDistribution?: string;
 }
 
