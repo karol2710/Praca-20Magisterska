@@ -3777,6 +3777,28 @@ export default function ResourceConfiguration({ config, onConfigChange }: Resour
                 <p className="text-xs text-foreground/50 mt-1">Affinity for session persistence</p>
               </div>
 
+              {/* Session Affinity Timeout */}
+              <div className="border-t border-border pt-4">
+                <label htmlFor="sessionAffinityTimeout" className="block text-sm font-medium text-foreground mb-2">
+                  Session Affinity Timeout (seconds)
+                </label>
+                <input
+                  id="sessionAffinityTimeout"
+                  type="number"
+                  value={config.spec?.sessionAffinityTimeout || ""}
+                  onChange={(e) => {
+                    onConfigChange("spec", {
+                      ...(config.spec || {}),
+                      sessionAffinityTimeout: e.target.value ? parseInt(e.target.value) : undefined,
+                    });
+                  }}
+                  placeholder="10800"
+                  className="input-field"
+                  min="0"
+                />
+                <p className="text-xs text-foreground/50 mt-1">Timeout for client IP based session affinity in seconds</p>
+              </div>
+
               {/* Traffic Distribution */}
               <div className="border-t border-border pt-4">
                 <label htmlFor="trafficDistribution" className="block text-sm font-medium text-foreground mb-2">
