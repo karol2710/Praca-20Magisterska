@@ -8420,14 +8420,8 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                   id="driverName"
                   type="text"
                   value={(config.spec as VolumeAttributesClassSpec)?.driverName || ""}
-                  onChange={(e) => {
-                    onConfigChange("spec", {
-                      ...(config.spec as VolumeAttributesClassSpec || {}),
-                      driverName: e.target.value || undefined,
-                    });
-                  }}
-                  placeholder="e.g., driver.longhorn.io"
-                  className="input-field text-sm"
+                  disabled
+                  className="input-field text-sm opacity-60 cursor-not-allowed"
                 />
                 <p className="text-xs text-foreground/50 mt-1">Storage driver implementation</p>
               </div>
