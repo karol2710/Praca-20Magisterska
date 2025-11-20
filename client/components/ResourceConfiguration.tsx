@@ -1901,7 +1901,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                           <label className="block text-xs font-medium text-foreground mb-1">Namespace</label>
                                           <input
                                             type="text"
-                                            value={filter.requestMirror?.backendRef?.namespace || ""}
+                                            value={filter.requestMirror?.backendRef?.namespace || globalNamespace || ""}
                                             onChange={(e) => {
                                               const updated = [...((config.spec as HTTPRouteSpec)?.rules || [])];
                                               const filters = [...(updated[rIdx]?.filters || [])];
@@ -1918,7 +1918,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                               updated[rIdx] = { ...rule, filters };
                                               onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
                                             }}
-                                            placeholder="default"
+                                            placeholder={globalNamespace || "default"}
                                             className="input-field text-xs"
                                           />
                                         </div>
@@ -2324,7 +2324,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                     <label className="block text-xs font-medium text-foreground mb-1">Namespace</label>
                                     <input
                                       type="text"
-                                      value={backend.namespace || ""}
+                                      value={backend.namespace || globalNamespace || ""}
                                       onChange={(e) => {
                                         const updated = [...((config.spec as HTTPRouteSpec)?.rules || [])];
                                         const backends = [...(updated[rIdx]?.backendRefs || [])];
@@ -2332,7 +2332,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                         updated[rIdx] = { ...rule, backendRefs: backends };
                                         onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
                                       }}
-                                      placeholder="default"
+                                      placeholder={globalNamespace || "default"}
                                       className="input-field text-xs"
                                     />
                                   </div>
