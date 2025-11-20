@@ -178,7 +178,6 @@ interface ServicePort {
   port: number;
   targetPort?: number | string;
   protocol?: "TCP" | "UDP" | "SCTP";
-  nodePort?: number;
   appProtocol?: string;
 }
 
