@@ -263,7 +263,6 @@ interface PersistentVolumeSpec {
   accessModes?: string[];
   capacity?: Record<string, string>;
   claimRef?: ClaimReference;
-  mountOptions?: string[];
   persistentVolumeReclaimPolicy?: string;
   storageClassName?: string;
   volumeAttributesClassName?: string;
@@ -7805,62 +7804,6 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                   placeholder="e.g., premium"
                   className="input-field"
                 />
-              </div>
-
-              {/* Mount Options */}
-              <div className="border-t border-border pt-4">
-                <div className="flex items-center justify-between mb-3">
-                  <label className="block text-sm font-medium text-foreground">Mount Options</label>
-                  <button
-                    onClick={() => {
-                      const mountOptions = (config.spec as PersistentVolumeSpec)?.mountOptions || [];
-                      onConfigChange("spec", {
-                        ...(config.spec as PersistentVolumeSpec || {}),
-                        mountOptions: [...mountOptions, ""],
-                      });
-                    }}
-                    className="text-primary hover:opacity-70 text-sm"
-                  >
-                    + Add Option
-                  </button>
-                </div>
-
-                {((config.spec as PersistentVolumeSpec)?.mountOptions && (config.spec as PersistentVolumeSpec)?.mountOptions!.length > 0) ? (
-                  <div className="space-y-2">
-                    {((config.spec as PersistentVolumeSpec)?.mountOptions || []).map((option, idx) => (
-                      <div key={idx} className="flex gap-2 items-center">
-                        <input
-                          type="text"
-                          value={option || ""}
-                          onChange={(e) => {
-                            const updated = [...((config.spec as PersistentVolumeSpec)?.mountOptions || [])];
-                            updated[idx] = e.target.value;
-                            onConfigChange("spec", {
-                              ...(config.spec as PersistentVolumeSpec || {}),
-                              mountOptions: updated,
-                            });
-                          }}
-                          placeholder="e.g., noatime"
-                          className="input-field text-sm flex-1"
-                        />
-                        <button
-                          onClick={() => {
-                            const updated = ((config.spec as PersistentVolumeSpec)?.mountOptions || []).filter((_, i) => i !== idx);
-                            onConfigChange("spec", {
-                              ...(config.spec as PersistentVolumeSpec || {}),
-                              mountOptions: updated.length > 0 ? updated : undefined,
-                            });
-                          }}
-                          className="text-destructive hover:opacity-70"
-                        >
-                          <X className="w-4 h-4" />
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-foreground/60 text-sm py-2">No mount options defined</p>
-                )}
               </div>
 
               {/* Claim Reference */}
