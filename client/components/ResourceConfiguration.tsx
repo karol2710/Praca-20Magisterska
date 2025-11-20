@@ -263,11 +263,7 @@ interface PersistentVolumeSpec {
   accessModes?: string[];
   capacity?: Record<string, string>;
   claimRef?: ClaimReference;
-  local?: {
-    path?: string;
-  };
   mountOptions?: string[];
-  nodeAffinity?: NodeAffinity;
   persistentVolumeReclaimPolicy?: string;
   storageClassName?: string;
   volumeAttributesClassName?: string;
@@ -7811,26 +7807,6 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                 />
               </div>
 
-              {/* Local Path */}
-              <div className="border-t border-border pt-4">
-                <label htmlFor="localPath" className="block text-sm font-medium text-foreground mb-2">
-                  Local Path
-                </label>
-                <input
-                  id="localPath"
-                  type="text"
-                  value={(config.spec as PersistentVolumeSpec)?.local?.path || ""}
-                  onChange={(e) => {
-                    onConfigChange("spec", {
-                      ...(config.spec as PersistentVolumeSpec || {}),
-                      local: e.target.value ? { path: e.target.value } : undefined,
-                    });
-                  }}
-                  placeholder="e.g., /mnt/data"
-                  className="input-field"
-                />
-              </div>
-
               {/* Mount Options */}
               <div className="border-t border-border pt-4">
                 <div className="flex items-center justify-between mb-3">
@@ -8005,24 +7981,6 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                     />
                   </div>
 
-                  <div>
-                    <label htmlFor="claimRef-uid" className="block text-xs font-medium text-foreground/70 mb-1">
-                      UID
-                    </label>
-                    <input
-                      id="claimRef-uid"
-                      type="text"
-                      value={(config.spec as PersistentVolumeSpec)?.claimRef?.uid || ""}
-                      onChange={(e) => {
-                        onConfigChange("spec", {
-                          ...(config.spec as PersistentVolumeSpec || {}),
-                          claimRef: { ...(config.spec as PersistentVolumeSpec)?.claimRef, uid: e.target.value || undefined },
-                        });
-                      }}
-                      placeholder="Optional"
-                      className="input-field text-sm"
-                    />
-                  </div>
                 </div>
               </div>
 
