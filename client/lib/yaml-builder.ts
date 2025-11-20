@@ -764,3 +764,50 @@ export function generateCronJobYAML(cronJobName: string, cronJobConfig: Record<s
   const cleaned = cleanEmptyValues(yaml);
   return YAML.dump(cleaned, { indent: 2 });
 }
+
+export function generateResourceYAML(resourceName: string, resourceType: string, resourceConfig: Record<string, any>, namespace?: string): string {
+  const metadata: Record<string, any> = {
+    name: resourceName,
+  };
+
+  if (namespace) metadata.namespace = namespace;
+  if (resourceConfig.deletionGracePeriodSeconds) metadata.deletionGracePeriodSeconds = resourceConfig.deletionGracePeriodSeconds;
+
+  if (resourceConfig.annotations && Object.keys(resourceConfig.annotations).length > 0) {
+    metadata.annotations = resourceConfig.annotations;
+  }
+
+  if (resourceConfig.labels && Object.keys(resourceConfig.labels).length > 0) {
+    metadata.labels = resourceConfig.labels;
+  }
+
+  if (resourceConfig.ownerReferences && resourceConfig.ownerReferences.length > 0) {
+    metadata.ownerReferences = resourceConfig.ownerReferences;
+  }
+
+  const spec: Record<string, any> = resourceConfig.spec || {};
+
+  const apiVersions: Record<string, string> = {
+    Service: "v1",
+    HTTPRoute: "gateway.networking.k8s.io/v1beta1",
+    GRPCRoute: "gateway.networking.k8s.io/v1",
+    StorageClass: "storage.k8s.io/v1",
+    PersistentVolume: "v1",
+    PersistentVolumeClaim: "v1",
+    VolumeAttributesClass: "storage.k8s.io/v1alpha1",
+    ConfigMap: "v1",
+    Secret: "v1",
+    LimitRange: "v1",
+    RuntimeClass: "node.k8s.io/v1",
+  };
+
+  const yaml: Record<string, any> = {
+    apiVersion: apiVersions[resourceType] || "v1",
+    kind: resourceType,
+    metadata: cleanEmptyValues(metadata),
+    spec: cleanEmptyValues(spec),
+  };
+
+  const cleaned = cleanEmptyValues(yaml);
+  return YAML.dump(cleaned, { indent: 2 });
+}
