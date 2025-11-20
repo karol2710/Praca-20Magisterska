@@ -1038,6 +1038,24 @@ export function generateResourceYAML(resourceName: string, resourceType: string,
     if (secretSpec.data && Object.keys(secretSpec.data).length > 0) {
       spec.data = addTrailingNewlinesToMultilineValues(secretSpec.data);
     }
+  } else if (resourceType === "LimitRange" && resourceConfig.spec) {
+    // LimitRange-specific spec fields
+    const limitRangeSpec = resourceConfig.spec;
+
+    if (limitRangeSpec.limits && Array.isArray(limitRangeSpec.limits)) {
+      spec.limits = limitRangeSpec.limits.map((item: any) => {
+        const cleanedItem: Record<string, any> = {};
+
+        if (item.type) cleanedItem.type = item.type;
+        if (item.default && Object.keys(item.default).length > 0) cleanedItem.default = item.default;
+        if (item.defaultRequest && Object.keys(item.defaultRequest).length > 0) cleanedItem.defaultRequest = item.defaultRequest;
+        if (item.max && Object.keys(item.max).length > 0) cleanedItem.max = item.max;
+        if (item.min && Object.keys(item.min).length > 0) cleanedItem.min = item.min;
+        if (item.maxLimitRequestRatio && Object.keys(item.maxLimitRequestRatio).length > 0) cleanedItem.maxLimitRequestRatio = item.maxLimitRequestRatio;
+
+        return cleanedItem;
+      }).filter((item: Record<string, any>) => Object.keys(item).length > 0);
+    }
   } else {
     // For other resource types, use spec as-is
     if (resourceConfig.spec) {
