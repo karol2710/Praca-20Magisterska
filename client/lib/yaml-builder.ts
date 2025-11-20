@@ -381,7 +381,19 @@ function buildWorkloadYAML(
   };
 
   const cleaned = cleanEmptyValues(yaml);
-  return YAML.dump(cleaned, { indent: 2 });
+  return YAML.dump(cleaned, yamlDumpOptions);
+}
+
+function addTrailingNewlinesToMultilineValues(obj: Record<string, any>): Record<string, any> {
+  const result: Record<string, any> = {};
+  for (const [key, value] of Object.entries(obj)) {
+    if (typeof value === 'string' && value.includes('\n') && !value.endsWith('\n')) {
+      result[key] = value + '\n';
+    } else {
+      result[key] = value;
+    }
+  }
+  return result;
 }
 
 export function generateDeploymentYAML(deploymentName: string, deploymentConfig: Record<string, any>, containers: Container[], namespace?: string): string {
