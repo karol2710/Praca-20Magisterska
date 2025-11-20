@@ -1578,13 +1578,22 @@ export default function CreateChart() {
                     <div className="bg-card border border-border rounded-xl p-8">
                       <div className="flex items-center justify-between mb-6">
                         <h2 className="text-xl font-bold text-foreground">Configure "{activeResource.name}" ({activeResource.type})</h2>
-                        <button
-                          onClick={() => setActiveResourceId("")}
-                          className="text-destructive hover:bg-destructive/10 p-1 rounded hover:opacity-75 transition-opacity"
-                          title="Close configuration"
-                        >
-                          <X className="w-6 h-6" />
-                        </button>
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={handleViewResourceYaml}
+                            className="flex items-center gap-2 px-3 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity text-sm font-medium"
+                          >
+                            <Zap className="w-4 h-4" />
+                            View YAML
+                          </button>
+                          <button
+                            onClick={() => setActiveResourceId("")}
+                            className="text-destructive hover:bg-destructive/10 p-1 rounded hover:opacity-75 transition-opacity"
+                            title="Close configuration"
+                          >
+                            <X className="w-6 h-6" />
+                          </button>
+                        </div>
                       </div>
                       <ResourceConfiguration
                         config={{
