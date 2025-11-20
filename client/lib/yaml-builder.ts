@@ -993,6 +993,19 @@ export function generateResourceYAML(resourceName: string, resourceType: string,
         return cleanEmptyValues(ruleObj);
       });
     }
+  } else if (resourceType === "ConfigMap" && resourceConfig.spec) {
+    // ConfigMap-specific spec fields
+    const configMapSpec = resourceConfig.spec;
+
+    if (configMapSpec.immutable !== undefined) spec.immutable = configMapSpec.immutable;
+
+    if (configMapSpec.data && Object.keys(configMapSpec.data).length > 0) {
+      spec.data = configMapSpec.data;
+    }
+
+    if (configMapSpec.binaryData && Object.keys(configMapSpec.binaryData).length > 0) {
+      spec.binaryData = configMapSpec.binaryData;
+    }
   } else {
     // For other resource types, use spec as-is
     if (resourceConfig.spec) {
