@@ -232,6 +232,11 @@ function buildPodSpec(config: Record<string, any>, containers: Container[]): Rec
   return spec;
 }
 
+const yamlDumpOptions = {
+  indent: 2,
+  lineWidth: -1,
+};
+
 export function generatePodYAML(podName: string, podConfig: Record<string, any>, containers: Container[], namespace?: string): string {
   const metadata: Record<string, any> = {
     name: podName,
@@ -260,7 +265,7 @@ export function generatePodYAML(podName: string, podConfig: Record<string, any>,
   };
 
   const cleaned = cleanEmptyValues(yaml);
-  return YAML.dump(cleaned, { indent: 2 });
+  return YAML.dump(cleaned, yamlDumpOptions);
 }
 
 function buildWorkloadYAML(
