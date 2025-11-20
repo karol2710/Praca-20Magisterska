@@ -461,6 +461,15 @@ export default function CreateChart() {
         };
       }
 
+      // Initialize spec for ConfigMap with default data
+      if (selectedResourceType === "ConfigMap") {
+        newResource.spec = {
+          data: {
+            "key": "value",
+          },
+        };
+      }
+
       setResources([...resources, newResource]);
       setNewResourceName("");
     }
