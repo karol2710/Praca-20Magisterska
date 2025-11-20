@@ -907,6 +907,92 @@ export function generateResourceYAML(resourceName: string, resourceType: string,
         return cleanEmptyValues(ruleObj);
       });
     }
+  } else if (resourceType === "GRPCRoute" && resourceConfig.spec) {
+    // GRPCRoute-specific spec fields
+    const grpcRouteSpec = resourceConfig.spec;
+
+    // Static parentRefs that should always be included
+    spec.parentRefs = [
+      {
+        name: "platform-gateway",
+        namespace: "envoy-gateway-system",
+      },
+    ];
+
+    if (grpcRouteSpec.hostnames && grpcRouteSpec.hostnames.length > 0) {
+      spec.hostnames = grpcRouteSpec.hostnames;
+    }
+
+    if (grpcRouteSpec.rules && grpcRouteSpec.rules.length > 0) {
+      spec.rules = grpcRouteSpec.rules.map((rule: Record<string, any>) => {
+        const ruleObj: Record<string, any> = {};
+        if (rule.sectionName) ruleObj.name = rule.sectionName;
+        if (rule.matches && rule.matches.length > 0) ruleObj.matches = rule.matches;
+
+        if (rule.filters && rule.filters.length > 0) {
+          ruleObj.filters = rule.filters.map((filter: Record<string, any>) => {
+            const filterObj: Record<string, any> = { type: filter.type };
+            if (filter.requestHeaderModifier) filterObj.requestHeaderModifier = filter.requestHeaderModifier;
+            if (filter.responseHeaderModifier) filterObj.responseHeaderModifier = filter.responseHeaderModifier;
+            if (filter.requestRedirect) filterObj.requestRedirect = filter.requestRedirect;
+            if (filter.urlRewrite) filterObj.urlRewrite = filter.urlRewrite;
+
+            if (filter.requestMirror) {
+              filterObj.requestMirror = {};
+              if (filter.requestMirror.backendRef) {
+                filterObj.requestMirror.backendRef = {};
+                if (filter.requestMirror.backendRef.name) filterObj.requestMirror.backendRef.name = filter.requestMirror.backendRef.name;
+                if (filter.requestMirror.backendRef.port !== undefined) filterObj.requestMirror.backendRef.port = filter.requestMirror.backendRef.port;
+                filterObj.requestMirror.backendRef.namespace = namespace || "default";
+              }
+              if (filter.requestMirror.percent !== undefined) filterObj.requestMirror.percent = filter.requestMirror.percent;
+              if (filter.requestMirror.fraction) filterObj.requestMirror.fraction = filter.requestMirror.fraction;
+            }
+            return cleanEmptyValues(filterObj);
+          });
+        }
+
+        if (rule.backendRefs && rule.backendRefs.length > 0) {
+          ruleObj.backendRefs = rule.backendRefs.map((backend: Record<string, any>) => {
+            const backendObj: Record<string, any> = {};
+            if (backend.name) backendObj.name = backend.name;
+            if (backend.weight !== undefined) backendObj.weight = backend.weight;
+            if (backend.group) backendObj.group = backend.group;
+            if (backend.kind) backendObj.kind = backend.kind;
+            backendObj.namespace = namespace || "default";
+            if (backend.port !== undefined) backendObj.port = backend.port;
+
+            if (backend.filters && backend.filters.length > 0) {
+              backendObj.filters = backend.filters.map((bFilter: Record<string, any>) => {
+                const bFilterObj: Record<string, any> = { type: bFilter.type };
+                if (bFilter.requestHeaderModifier) bFilterObj.requestHeaderModifier = bFilter.requestHeaderModifier;
+                if (bFilter.responseHeaderModifier) bFilterObj.responseHeaderModifier = bFilter.responseHeaderModifier;
+                if (bFilter.requestRedirect) bFilterObj.requestRedirect = bFilter.requestRedirect;
+                if (bFilter.urlRewrite) bFilterObj.urlRewrite = bFilter.urlRewrite;
+
+                if (bFilter.requestMirror) {
+                  bFilterObj.requestMirror = {};
+                  if (bFilter.requestMirror.backendRef) {
+                    bFilterObj.requestMirror.backendRef = {};
+                    if (bFilter.requestMirror.backendRef.name) bFilterObj.requestMirror.backendRef.name = bFilter.requestMirror.backendRef.name;
+                    if (bFilter.requestMirror.backendRef.port !== undefined) bFilterObj.requestMirror.backendRef.port = bFilter.requestMirror.backendRef.port;
+                    bFilterObj.requestMirror.backendRef.namespace = namespace || "default";
+                  }
+                  if (bFilter.requestMirror.percent !== undefined) bFilterObj.requestMirror.percent = bFilter.requestMirror.percent;
+                  if (bFilter.requestMirror.fraction) bFilterObj.requestMirror.fraction = bFilter.requestMirror.fraction;
+                }
+                return cleanEmptyValues(bFilterObj);
+              });
+            }
+
+            return cleanEmptyValues(backendObj);
+          });
+        }
+
+        if (rule.timeouts) ruleObj.timeouts = rule.timeouts;
+        return cleanEmptyValues(ruleObj);
+      });
+    }
   } else {
     // For other resource types, use spec as-is
     if (resourceConfig.spec) {
