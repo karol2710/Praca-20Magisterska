@@ -374,6 +374,7 @@ interface ResourceConfig {
 interface ResourceConfigurationProps {
   config: ResourceConfig;
   onConfigChange: (key: keyof ResourceConfig, value: any) => void;
+  globalNamespace?: string;
 }
 
 const configSections: { [key: string]: { id: string; title: string; description: string }[] } = {
