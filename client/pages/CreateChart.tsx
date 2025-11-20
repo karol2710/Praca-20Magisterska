@@ -1579,7 +1579,6 @@ export default function CreateChart() {
                           id: activeResource.id,
                           name: activeResource.name,
                           type: activeResource.type,
-                          namespace: activeResource.namespace,
                           labels: activeResource.labels,
                           annotations: activeResource.annotations,
                           deletionGracePeriodSeconds: activeResource.deletionGracePeriodSeconds,
@@ -1587,6 +1586,7 @@ export default function CreateChart() {
                           spec: activeResource.spec,
                         }}
                         onConfigChange={updateResourceConfig}
+                        globalNamespace={globalNamespace}
                       />
                     </div>
                   )}
