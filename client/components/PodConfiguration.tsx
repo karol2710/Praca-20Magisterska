@@ -213,10 +213,11 @@ interface ConfigSection {
 interface ConfigField {
   key: keyof PodConfig;
   label: string;
-  type: "text" | "number" | "checkbox" | "select" | "tags";
+  type: "text" | "number" | "checkbox" | "select" | "tags" | "static-checkbox";
   placeholder?: string;
   options?: { value: string; label: string }[];
   description?: string;
+  staticValue?: boolean;
 }
 
 const configSections: ConfigSection[] = [
