@@ -840,13 +840,6 @@ export default function AffinityConfiguration({
         <h3 className="font-semibold text-foreground mb-4">Affinity & Anti-Affinity</h3>
         <div className="space-y-3">
           <AffinityTypeSection
-            type="node"
-            title="Node Affinity"
-            config={affinity.nodeAffinity}
-            onConfigChange={(config) => updateNodeAffinity(config as NodeAffinityConfig)}
-          />
-
-          <AffinityTypeSection
             type="pod"
             title="Pod Affinity"
             config={affinity.podAffinity}
