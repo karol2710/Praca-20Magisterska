@@ -321,18 +321,6 @@ const configSections: ConfigSection[] = [
     ],
   },
   {
-    id: "dns",
-    title: "DNS Config",
-    description: "DNS configuration for the Pod",
-    fields: [],
-  },
-  {
-    id: "hostAliases",
-    title: "Host Aliases",
-    description: "Static host entries for DNS resolution",
-    fields: [],
-  },
-  {
     id: "volumes",
     title: "Volumes",
     description: "Pod volumes configuration",
