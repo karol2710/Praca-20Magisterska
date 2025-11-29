@@ -97,7 +97,6 @@ export interface ContainerConfig {
   volumeMounts?: {
     devicePath?: string;
     mountPath: string;
-    mountPropagation?: string;
     name: string;
     readOnly?: boolean;
     recursiveReadOnly?: boolean;
