@@ -537,7 +537,7 @@ const configSections: { [key: string]: { id: string; title: string; description:
   ],
 };
 
-export default function ResourceConfiguration({ config, onConfigChange, globalNamespace }: ResourceConfigurationProps) {
+export default function ResourceConfiguration({ config, onConfigChange, globalNamespace, globalDomain }: ResourceConfigurationProps) {
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(["metadata"]));
 
   const toggleSection = (sectionId: string) => {
