@@ -170,18 +170,179 @@ spec:
 ${backendRefs}`;
 }
 
-export function combineYamlDocuments(
-  clusterIpServices: string[],
-  httpRoute: string | null
-): string {
+function generateNamespace(namespace: string): string {
+  return `apiVersion: v1
+kind: Namespace
+metadata:
+  name: ${namespace}`;
+}
+
+function generateRateLimit(namespace: string, requestsPerSecond: string): string {
+  return `apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ratelimit-config
+  namespace: ${namespace}
+data:
+  requests-per-second: "${requestsPerSecond}"`;
+}
+
+function generateResourceQuota(namespace: string, quota: Record<string, any>): string {
+  const limits: Record<string, string> = {};
+
+  if (quota.requestsCPU) limits["requests.cpu"] = quota.requestsCPU;
+  if (quota.requestsMemory) limits["requests.memory"] = quota.requestsMemory;
+  if (quota.limitsCPU) limits["limits.cpu"] = quota.limitsCPU;
+  if (quota.limitsMemory) limits["limits.memory"] = quota.limitsMemory;
+  if (quota.requestsStorage) limits["requests.storage"] = quota.requestsStorage;
+  if (quota.persistentVolumeClaimsLimit) limits["persistentvolumeclaims"] = quota.persistentVolumeClaimsLimit;
+
+  const limitsYaml = Object.entries(limits)
+    .map(([key, value]) => `  ${key}: ${value}`)
+    .join("\n");
+
+  return `apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: namespace-quota
+  namespace: ${namespace}
+spec:
+  hard:
+${limitsYaml}`;
+}
+
+function generateNetworkPolicy(namespace: string): string {
+  return `apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-network-policy
+  namespace: ${namespace}
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: ${namespace}
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              name: ${namespace}
+    - to:
+        - namespaceSelector: {}
+      ports:
+        - protocol: TCP
+          port: 53
+        - protocol: UDP
+          port: 53`;
+}
+
+function generateRBAC(namespace: string): string {
+  return `apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: default
+  namespace: ${namespace}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: default-role
+  namespace: ${namespace}
+rules:
+  - apiGroups: [""]
+    resources: ["pods", "pods/log"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["pods/exec"]
+    verbs: ["create"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: default-rolebinding
+  namespace: ${namespace}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: default-role
+subjects:
+  - kind: ServiceAccount
+    name: default
+    namespace: ${namespace}`;
+}
+
+function generateCertificate(namespace: string, domain: string, environment: "staging" | "production" = "production"): string {
+  const issuer = environment === "production" ? "letsencrypt-prod" : "letsencrypt-staging";
+
+  return `apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: ${namespace}-cert-${environment}
+  namespace: ${namespace}
+spec:
+  secretName: ${namespace}-tls-${environment}
+  issuerRef:
+    name: ${issuer}
+    kind: ClusterIssuer
+  dnsNames:
+    - ${domain}
+    - "*.${domain}"`;
+}
+
+function generateBackupSchedule(namespace: string): string {
+  return `apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backup-schedule
+  namespace: ${namespace}
+data:
+  schedule: "0 2 * * *"
+  retention-days: "30"
+  backup-type: "full"`;
+}
+
+export function combineYamlDocuments(result: TemplateGenerationResult): string {
   const documents: string[] = [];
 
-  clusterIpServices.forEach((service) => {
+  if (result.namespace) {
+    documents.push(result.namespace);
+  }
+
+  result.clusterIpServices.forEach((service) => {
     documents.push(service);
   });
 
-  if (httpRoute) {
-    documents.push(httpRoute);
+  if (result.httpRoute) {
+    documents.push(result.httpRoute);
+  }
+
+  if (result.rateLimit) {
+    documents.push(result.rateLimit);
+  }
+
+  if (result.resourceQuota) {
+    documents.push(result.resourceQuota);
+  }
+
+  if (result.networkPolicy) {
+    documents.push(result.networkPolicy);
+  }
+
+  if (result.rbac) {
+    documents.push(result.rbac);
+  }
+
+  if (result.certificate) {
+    documents.push(result.certificate);
+  }
+
+  if (result.backupSchedule) {
+    documents.push(result.backupSchedule);
   }
 
   return documents.join("\n---\n");
