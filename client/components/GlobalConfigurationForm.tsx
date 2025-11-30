@@ -23,6 +23,7 @@ interface GlobalConfigurationFormProps {
 export default function GlobalConfigurationForm({
   config,
   onNamespaceChange,
+  onDomainChange,
   onRequestsPerSecondChange,
   onResourceQuotaChange,
 }: GlobalConfigurationFormProps) {
@@ -44,6 +45,22 @@ export default function GlobalConfigurationForm({
           className="input-field w-full"
         />
         <p className="text-xs text-foreground/50 mt-2">This namespace will be applied to all workloads and resources</p>
+      </div>
+
+      {/* Domain */}
+      <div>
+        <label htmlFor="globalDomain" className="block text-sm font-medium text-foreground mb-2">
+          Domain
+        </label>
+        <input
+          id="globalDomain"
+          type="text"
+          value={config.domain}
+          onChange={(e) => onDomainChange(e.target.value || "")}
+          placeholder="example.com"
+          className="input-field w-full"
+        />
+        <p className="text-xs text-foreground/50 mt-2">Domain name for ingress and service endpoints</p>
       </div>
 
       {/* Rate Limiting */}
