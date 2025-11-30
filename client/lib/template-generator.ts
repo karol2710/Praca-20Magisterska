@@ -75,15 +75,15 @@ export function generateTemplates(
     });
   }
 
-  // Generate single HTTPRoute
+  // Generate single HTTPRoute with all workloads as backend refs
   if (createHTTPRoute) {
-    const firstWorkloadWithPorts = workloads.find(
+    const workloadsWithPorts = workloads.filter(
       (w) => workloadPortMappings[w.name]?.length > 0
     );
 
-    if (firstWorkloadWithPorts) {
+    if (workloadsWithPorts.length > 0) {
       result.httpRoute = generateHTTPRoute(
-        firstWorkloadWithPorts.name,
+        workloadsWithPorts,
         globalConfig.namespace,
         globalConfig.domain
       );
