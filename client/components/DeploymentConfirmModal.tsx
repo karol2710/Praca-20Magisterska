@@ -21,6 +21,7 @@ export default function DeploymentConfirmModal({
   isOpen,
   deploymentName,
   namespace,
+  generatedYaml,
   onConfirm,
   onCancel,
 }: DeploymentConfirmModalProps) {
@@ -29,6 +30,8 @@ export default function DeploymentConfirmModal({
   const [createHTTPRoute, setCreateHTTPRoute] = useState(true);
   const [createClusterIPService, setCreateClusterIPService] = useState(true);
   const [environment, setEnvironment] = useState<"staging" | "production">("production");
+  const [editedYaml, setEditedYaml] = useState<string>(generatedYaml || "");
+  const [copiedYaml, setCopiedYaml] = useState(false);
 
   const handleConfirm = async () => {
     try {
@@ -38,11 +41,19 @@ export default function DeploymentConfirmModal({
         createHTTPRoute,
         createClusterIPService,
         environment,
+        generatedYaml: editedYaml,
       });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Deployment failed");
       setIsDeploying(false);
     }
+  };
+
+  const copyYamlToClipboard = () => {
+    navigator.clipboard.writeText(editedYaml).then(() => {
+      setCopiedYaml(true);
+      setTimeout(() => setCopiedYaml(false), 2000);
+    });
   };
 
   if (!isOpen) return null;
