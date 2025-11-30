@@ -1,5 +1,6 @@
 interface GlobalConfigState {
   namespace: string;
+  domain: string;
   requestsPerSecond: string;
   resourceQuota: {
     requestsCPU?: string;
@@ -14,6 +15,7 @@ interface GlobalConfigState {
 interface GlobalConfigurationFormProps {
   config: GlobalConfigState;
   onNamespaceChange: (value: string) => void;
+  onDomainChange: (value: string) => void;
   onRequestsPerSecondChange: (value: string) => void;
   onResourceQuotaChange: (quota: GlobalConfigState["resourceQuota"]) => void;
 }
