@@ -34,6 +34,9 @@ export async function initializeDatabase() {
           namespace VARCHAR(255) NOT NULL,
           yaml_config TEXT NOT NULL,
           status VARCHAR(50) DEFAULT 'pending',
+          environment VARCHAR(50) DEFAULT 'production',
+          workloads_count INT DEFAULT 0,
+          resources_count INT DEFAULT 0,
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
           updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
