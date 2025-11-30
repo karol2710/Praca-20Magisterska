@@ -910,7 +910,7 @@ export default function CreateChart() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(deploymentPayload),
+        body: JSON.stringify(payloadToSend),
       });
 
       const data = await response.json();
