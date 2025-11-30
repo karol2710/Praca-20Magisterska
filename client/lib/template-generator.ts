@@ -130,13 +130,15 @@ ${portSpecs}
 function generateHTTPRoute(
   workloads: Workload[],
   namespace: string,
-  domain: string
+  domain: string,
+  userCreatedClusterIPNames?: string[]
 ): string {
   const routeName = `${namespace}-route`;
 
   const backendRefs = workloads
-    .map((w) => {
-      const serviceName = `${w.name.toLowerCase()}-clusterip`;
+    .map((w, index) => {
+      // Use user-created ClusterIP name if available, otherwise generate one
+      const serviceName = userCreatedClusterIPNames?.[index] || `${w.name.toLowerCase()}-clusterip`;
       return `        - name: ${serviceName}\n          port: 80`;
     })
     .join("\n");
