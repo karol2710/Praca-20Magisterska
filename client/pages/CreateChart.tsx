@@ -859,7 +859,6 @@ export default function CreateChart() {
 
     setAdvancedDeploymentResult("");
     setAdvancedDeploymentError("");
-    setIsCreating(true);
 
     try {
       const token = localStorage.getItem("token");
@@ -882,25 +881,22 @@ export default function CreateChart() {
         setAdvancedDeploymentResult(data.output);
         setShowDeploymentModal(false);
         setPendingDeploymentConfig(null);
+        setIsCreating(false);
 
         // Redirect to deployments page after success
         setTimeout(() => {
           window.location.href = "/deployments";
         }, 2000);
       } else if (response.status === 401) {
-        setAdvancedDeploymentError("Authentication failed. Please log in again.");
-        setTimeout(() => {
-          window.location.href = "/login";
-        }, 2000);
+        setIsCreating(false);
+        throw new Error("Authentication failed. Please log in again.");
       } else {
-        setAdvancedDeploymentError(data.error || "Deployment failed");
+        setIsCreating(false);
+        throw new Error(data.error || "Deployment failed");
       }
     } catch (error) {
-      setAdvancedDeploymentError(
-        error instanceof Error ? error.message : "An error occurred"
-      );
-    } finally {
       setIsCreating(false);
+      throw new Error(error instanceof Error ? error.message : "An error occurred");
     }
   };
 
