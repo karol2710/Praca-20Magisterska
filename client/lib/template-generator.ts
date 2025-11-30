@@ -122,12 +122,18 @@ ${portSpecs}
 }
 
 function generateHTTPRoute(
-  workloadName: string,
+  workloads: Workload[],
   namespace: string,
   domain: string
 ): string {
-  const serviceName = `${workloadName.toLowerCase()}-clusterip`;
   const routeName = `${namespace}-route`;
+
+  const backendRefs = workloads
+    .map((w) => {
+      const serviceName = `${w.name.toLowerCase()}-clusterip`;
+      return `        - name: ${serviceName}\n          port: 80`;
+    })
+    .join("\n");
 
   return `apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
@@ -146,8 +152,7 @@ spec:
             type: PathPrefix
             value: /
       backendRefs:
-        - name: ${serviceName}
-          port: 80`;
+${backendRefs}`;
 }
 
 export function combineYamlDocuments(
