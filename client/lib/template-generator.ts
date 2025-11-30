@@ -22,6 +22,13 @@ interface TemplateGenerationResult {
   clusterIpServices: string[];
   httpRoute: string | null;
   workloadPortMappings: Record<string, number[]>;
+  namespace?: string;
+  rateLimit?: string;
+  resourceQuota?: string;
+  networkPolicy?: string;
+  rbac?: string;
+  certificate?: string;
+  backupSchedule?: string;
 }
 
 interface GenerateTemplatesOptions {
