@@ -266,7 +266,7 @@ function generateNetworkPolicy(namespace: string): string {
   return `apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: default-network-policy
+  name: isolate-${namespace}
   namespace: ${namespace}
 spec:
   podSelector: {}
@@ -275,21 +275,17 @@ spec:
     - Egress
   ingress:
     - from:
+        - podSelector: {}
         - namespaceSelector:
             matchLabels:
-              name: ${namespace}
+              name: envoy-gateway-system
   egress:
     - to:
-        - namespaceSelector:
-            matchLabels:
-              name: ${namespace}
-    - to:
-        - namespaceSelector: {}
-      ports:
-        - protocol: TCP
-          port: 53
-        - protocol: UDP
-          port: 53`;
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except:
+              - 10.42.0.0/16
+              - 10.43.0.0/16`;
 }
 
 function generateRBAC(namespace: string): string {
