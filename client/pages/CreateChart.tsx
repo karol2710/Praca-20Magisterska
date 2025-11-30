@@ -834,6 +834,9 @@ export default function CreateChart() {
     // Determine if user has created HTTPRoute or ClusterIP resources
     const hasHTTPRoute = resources.some((r) => r.type === "HTTPRoute");
     const hasClusterIP = resources.some((r) => r.type === "Service");
+    const clusterIPNames = resources
+      .filter((r) => r.type === "Service")
+      .map((r) => r.name);
 
     // Generate YAML templates based on what user has created
     // If HTTPRoute exists, don't generate anything
@@ -851,7 +854,8 @@ export default function CreateChart() {
         resourceQuota,
       },
       shouldGenerateClusterIP,
-      shouldGenerateHTTPRoute
+      shouldGenerateHTTPRoute,
+      { userCreatedClusterIPNames: clusterIPNames }
     );
 
     const yaml = combineYamlDocuments(
