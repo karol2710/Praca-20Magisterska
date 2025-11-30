@@ -74,5 +74,10 @@ export async function createServer() {
   app.post("/api/deploy", authMiddleware, handleDeploy);
   app.post("/api/deploy-advanced", authMiddleware, handleAdvancedDeploy);
 
+  // Protected deployments management routes
+  app.get("/api/deployments", authMiddleware, handleGetDeployments);
+  app.get("/api/deployments/:deploymentId/yaml", authMiddleware, handleGetDeploymentYaml);
+  app.delete("/api/deployments/:deploymentId", authMiddleware, handleDeleteDeployment);
+
   return app;
 }
