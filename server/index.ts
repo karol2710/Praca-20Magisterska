@@ -10,6 +10,11 @@ import {
   handleGetCurrentUser,
   handleLogout,
 } from "./routes/auth.js";
+import {
+  handleGetDeployments,
+  handleGetDeploymentYaml,
+  handleDeleteDeployment,
+} from "./routes/deployments.js";
 import { authMiddleware } from "./auth.js";
 import { initializeDatabase } from "./db.js";
 
