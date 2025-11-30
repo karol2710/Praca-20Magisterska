@@ -85,8 +85,7 @@ export function generateTemplates(
       result.httpRoute = generateHTTPRoute(
         firstWorkloadWithPorts.name,
         globalConfig.namespace,
-        globalConfig.domain,
-        workloadPortMappings[firstWorkloadWithPorts.name][0]
+        globalConfig.domain
       );
     }
   }
