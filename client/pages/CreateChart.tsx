@@ -528,6 +528,22 @@ export default function CreateChart() {
         };
       }
 
+      // Initialize spec for HTTPRoute with global domain
+      if (selectedResourceType === "HTTPRoute") {
+        newResource.spec = {
+          hostnames: globalDomain ? [globalDomain] : [],
+          rules: [],
+        };
+      }
+
+      // Initialize spec for GRPCRoute with global domain
+      if (selectedResourceType === "GRPCRoute") {
+        newResource.spec = {
+          hostnames: globalDomain ? [globalDomain] : [],
+          rules: [],
+        };
+      }
+
       setResources([...resources, newResource]);
       setNewResourceName("");
     }
