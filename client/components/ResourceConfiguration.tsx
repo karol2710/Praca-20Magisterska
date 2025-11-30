@@ -940,7 +940,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                   ...rule,
                                   matches: [...(rule.matches || []), { method: "" }],
                                 };
-                                onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                               }}
                               className="text-primary hover:opacity-70 text-xs"
                             >
@@ -1021,7 +1021,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                           headers: [...(match.headers || []), { name: "", value: "" }],
                                         };
                                         updated[rIdx] = { ...rule, matches };
-                                        onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                        onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                       }}
                                       className="text-primary hover:opacity-70 text-xs"
                                     >
@@ -1040,7 +1040,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                           headers[hIdx] = { ...header, name: e.target.value || undefined };
                                           matches[mIdx] = { ...match, headers };
                                           updated[rIdx] = { ...rule, matches };
-                                          onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                          onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                         }}
                                         placeholder="Header name"
                                         className="input-field text-xs flex-1"
@@ -1055,7 +1055,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                           headers[hIdx] = { ...header, value: e.target.value || undefined };
                                           matches[mIdx] = { ...match, headers };
                                           updated[rIdx] = { ...rule, matches };
-                                          onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                          onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                         }}
                                         placeholder="Header value"
                                         className="input-field text-xs flex-1"
@@ -1070,7 +1070,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                             headers: headers.length > 0 ? headers : undefined,
                                           };
                                           updated[rIdx] = { ...rule, matches };
-                                          onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                          onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                         }}
                                         className="text-destructive hover:opacity-70 text-xs"
                                       >
@@ -1093,7 +1093,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                           queryParams: [...(match.queryParams || []), { name: "", value: "" }],
                                         };
                                         updated[rIdx] = { ...rule, matches };
-                                        onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                        onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                       }}
                                       className="text-primary hover:opacity-70 text-xs"
                                     >
@@ -1112,7 +1112,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                           queryParams[pIdx] = { ...param, name: e.target.value || undefined };
                                           matches[mIdx] = { ...match, queryParams };
                                           updated[rIdx] = { ...rule, matches };
-                                          onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                          onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                         }}
                                         placeholder="Param name"
                                         className="input-field text-xs flex-1"
@@ -1127,7 +1127,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                           queryParams[pIdx] = { ...param, value: e.target.value || undefined };
                                           matches[mIdx] = { ...match, queryParams };
                                           updated[rIdx] = { ...rule, matches };
-                                          onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                          onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                         }}
                                         placeholder="Param value"
                                         className="input-field text-xs flex-1"
@@ -1142,7 +1142,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                             queryParams: queryParams.length > 0 ? queryParams : undefined,
                                           };
                                           updated[rIdx] = { ...rule, matches };
-                                          onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                          onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                         }}
                                         className="text-destructive hover:opacity-70 text-xs"
                                       >
@@ -1157,7 +1157,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                     const updated = [...((config.spec as HTTPRouteSpec)?.rules || [])];
                                     const matches = (updated[rIdx]?.matches || []).filter((_, i) => i !== mIdx);
                                     updated[rIdx] = { ...rule, matches: matches.length > 0 ? matches : undefined };
-                                    onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                    onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                   }}
                                   className="w-full text-xs text-destructive hover:bg-destructive/10 py-1 rounded transition-colors"
                                 >
@@ -1179,7 +1179,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                   ...rule,
                                   filters: [...(rule.filters || []), { type: "RequestHeaderModifier" }],
                                 };
-                                onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                               }}
                               className="text-primary hover:opacity-70 text-xs"
                             >
@@ -1198,7 +1198,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                       const filters = [...(updated[rIdx]?.filters || [])];
                                       filters[fIdx] = { type: e.target.value as HTTPRouteFilter["type"] };
                                       updated[rIdx] = { ...rule, filters };
-                                      onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                      onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                     }}
                                     className="input-field text-xs"
                                   >
@@ -1236,7 +1236,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                                 },
                                               };
                                               updated[rIdx] = { ...rule, filters };
-                                              onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                              onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                             }}
                                             placeholder="Header name"
                                             className="input-field text-xs flex-1"
@@ -1257,7 +1257,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                                 },
                                               };
                                               updated[rIdx] = { ...rule, filters };
-                                              onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                              onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                             }}
                                             placeholder="Header value"
                                             className="input-field text-xs flex-1"
@@ -1276,7 +1276,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                                 },
                                               };
                                               updated[rIdx] = { ...rule, filters };
-                                              onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                              onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                             }}
                                             className="text-destructive hover:opacity-70 text-xs"
                                           >
@@ -1296,7 +1296,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                             },
                                           };
                                           updated[rIdx] = { ...rule, filters };
-                                          onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                          onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                         }}
                                         className="text-primary hover:opacity-70 text-xs"
                                       >
@@ -1327,7 +1327,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                                 },
                                               };
                                               updated[rIdx] = { ...rule, filters };
-                                              onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                              onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                             }}
                                             placeholder="Header name"
                                             className="input-field text-xs flex-1"
@@ -1348,7 +1348,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                                 },
                                               };
                                               updated[rIdx] = { ...rule, filters };
-                                              onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                              onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                             }}
                                             placeholder="Header value"
                                             className="input-field text-xs flex-1"
@@ -1367,7 +1367,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                                 },
                                               };
                                               updated[rIdx] = { ...rule, filters };
-                                              onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                              onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                             }}
                                             className="text-destructive hover:opacity-70 text-xs"
                                           >
@@ -1387,7 +1387,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                             },
                                           };
                                           updated[rIdx] = { ...rule, filters };
-                                          onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                          onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                         }}
                                         className="text-primary hover:opacity-70 text-xs"
                                       >
@@ -1415,7 +1415,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                                 },
                                               };
                                               updated[rIdx] = { ...rule, filters };
-                                              onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                              onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                             }}
                                             placeholder="Header name to remove"
                                             className="input-field text-xs flex-1"
@@ -1433,7 +1433,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                                 },
                                               };
                                               updated[rIdx] = { ...rule, filters };
-                                              onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                              onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                             }}
                                             className="text-destructive hover:opacity-70 text-xs"
                                           >
@@ -1453,7 +1453,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                             },
                                           };
                                           updated[rIdx] = { ...rule, filters };
-                                          onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                          onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                         }}
                                         className="text-primary hover:opacity-70 text-xs"
                                       >
@@ -1489,7 +1489,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                                 },
                                               };
                                               updated[rIdx] = { ...rule, filters };
-                                              onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                              onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                             }}
                                             placeholder="Header name"
                                             className="input-field text-xs flex-1"
@@ -1510,7 +1510,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                                 },
                                               };
                                               updated[rIdx] = { ...rule, filters };
-                                              onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                              onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                             }}
                                             placeholder="Header value"
                                             className="input-field text-xs flex-1"
@@ -1529,7 +1529,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                                 },
                                               };
                                               updated[rIdx] = { ...rule, filters };
-                                              onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                              onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                             }}
                                             className="text-destructive hover:opacity-70 text-xs"
                                           >
@@ -1549,7 +1549,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                             },
                                           };
                                           updated[rIdx] = { ...rule, filters };
-                                          onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                          onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                         }}
                                         className="text-primary hover:opacity-70 text-xs"
                                       >
@@ -1580,7 +1580,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                                 },
                                               };
                                               updated[rIdx] = { ...rule, filters };
-                                              onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                              onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                             }}
                                             placeholder="Header name"
                                             className="input-field text-xs flex-1"
@@ -1601,7 +1601,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                                 },
                                               };
                                               updated[rIdx] = { ...rule, filters };
-                                              onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                              onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                             }}
                                             placeholder="Header value"
                                             className="input-field text-xs flex-1"
@@ -1620,7 +1620,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                                 },
                                               };
                                               updated[rIdx] = { ...rule, filters };
-                                              onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                              onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                             }}
                                             className="text-destructive hover:opacity-70 text-xs"
                                           >
@@ -1640,7 +1640,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                             },
                                           };
                                           updated[rIdx] = { ...rule, filters };
-                                          onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                          onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                         }}
                                         className="text-primary hover:opacity-70 text-xs"
                                       >
@@ -1668,7 +1668,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                                 },
                                               };
                                               updated[rIdx] = { ...rule, filters };
-                                              onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                              onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                             }}
                                             placeholder="Header name to remove"
                                             className="input-field text-xs flex-1"
@@ -1686,7 +1686,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                                 },
                                               };
                                               updated[rIdx] = { ...rule, filters };
-                                              onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                              onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                             }}
                                             className="text-destructive hover:opacity-70 text-xs"
                                           >
@@ -1706,7 +1706,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                             },
                                           };
                                           updated[rIdx] = { ...rule, filters };
-                                          onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                          onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                         }}
                                         className="text-primary hover:opacity-70 text-xs"
                                       >
@@ -1741,7 +1741,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                                 },
                                               };
                                               updated[rIdx] = { ...rule, filters };
-                                              onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                              onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                             }}
                                             placeholder="service-name"
                                             className="input-field text-xs"
@@ -1775,7 +1775,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                                 },
                                               };
                                               updated[rIdx] = { ...rule, filters };
-                                              onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                              onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                             }}
                                             placeholder="80"
                                             className="input-field text-xs"
@@ -1802,7 +1802,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                               },
                                             };
                                             updated[rIdx] = { ...rule, filters };
-                                            onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                            onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                           }}
                                           placeholder="50"
                                           min="0"
@@ -1835,7 +1835,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                                 },
                                               };
                                               updated[rIdx] = { ...rule, filters };
-                                              onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                              onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                             }}
                                             placeholder="1"
                                             min="0"
@@ -1862,7 +1862,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                                 },
                                               };
                                               updated[rIdx] = { ...rule, filters };
-                                              onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                              onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                             }}
                                             placeholder="2"
                                             className="input-field text-xs"
@@ -1894,7 +1894,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                               },
                                             };
                                             updated[rIdx] = { ...rule, filters };
-                                            onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                            onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                           }}
                                           placeholder="https"
                                           className="input-field text-xs"
@@ -1916,7 +1916,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                               },
                                             };
                                             updated[rIdx] = { ...rule, filters };
-                                            onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                            onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                           }}
                                           placeholder="example.com"
                                           className="input-field text-xs"
@@ -1941,7 +1941,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                               },
                                             };
                                             updated[rIdx] = { ...rule, filters };
-                                            onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                            onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                           }}
                                           placeholder="Exact, ReplacePrefixMatch"
                                           className="input-field text-xs"
@@ -1966,7 +1966,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                               },
                                             };
                                             updated[rIdx] = { ...rule, filters };
-                                            onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                            onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                           }}
                                           placeholder="/new-path"
                                           className="input-field text-xs"
@@ -1988,7 +1988,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                               },
                                             };
                                             updated[rIdx] = { ...rule, filters };
-                                            onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                            onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                           }}
                                           placeholder="8080"
                                           className="input-field text-xs"
@@ -2010,7 +2010,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                               },
                                             };
                                             updated[rIdx] = { ...rule, filters };
-                                            onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                            onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                           }}
                                           placeholder="301"
                                           className="input-field text-xs"
@@ -2040,7 +2040,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                               },
                                             };
                                             updated[rIdx] = { ...rule, filters };
-                                            onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                            onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                           }}
                                           placeholder="example.com"
                                           className="input-field text-xs"
@@ -2065,7 +2065,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                               },
                                             };
                                             updated[rIdx] = { ...rule, filters };
-                                            onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                            onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                           }}
                                           placeholder="Exact, ReplacePrefixMatch"
                                           className="input-field text-xs"
@@ -2090,7 +2090,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                               },
                                             };
                                             updated[rIdx] = { ...rule, filters };
-                                            onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                            onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                           }}
                                           placeholder="/new-path"
                                           className="input-field text-xs"
@@ -2105,7 +2105,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                     const updated = [...((config.spec as HTTPRouteSpec)?.rules || [])];
                                     const filters = (updated[rIdx]?.filters || []).filter((_, i) => i !== fIdx);
                                     updated[rIdx] = { ...rule, filters: filters.length > 0 ? filters : undefined };
-                                    onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                    onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                   }}
                                   className="w-full text-xs text-destructive hover:bg-destructive/10 py-1 rounded transition-colors"
                                 >
@@ -2127,7 +2127,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                   ...rule,
                                   backendRefs: [...(rule.backendRefs || []), { name: "" }],
                                 };
-                                onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                               }}
                               className="text-primary hover:opacity-70 text-xs"
                             >
@@ -2148,7 +2148,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                         const backends = [...(updated[rIdx]?.backendRefs || [])];
                                         backends[bIdx] = { ...backend, name: e.target.value || undefined };
                                         updated[rIdx] = { ...rule, backendRefs: backends };
-                                        onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                        onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                       }}
                                       placeholder="service-name"
                                       className="input-field text-xs"
@@ -2176,7 +2176,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                           port: e.target.value ? parseInt(e.target.value) : undefined,
                                         };
                                         updated[rIdx] = { ...rule, backendRefs: backends };
-                                        onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                        onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                       }}
                                       placeholder="80"
                                       className="input-field text-xs"
@@ -2195,7 +2195,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                           weight: e.target.value ? parseInt(e.target.value) : undefined,
                                         };
                                         updated[rIdx] = { ...rule, backendRefs: backends };
-                                        onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                        onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                       }}
                                       placeholder="100"
                                       className="input-field text-xs"
@@ -2211,7 +2211,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                         const backends = [...(updated[rIdx]?.backendRefs || [])];
                                         backends[bIdx] = { ...backend, group: e.target.value || undefined };
                                         updated[rIdx] = { ...rule, backendRefs: backends };
-                                        onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                        onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                       }}
                                       placeholder="core"
                                       className="input-field text-xs"
@@ -2227,7 +2227,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                         const backends = [...(updated[rIdx]?.backendRefs || [])];
                                         backends[bIdx] = { ...backend, kind: e.target.value || undefined };
                                         updated[rIdx] = { ...rule, backendRefs: backends };
-                                        onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                        onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                       }}
                                       placeholder="Service"
                                       className="input-field text-xs"
@@ -2248,7 +2248,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                           filters: [...(backend.filters || []), { type: "RequestHeaderModifier" }],
                                         };
                                         updated[rIdx] = { ...rule, backendRefs: backends };
-                                        onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                        onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                       }}
                                       className="text-primary hover:opacity-70 text-xs"
                                     >
@@ -2268,7 +2268,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                             filters[bfIdx] = { type: e.target.value as HTTPRouteFilter["type"] };
                                             backends[bIdx] = { ...backend, filters };
                                             updated[rIdx] = { ...rule, backendRefs: backends };
-                                            onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                            onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                           }}
                                           className="input-field text-xs"
                                         >
@@ -2308,7 +2308,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                                     };
                                                     backends[bIdx] = { ...backend, filters };
                                                     updated[rIdx] = { ...rule, backendRefs: backends };
-                                                    onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                                    onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                                   }}
                                                   placeholder="Header name"
                                                   className="input-field text-xs flex-1"
@@ -2331,7 +2331,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                                     };
                                                     backends[bIdx] = { ...backend, filters };
                                                     updated[rIdx] = { ...rule, backendRefs: backends };
-                                                    onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                                    onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                                   }}
                                                   placeholder="Header value"
                                                   className="input-field text-xs flex-1"
@@ -2352,7 +2352,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                                     };
                                                     backends[bIdx] = { ...backend, filters };
                                                     updated[rIdx] = { ...rule, backendRefs: backends };
-                                                    onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                                    onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                                   }}
                                                   className="text-destructive hover:opacity-70 text-xs"
                                                 >
@@ -2374,7 +2374,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                                 };
                                                 backends[bIdx] = { ...backend, filters };
                                                 updated[rIdx] = { ...rule, backendRefs: backends };
-                                                onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                                onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                               }}
                                               className="text-primary hover:opacity-70 text-xs"
                                             >
@@ -2407,7 +2407,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                                     };
                                                     backends[bIdx] = { ...backend, filters };
                                                     updated[rIdx] = { ...rule, backendRefs: backends };
-                                                    onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                                    onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                                   }}
                                                   placeholder="Header name"
                                                   className="input-field text-xs flex-1"
@@ -2430,7 +2430,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                                     };
                                                     backends[bIdx] = { ...backend, filters };
                                                     updated[rIdx] = { ...rule, backendRefs: backends };
-                                                    onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                                    onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                                   }}
                                                   placeholder="Header value"
                                                   className="input-field text-xs flex-1"
@@ -2451,7 +2451,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                                     };
                                                     backends[bIdx] = { ...backend, filters };
                                                     updated[rIdx] = { ...rule, backendRefs: backends };
-                                                    onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                                    onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                                   }}
                                                   className="text-destructive hover:opacity-70 text-xs"
                                                 >
@@ -2473,7 +2473,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                                 };
                                                 backends[bIdx] = { ...backend, filters };
                                                 updated[rIdx] = { ...rule, backendRefs: backends };
-                                                onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                                onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                               }}
                                               className="text-primary hover:opacity-70 text-xs"
                                             >
@@ -2503,7 +2503,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                                     };
                                                     backends[bIdx] = { ...backend, filters };
                                                     updated[rIdx] = { ...rule, backendRefs: backends };
-                                                    onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                                    onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                                   }}
                                                   placeholder="Header name to remove"
                                                   className="input-field text-xs flex-1"
@@ -2523,7 +2523,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                                     };
                                                     backends[bIdx] = { ...backend, filters };
                                                     updated[rIdx] = { ...rule, backendRefs: backends };
-                                                    onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                                    onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                                   }}
                                                   className="text-destructive hover:opacity-70 text-xs"
                                                 >
@@ -2545,7 +2545,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                                 };
                                                 backends[bIdx] = { ...backend, filters };
                                                 updated[rIdx] = { ...rule, backendRefs: backends };
-                                                onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                                onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                               }}
                                               className="text-primary hover:opacity-70 text-xs"
                                             >
@@ -2583,7 +2583,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                                     };
                                                     backends[bIdx] = { ...backend, filters };
                                                     updated[rIdx] = { ...rule, backendRefs: backends };
-                                                    onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                                    onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                                   }}
                                                   placeholder="Header name"
                                                   className="input-field text-xs flex-1"
@@ -2606,7 +2606,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                                     };
                                                     backends[bIdx] = { ...backend, filters };
                                                     updated[rIdx] = { ...rule, backendRefs: backends };
-                                                    onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                                    onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                                   }}
                                                   placeholder="Header value"
                                                   className="input-field text-xs flex-1"
@@ -2627,7 +2627,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                                     };
                                                     backends[bIdx] = { ...backend, filters };
                                                     updated[rIdx] = { ...rule, backendRefs: backends };
-                                                    onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                                    onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                                   }}
                                                   className="text-destructive hover:opacity-70 text-xs"
                                                 >
@@ -2649,7 +2649,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                                 };
                                                 backends[bIdx] = { ...backend, filters };
                                                 updated[rIdx] = { ...rule, backendRefs: backends };
-                                                onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                                onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                               }}
                                               className="text-primary hover:opacity-70 text-xs"
                                             >
@@ -2682,7 +2682,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                                     };
                                                     backends[bIdx] = { ...backend, filters };
                                                     updated[rIdx] = { ...rule, backendRefs: backends };
-                                                    onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                                    onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                                   }}
                                                   placeholder="Header name"
                                                   className="input-field text-xs flex-1"
@@ -2705,7 +2705,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                                     };
                                                     backends[bIdx] = { ...backend, filters };
                                                     updated[rIdx] = { ...rule, backendRefs: backends };
-                                                    onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                                    onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                                   }}
                                                   placeholder="Header value"
                                                   className="input-field text-xs flex-1"
@@ -2726,7 +2726,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                                     };
                                                     backends[bIdx] = { ...backend, filters };
                                                     updated[rIdx] = { ...rule, backendRefs: backends };
-                                                    onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                                    onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                                   }}
                                                   className="text-destructive hover:opacity-70 text-xs"
                                                 >
@@ -2748,7 +2748,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                                 };
                                                 backends[bIdx] = { ...backend, filters };
                                                 updated[rIdx] = { ...rule, backendRefs: backends };
-                                                onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                                onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                               }}
                                               className="text-primary hover:opacity-70 text-xs"
                                             >
@@ -2778,7 +2778,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                                     };
                                                     backends[bIdx] = { ...backend, filters };
                                                     updated[rIdx] = { ...rule, backendRefs: backends };
-                                                    onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                                    onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                                   }}
                                                   placeholder="Header name to remove"
                                                   className="input-field text-xs flex-1"
@@ -2798,7 +2798,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                                     };
                                                     backends[bIdx] = { ...backend, filters };
                                                     updated[rIdx] = { ...rule, backendRefs: backends };
-                                                    onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                                    onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                                   }}
                                                   className="text-destructive hover:opacity-70 text-xs"
                                                 >
@@ -2820,7 +2820,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                                 };
                                                 backends[bIdx] = { ...backend, filters };
                                                 updated[rIdx] = { ...rule, backendRefs: backends };
-                                                onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                                onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                               }}
                                               className="text-primary hover:opacity-70 text-xs"
                                             >
@@ -2855,7 +2855,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                                   };
                                                   backends[bIdx] = { ...backend, filters };
                                                   updated[rIdx] = { ...rule, backendRefs: backends };
-                                                  onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                                  onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                                 }}
                                                 placeholder="Service name"
                                                 className="input-field text-xs"
@@ -2885,7 +2885,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                                   };
                                                   backends[bIdx] = { ...backend, filters };
                                                   updated[rIdx] = { ...rule, backendRefs: backends };
-                                                  onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                                  onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                                 }}
                                                 placeholder="Port"
                                                 className="input-field text-xs"
@@ -2911,7 +2911,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                                 };
                                                 backends[bIdx] = { ...backend, filters };
                                                 updated[rIdx] = { ...rule, backendRefs: backends };
-                                                onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                                onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                               }}
                                               placeholder="Percent (0-100)"
                                               min="0"
@@ -2942,7 +2942,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                                   };
                                                   backends[bIdx] = { ...backend, filters };
                                                   updated[rIdx] = { ...rule, backendRefs: backends };
-                                                  onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                                  onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                                 }}
                                                 placeholder="Numerator"
                                                 className="input-field text-xs"
@@ -2966,7 +2966,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                                   };
                                                   backends[bIdx] = { ...backend, filters };
                                                   updated[rIdx] = { ...rule, backendRefs: backends };
-                                                  onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                                  onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                                 }}
                                                 placeholder="Denominator"
                                                 className="input-field text-xs"
@@ -2996,7 +2996,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                                 };
                                                 backends[bIdx] = { ...backend, filters };
                                                 updated[rIdx] = { ...rule, backendRefs: backends };
-                                                onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                                onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                               }}
                                               placeholder="Scheme (https)"
                                               className="input-field text-xs"
@@ -3017,7 +3017,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                                 };
                                                 backends[bIdx] = { ...backend, filters };
                                                 updated[rIdx] = { ...rule, backendRefs: backends };
-                                                onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                                onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                               }}
                                               placeholder="Hostname (example.com)"
                                               className="input-field text-xs"
@@ -3041,7 +3041,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                                 };
                                                 backends[bIdx] = { ...backend, filters };
                                                 updated[rIdx] = { ...rule, backendRefs: backends };
-                                                onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                                onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                               }}
                                               placeholder="Path Type"
                                               className="input-field text-xs"
@@ -3065,7 +3065,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                                 };
                                                 backends[bIdx] = { ...backend, filters };
                                                 updated[rIdx] = { ...rule, backendRefs: backends };
-                                                onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                                onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                               }}
                                               placeholder="Path Value"
                                               className="input-field text-xs"
@@ -3086,7 +3086,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                                 };
                                                 backends[bIdx] = { ...backend, filters };
                                                 updated[rIdx] = { ...rule, backendRefs: backends };
-                                                onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                                onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                               }}
                                               placeholder="Port (8080)"
                                               className="input-field text-xs"
@@ -3107,7 +3107,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                                 };
                                                 backends[bIdx] = { ...backend, filters };
                                                 updated[rIdx] = { ...rule, backendRefs: backends };
-                                                onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                                onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                               }}
                                               placeholder="Status Code (301)"
                                               className="input-field text-xs"
@@ -3135,7 +3135,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                               };
                                               backends[bIdx] = { ...backend, filters };
                                               updated[rIdx] = { ...rule, backendRefs: backends };
-                                              onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                              onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                             }}
                                             placeholder="Hostname (example.com)"
                                             className="input-field text-xs"
@@ -3159,7 +3159,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                               };
                                               backends[bIdx] = { ...backend, filters };
                                               updated[rIdx] = { ...rule, backendRefs: backends };
-                                              onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                              onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                             }}
                                             placeholder="Path Type"
                                             className="input-field text-xs"
@@ -3183,7 +3183,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                               };
                                               backends[bIdx] = { ...backend, filters };
                                               updated[rIdx] = { ...rule, backendRefs: backends };
-                                              onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                              onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                             }}
                                             placeholder="Path Value"
                                             className="input-field text-xs"
@@ -3198,7 +3198,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                           const filters = (backends[bIdx]?.filters || []).filter((_, i) => i !== bfIdx);
                                           backends[bIdx] = { ...backend, filters: filters.length > 0 ? filters : undefined };
                                           updated[rIdx] = { ...rule, backendRefs: backends };
-                                          onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                          onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                         }}
                                         className="w-full text-xs text-destructive hover:bg-destructive/10 py-1 rounded transition-colors"
                                       >
@@ -3213,7 +3213,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                     const updated = [...((config.spec as HTTPRouteSpec)?.rules || [])];
                                     const backends = (updated[rIdx]?.backendRefs || []).filter((_, i) => i !== bIdx);
                                     updated[rIdx] = { ...rule, backendRefs: backends.length > 0 ? backends : undefined };
-                                    onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                    onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                   }}
                                   className="w-full text-xs text-destructive hover:bg-destructive/10 py-1 rounded transition-colors"
                                 >
@@ -3242,7 +3242,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                       requestDuration: e.target.value || undefined,
                                     },
                                   };
-                                  onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                  onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                 }}
                                 placeholder="30s"
                                 className="input-field text-xs"
@@ -3262,7 +3262,7 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                                       backendRequestDuration: e.target.value || undefined,
                                     },
                                   };
-                                  onConfigChange("spec", { ...(config.spec as HTTPRouteSpec || {}), rules: updated });
+                                  onConfigChange("spec", updateSpecWithHostnames({ ...(config.spec as HTTPRouteSpec || {}), rules: updated }));
                                 }}
                                 placeholder="5s"
                                 className="input-field text-xs"
