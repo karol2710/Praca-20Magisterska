@@ -873,6 +873,7 @@ export default function CreateChart() {
         body: JSON.stringify({
           ...pendingDeploymentConfig,
           deploymentOptions: options,
+          generatedYaml: options.generatedYaml || generatedYaml,
         }),
       });
 
