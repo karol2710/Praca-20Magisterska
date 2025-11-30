@@ -1860,8 +1860,9 @@ export default function CreateChart() {
           isOpen={showDeploymentModal}
           namespace={globalNamespace}
           configurationItems={[
-            ...workloads.map((w) => ({ label: `Workload: ${w.type}`, value: w.name })),
-            ...resources.map((r) => ({ label: `Resource: ${r.type}`, value: r.name })),
+            { label: "Namespace", value: globalNamespace },
+            ...workloads.map((w) => ({ label: w.type, value: w.name })),
+            ...resources.map((r) => ({ label: r.type, value: r.name })),
           ]}
           generatedYaml={generatedYaml}
           onConfirm={handleDeploymentConfirm}
