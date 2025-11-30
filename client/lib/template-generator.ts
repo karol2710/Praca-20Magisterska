@@ -103,6 +103,33 @@ export function generateTemplates(
     }
   }
 
+  // Generate Namespace
+  result.namespace = generateNamespace(globalConfig.namespace);
+
+  // Generate Rate Limit ConfigMap if configured
+  if (globalConfig.requestsPerSecond) {
+    result.rateLimit = generateRateLimit(globalConfig.namespace, globalConfig.requestsPerSecond);
+  }
+
+  // Generate Resource Quota if configured
+  if (globalConfig.resourceQuota && Object.keys(globalConfig.resourceQuota).length > 0) {
+    result.resourceQuota = generateResourceQuota(globalConfig.namespace, globalConfig.resourceQuota);
+  }
+
+  // Generate Network Policy
+  result.networkPolicy = generateNetworkPolicy(globalConfig.namespace);
+
+  // Generate RBAC
+  result.rbac = generateRBAC(globalConfig.namespace);
+
+  // Generate Certificate if domain is specified
+  if (globalConfig.domain) {
+    result.certificate = generateCertificate(globalConfig.namespace, globalConfig.domain, "production");
+  }
+
+  // Generate Backup Schedule
+  result.backupSchedule = generateBackupSchedule(globalConfig.namespace);
+
   return result;
 }
 
