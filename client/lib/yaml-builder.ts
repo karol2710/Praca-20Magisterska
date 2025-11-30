@@ -515,8 +515,12 @@ export function generateStatefulSetYAML(statefulSetName: string, statefulSetConf
       spec: cleanEmptyValues(buildPodSpec(statefulSetConfig.template, containers)),
     };
 
-    if (statefulSetConfig.template.labels && Object.keys(statefulSetConfig.template.labels).length > 0) {
-      spec.template.metadata.labels = statefulSetConfig.template.labels;
+    // Add app label to pod template
+    const templateLabels = statefulSetConfig.template.labels ? { ...statefulSetConfig.template.labels } : {};
+    templateLabels.app = statefulSetName.toLowerCase();
+
+    if (Object.keys(templateLabels).length > 0) {
+      spec.template.metadata.labels = templateLabels;
     }
 
     if (statefulSetConfig.template.annotations && Object.keys(statefulSetConfig.template.annotations).length > 0) {
