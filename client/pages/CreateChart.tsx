@@ -8,6 +8,7 @@ import StatefulSetConfiguration from "@/components/StatefulSetConfiguration";
 import JobConfiguration from "@/components/JobConfiguration";
 import CronJobConfiguration from "@/components/CronJobConfiguration";
 import ResourceConfiguration from "@/components/ResourceConfiguration";
+import GlobalConfigurationForm from "@/components/GlobalConfigurationForm";
 import { Upload, Plus, X, Zap, Copy, Download } from "lucide-react";
 import { generatePodYAML, generateDeploymentYAML, generateReplicaSetYAML, generateStatefulSetYAML, generateJobYAML, generateCronJobYAML, generateResourceYAML } from "@/lib/yaml-builder";
 
