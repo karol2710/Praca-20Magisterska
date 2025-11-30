@@ -831,7 +831,17 @@ export default function CreateChart() {
       resourceQuota,
     };
 
-    // Generate YAML templates
+    // Determine if user has created HTTPRoute or ClusterIP resources
+    const hasHTTPRoute = resources.some((r) => r.type === "HTTPRoute");
+    const hasClusterIP = resources.some((r) => r.type === "Service");
+
+    // Generate YAML templates based on what user has created
+    // If HTTPRoute exists, don't generate anything
+    // If ClusterIP exists but not HTTPRoute, generate only HTTPRoute
+    // If neither exists, generate both
+    const shouldGenerateClusterIP = !hasHTTPRoute && !hasClusterIP;
+    const shouldGenerateHTTPRoute = !hasHTTPRoute;
+
     const templateResult = generateTemplates(
       workloads,
       {
@@ -840,8 +850,8 @@ export default function CreateChart() {
         requestsPerSecond,
         resourceQuota,
       },
-      true, // createClusterIP - will be determined by user in modal
-      true  // createHTTPRoute - will be determined by user in modal
+      shouldGenerateClusterIP,
+      shouldGenerateHTTPRoute
     );
 
     const yaml = combineYamlDocuments(
