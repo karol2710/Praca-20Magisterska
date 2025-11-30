@@ -342,15 +342,19 @@ spec:
 }
 
 function generateBackupSchedule(namespace: string): string {
-  return `apiVersion: v1
-kind: ConfigMap
+  return `apiVersion: velero.io/v1
+kind: Schedule
 metadata:
-  name: backup-schedule
-  namespace: ${namespace}
-data:
-  schedule: "0 2 * * *"
-  retention-days: "30"
-  backup-type: "full"`;
+  name: ${namespace}-daily
+  namespace: velero
+spec:
+  schedule: "0 0 * * *"
+  template:
+    ttl: 720h
+    includedNamespaces:
+      - ${namespace}
+    snapshotVolumes: true
+    includeClusterResources: false`;
 }
 
 export function combineYamlDocuments(result: TemplateGenerationResult): string {
