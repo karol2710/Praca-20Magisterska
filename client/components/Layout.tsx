@@ -40,6 +40,26 @@ export default function Layout({ children }: LayoutProps) {
               >
                 Home
               </Link>
+              <Link
+                to="/create-chart"
+                className={`transition-colors ${
+                  isActive("/create-chart")
+                    ? "text-primary font-medium"
+                    : "text-foreground/70 hover:text-foreground"
+                }`}
+              >
+                Create Chart
+              </Link>
+              <Link
+                to="/deployments"
+                className={`transition-colors ${
+                  isActive("/deployments")
+                    ? "text-primary font-medium"
+                    : "text-foreground/70 hover:text-foreground"
+                }`}
+              >
+                Deployments
+              </Link>
               <div className="flex items-center gap-2">
                 <Link
                   to="/login"
