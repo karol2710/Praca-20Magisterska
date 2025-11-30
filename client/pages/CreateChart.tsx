@@ -895,10 +895,12 @@ export default function CreateChart() {
           <GlobalConfigurationForm
             config={{
               namespace: globalNamespace,
+              domain: globalDomain,
               requestsPerSecond,
               resourceQuota,
             }}
             onNamespaceChange={setGlobalNamespace}
+            onDomainChange={setGlobalDomain}
             onRequestsPerSecondChange={setRequestsPerSecond}
             onResourceQuotaChange={setResourceQuota}
           />
