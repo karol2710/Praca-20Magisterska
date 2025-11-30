@@ -904,31 +904,39 @@ export default function CreateChart() {
               <form onSubmit={handleStandardSubmit} className="max-w-2xl mx-auto space-y-6 bg-card border border-border rounded-xl p-8">
                 <div>
                   <label htmlFor="repository" className="block text-sm font-semibold text-foreground mb-2">
-                    Repository
+                    Repository <span className="text-destructive">*</span>
                   </label>
                   <input
                     id="repository"
                     type="text"
                     value={repository}
-                    onChange={(e) => setRepository(e.target.value)}
+                    onChange={(e) => setRepository(e.target.value.slice(0, 500))}
                     placeholder="kyverno-nirmata https://nirmata.github.io/kyverno-charts/"
                     className="input-field"
+                    maxLength={500}
                     required
+                    spellCheck="false"
+                    autoComplete="off"
                   />
+                  <p className="text-xs text-foreground/50 mt-1">Format: "name https://url" (HTTPS required)</p>
                 </div>
 
                 <div>
                   <label htmlFor="helmInstall" className="block text-sm font-semibold text-foreground mb-2">
-                    Helm Install
+                    Helm Install <span className="text-destructive">*</span>
                   </label>
                   <textarea
                     id="helmInstall"
                     value={helmInstall}
-                    onChange={(e) => setHelmInstall(e.target.value)}
+                    onChange={(e) => setHelmInstall(e.target.value.slice(0, 1000))}
                     placeholder="my-nirmata-kyverno-operator kyverno-nirmata/nirmata-kyverno-operator --version 0.8.9-rc1"
                     className="input-field resize-none h-24"
+                    maxLength={1000}
                     required
+                    spellCheck="false"
+                    autoComplete="off"
                   />
+                  <p className="text-xs text-foreground/50 mt-1">Note: Some characters are not allowed for security reasons</p>
                 </div>
 
                 <button
