@@ -1860,7 +1860,7 @@ export default function CreateChart() {
       {showDeploymentModal && pendingDeploymentConfig && (
         <DeploymentConfirmModal
           isOpen={showDeploymentModal}
-          deploymentName={newWorkloadName}
+          deploymentName={workloads.length > 0 ? workloads[0].name : "Deployment"}
           namespace={globalNamespace}
           generatedYaml={generatedYaml}
           onConfirm={handleDeploymentConfirm}
