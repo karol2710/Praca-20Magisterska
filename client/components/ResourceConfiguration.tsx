@@ -895,10 +895,11 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
                   <button
                     onClick={() => {
                       const rules = ((config.spec as HTTPRouteSpec)?.rules || []);
-                      onConfigChange("spec", {
+                      const newSpec = {
                         ...(config.spec as HTTPRouteSpec || {}),
                         rules: [...rules, { matches: [], backendRefs: [], filters: [] }],
-                      });
+                      };
+                      onConfigChange("spec", updateSpecWithHostnames(newSpec));
                     }}
                     className="text-primary hover:opacity-70 text-sm"
                   >
