@@ -550,6 +550,15 @@ export default function ResourceConfiguration({ config, onConfigChange, globalNa
     setExpandedSections(newExpanded);
   };
 
+  const updateSpecWithHostnames = (newSpec: any) => {
+    if ((config.type === "HTTPRoute" || config.type === "GRPCRoute") && globalDomain) {
+      if (!newSpec.hostnames || newSpec.hostnames.length === 0) {
+        newSpec.hostnames = [globalDomain];
+      }
+    }
+    return newSpec;
+  };
+
   const sections = configSections[config.type] || [];
 
   const renderTagsField = (
