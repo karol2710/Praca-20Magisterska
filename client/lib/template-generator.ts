@@ -24,11 +24,16 @@ interface TemplateGenerationResult {
   workloadPortMappings: Record<string, number[]>;
 }
 
+interface GenerateTemplatesOptions {
+  userCreatedClusterIPNames?: string[];
+}
+
 export function generateTemplates(
   workloads: Workload[],
   globalConfig: GlobalConfig,
   createClusterIP: boolean,
-  createHTTPRoute: boolean
+  createHTTPRoute: boolean,
+  options?: GenerateTemplatesOptions
 ): TemplateGenerationResult {
   const result: TemplateGenerationResult = {
     clusterIpServices: [],
@@ -75,7 +80,7 @@ export function generateTemplates(
     });
   }
 
-  // Generate single HTTPRoute with all workloads as backend refs
+  // Generate single HTTPRoute with all workloads/ClusterIPs as backend refs
   if (createHTTPRoute) {
     const workloadsWithPorts = workloads.filter(
       (w) => workloadPortMappings[w.name]?.length > 0
@@ -85,7 +90,8 @@ export function generateTemplates(
       result.httpRoute = generateHTTPRoute(
         workloadsWithPorts,
         globalConfig.namespace,
-        globalConfig.domain
+        globalConfig.domain,
+        options?.userCreatedClusterIPNames
       );
     }
   }
