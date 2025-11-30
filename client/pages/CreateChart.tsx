@@ -265,6 +265,7 @@ export default function CreateChart() {
   const [showYamlModal, setShowYamlModal] = useState<boolean>(false);
   const [generatedYaml, setGeneratedYaml] = useState<string>("");
   const [globalNamespace, setGlobalNamespace] = useState<string>("default");
+  const [globalDomain, setGlobalDomain] = useState<string>("");
 
   // Rate Limiting
   const [requestsPerSecond, setRequestsPerSecond] = useState<string>("");
