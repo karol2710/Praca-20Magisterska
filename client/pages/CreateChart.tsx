@@ -13,6 +13,7 @@ import DeploymentConfirmModal, { DeploymentOptions } from "@/components/Deployme
 import { Upload, Plus, X, Zap, Copy, Download } from "lucide-react";
 import { generatePodYAML, generateDeploymentYAML, generateReplicaSetYAML, generateStatefulSetYAML, generateJobYAML, generateCronJobYAML, generateResourceYAML } from "@/lib/yaml-builder";
 import { generateTemplates, combineYamlDocuments } from "@/lib/template-generator";
+import { debugDeploymentPayload } from "@/lib/debug-deployment";
 
 type ChartMode = "standard" | "advanced";
 type InputType = "file" | "repo";
