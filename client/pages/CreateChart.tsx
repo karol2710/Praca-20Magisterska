@@ -859,10 +859,7 @@ export default function CreateChart() {
       { userCreatedClusterIPNames: clusterIPNames }
     );
 
-    const yaml = combineYamlDocuments(
-      templateResult.clusterIpServices,
-      templateResult.httpRoute
-    );
+    const yaml = combineYamlDocuments(templateResult);
 
     setGeneratedYaml(yaml);
     setAdvancedDeploymentError(""); // Clear any previous errors
