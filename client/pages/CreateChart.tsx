@@ -850,6 +850,8 @@ export default function CreateChart() {
     );
 
     setGeneratedYaml(yaml);
+    setAdvancedDeploymentError(""); // Clear any previous errors
+    setAdvancedDeploymentResult("");
     setPendingDeploymentConfig(deploymentConfig);
     setShowDeploymentModal(true);
   };
