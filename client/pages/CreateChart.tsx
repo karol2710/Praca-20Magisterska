@@ -877,6 +877,15 @@ export default function CreateChart() {
     setAdvancedDeploymentResult("");
     setAdvancedDeploymentError("");
 
+    const deploymentPayload = {
+      ...pendingDeploymentConfig,
+      deploymentOptions: options,
+      generatedYaml: options.generatedYaml || generatedYaml,
+    };
+
+    // Temporary debug: Log what will be sent to cluster
+    debugDeploymentPayload(deploymentPayload);
+
     try {
       const token = localStorage.getItem("token");
       const response = await fetch("/api/deploy-advanced", {
@@ -885,11 +894,7 @@ export default function CreateChart() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          ...pendingDeploymentConfig,
-          deploymentOptions: options,
-          generatedYaml: options.generatedYaml || generatedYaml,
-        }),
+        body: JSON.stringify(deploymentPayload),
       });
 
       const data = await response.json();
