@@ -284,6 +284,7 @@ export default function CreateChart() {
   // Deployment Modal
   const [showDeploymentModal, setShowDeploymentModal] = useState<boolean>(false);
   const [pendingDeploymentConfig, setPendingDeploymentConfig] = useState<any>(null);
+  const [generatedYaml, setGeneratedYaml] = useState<string>("");
 
   const activeWorkload = workloads.find((w) => w.id === activeWorkloadId);
 
