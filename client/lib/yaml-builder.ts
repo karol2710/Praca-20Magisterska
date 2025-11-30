@@ -387,8 +387,12 @@ function buildWorkloadYAML(
       spec: cleanEmptyValues(buildPodSpec(config.template, containers)),
     };
 
-    if (config.template.labels && Object.keys(config.template.labels).length > 0) {
-      spec.template.metadata.labels = config.template.labels;
+    // Add app label to pod template
+    const templateLabels = config.template.labels ? { ...config.template.labels } : {};
+    templateLabels.app = name.toLowerCase();
+
+    if (Object.keys(templateLabels).length > 0) {
+      spec.template.metadata.labels = templateLabels;
     }
 
     if (config.template.annotations && Object.keys(config.template.annotations).length > 0) {
