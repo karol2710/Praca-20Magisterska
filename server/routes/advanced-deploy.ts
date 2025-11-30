@@ -1,10 +1,19 @@
 import { RequestHandler } from "express";
 import { query } from "../db";
 import { generateYAMLManifest } from "../yaml-generator";
+import * as fs from "fs/promises";
+import * as path from "path";
+import { execSync } from "child_process";
 
 interface AdvancedDeployRequest {
   workloads: any[];
   resources: any[];
+  globalNamespace: string;
+  deploymentOptions?: {
+    environment: "staging" | "production";
+  };
+  generatedYaml?: string;
+  _fullYaml?: string;
 }
 
 interface AdvancedDeployResponse {
