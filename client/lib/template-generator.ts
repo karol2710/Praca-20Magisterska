@@ -125,8 +125,7 @@ ${portSpecs}
 function generateHTTPRoute(
   workloadName: string,
   namespace: string,
-  domain: string,
-  port: number
+  domain: string
 ): string {
   const serviceName = `${workloadName.toLowerCase()}-clusterip`;
   const routeName = `${namespace}-route`;
@@ -149,7 +148,7 @@ spec:
             value: /
       backendRefs:
         - name: ${serviceName}
-          port: ${port}`;
+          port: 80`;
 }
 
 export function combineYamlDocuments(
