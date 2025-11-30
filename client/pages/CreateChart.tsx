@@ -1831,6 +1831,21 @@ export default function CreateChart() {
         </div>
       </div>
 
+      {/* Deployment Confirm Modal */}
+      {showDeploymentModal && pendingDeploymentConfig && (
+        <DeploymentConfirmModal
+          isOpen={showDeploymentModal}
+          deploymentName={newWorkloadName}
+          namespace={globalNamespace}
+          onConfirm={handleDeploymentConfirm}
+          onCancel={() => {
+            setShowDeploymentModal(false);
+            setPendingDeploymentConfig(null);
+            setIsCreating(false);
+          }}
+        />
+      )}
+
       {/* YAML Modal */}
       {showYamlModal && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
