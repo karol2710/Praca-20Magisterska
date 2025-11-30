@@ -12,6 +12,7 @@ import GlobalConfigurationForm from "@/components/GlobalConfigurationForm";
 import DeploymentConfirmModal, { DeploymentOptions } from "@/components/DeploymentConfirmModal";
 import { Upload, Plus, X, Zap, Copy, Download } from "lucide-react";
 import { generatePodYAML, generateDeploymentYAML, generateReplicaSetYAML, generateStatefulSetYAML, generateJobYAML, generateCronJobYAML, generateResourceYAML } from "@/lib/yaml-builder";
+import { generateTemplates, combineYamlDocuments } from "@/lib/template-generator";
 
 type ChartMode = "standard" | "advanced";
 type InputType = "file" | "repo";
