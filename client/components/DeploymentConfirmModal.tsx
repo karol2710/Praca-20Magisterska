@@ -105,42 +105,6 @@ export default function DeploymentConfirmModal({
             </div>
           </div>
 
-          {/* Networking Options */}
-          <div>
-            <label className="block text-sm font-semibold text-foreground mb-3">Networking Configuration</label>
-            <div className="space-y-3">
-              <label className="flex items-start gap-3 p-4 border border-border rounded-lg cursor-pointer hover:bg-muted/10">
-                <input
-                  type="checkbox"
-                  checked={createHTTPRoute}
-                  onChange={(e) => setCreateHTTPRoute(e.target.checked)}
-                  className="w-4 h-4 mt-1"
-                />
-                <div className="flex-1">
-                  <p className="font-medium text-foreground">Create HTTPRoute</p>
-                  <p className="text-xs text-foreground/50 mt-1">
-                    Enables external access to your application via HTTP/HTTPS. Recommended for web applications.
-                  </p>
-                </div>
-              </label>
-
-              <label className="flex items-start gap-3 p-4 border border-border rounded-lg cursor-pointer hover:bg-muted/10">
-                <input
-                  type="checkbox"
-                  checked={createClusterIPService}
-                  onChange={(e) => setCreateClusterIPService(e.target.checked)}
-                  className="w-4 h-4 mt-1"
-                />
-                <div className="flex-1">
-                  <p className="font-medium text-foreground">Create ClusterIP Service</p>
-                  <p className="text-xs text-foreground/50 mt-1">
-                    Creates a Kubernetes Service for internal cluster communication. Usually created automatically.
-                  </p>
-                </div>
-              </label>
-            </div>
-          </div>
-
           {/* Generated YAML */}
           {editedYaml && (
             <div>
