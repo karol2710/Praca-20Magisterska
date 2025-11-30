@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { AlertCircle, CheckCircle } from "lucide-react";
+import { AlertCircle, CheckCircle, Copy, Check } from "lucide-react";
 
 interface DeploymentConfirmModalProps {
   isOpen: boolean;
   deploymentName: string;
   namespace: string;
+  generatedYaml?: string;
   onConfirm: (options: DeploymentOptions) => Promise<void>;
   onCancel: () => void;
 }
@@ -13,6 +14,7 @@ export interface DeploymentOptions {
   createHTTPRoute: boolean;
   createClusterIPService: boolean;
   environment: "staging" | "production";
+  generatedYaml?: string;
 }
 
 export default function DeploymentConfirmModal({
