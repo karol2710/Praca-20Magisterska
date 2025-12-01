@@ -89,7 +89,7 @@ export default function Layout({ children }: LayoutProps) {
                 href="https://github.com/karol2710/Praca-20Magisterska"
                 className="text-primary hover:underline"
               >
-                Praca Magisterska KŻ
+                Praca Inżynierska KŻ
               </a>
               <span>© 2025 by</span>
               <a
