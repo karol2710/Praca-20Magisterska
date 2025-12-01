@@ -236,6 +236,7 @@ export const handleDeploy: RequestHandler = async (req, res) => {
     res.status(200).json({
       success: true,
       output: output.join("\n"),
+      securityReport,
     } as DeployResponse);
   } catch (error: any) {
     // Don't expose detailed error messages to client
