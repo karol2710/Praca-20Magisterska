@@ -1,6 +1,7 @@
 import { RequestHandler } from "express";
 import { execSync, spawnSync } from "child_process";
 import { query } from "../db";
+import { validateHelmChart, parseHelmValues } from "../security-validator";
 
 interface DeployRequest {
   repository: string;
