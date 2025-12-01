@@ -73,6 +73,7 @@ export async function createServer() {
   // Protected deployment routes
   app.post("/api/deploy", authMiddleware, handleDeploy);
   app.post("/api/deploy-advanced", authMiddleware, handleAdvancedDeploy);
+  app.post("/api/check-security", authMiddleware, handleCheckSecurity);
 
   // Protected deployments management routes
   app.get("/api/deployments", authMiddleware, handleGetDeployments);
