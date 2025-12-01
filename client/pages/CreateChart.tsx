@@ -260,6 +260,8 @@ export default function CreateChart() {
   const [helmInstall, setHelmInstall] = useState<string>("");
   const [deploymentResult, setDeploymentResult] = useState<string>("");
   const [deploymentError, setDeploymentError] = useState<string>("");
+  const [securityReport, setSecurityReport] = useState<any>(null);
+  const [showSecurityWarning, setShowSecurityWarning] = useState(false);
   const [advancedDeploymentResult, setAdvancedDeploymentResult] =
     useState<string>("");
   const [advancedDeploymentError, setAdvancedDeploymentError] =
@@ -1009,7 +1011,7 @@ export default function CreateChart() {
               <ul className="space-y-2 text-sm text-foreground/60">
                 <li>✓ Create multiple workloads</li>
                 <li>✓ Define resources</li>
-                <li>✓ Full control over configuration</li>
+                <li>��� Full control over configuration</li>
                 <li>✓ Complex deployments</li>
               </ul>
             </div>
