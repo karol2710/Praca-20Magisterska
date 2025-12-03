@@ -343,15 +343,7 @@ PING_MESSAGE=ping
 
 ---
 
-## Validation & Type Safety
-
-### Runtime Validation
-
-- Zod for API request/response validation
-- Type-safe form submission
-- Database query type checking
-
-### Compile-time Validation
+## Type Safety
 
 - TypeScript strict mode (configurable)
 - Type inference for React components
