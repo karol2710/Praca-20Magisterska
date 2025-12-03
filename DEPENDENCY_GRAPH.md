@@ -424,7 +424,7 @@ Container Layer
 
 ```
 HTTP/REST API (Fetch)
-├─ Request: JSON (React Hook Form + Zod)
+├─ Request: JSON (React Hook Form)
 ├─ Response: JSON (TanStack React Query)
 └─ Authentication: Bearer Token (JWT)
 ```
