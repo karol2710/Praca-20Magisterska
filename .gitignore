@@ -25,3 +25,8 @@ dist-ssr
 
 .config/
 !.env
+
+# Kubernetes secrets - DO NOT COMMIT
+kubernetes/secrets.env
+kubernetes/sealed-secret.yaml
+kubernetes/secret-generated.yaml
