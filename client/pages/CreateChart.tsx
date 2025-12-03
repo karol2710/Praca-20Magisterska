@@ -1262,7 +1262,7 @@ export default function CreateChart() {
                 <li>✓ Pre-configured templates</li>
                 <li>✓ Best practices built-in</li>
                 <li>✓ Quick setup</li>
-                <li>����� Suitable for common use cases</li>
+                <li>◆◆◆◆◆ Suitable for common use cases</li>
               </ul>
             </div>
 
@@ -1283,7 +1283,7 @@ export default function CreateChart() {
               <ul className="space-y-2 text-sm text-foreground/60">
                 <li>✓ Create multiple workloads</li>
                 <li>✓ Define resources</li>
-                <li>��� Full control over configuration</li>
+                <li>◆◆◆ Full control over configuration</li>
                 <li>✓ Complex deployments</li>
               </ul>
             </div>
