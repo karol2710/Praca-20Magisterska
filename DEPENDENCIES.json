@@ -54,13 +54,6 @@
         "category": "Data Processing"
       }
     },
-    "validation": {
-      "zod": {
-        "version": "^3.25.76",
-        "purpose": "TypeScript-first schema validation",
-        "category": "Validation"
-      }
-    },
     "deployment": {
       "serverless-http": {
         "version": "^3.2.0",
@@ -180,20 +173,10 @@
         "purpose": "Performant, flexible form state management",
         "category": "Forms"
       },
-      "hookform_resolvers": {
-        "version": "^5.2.1",
-        "purpose": "Validation resolver for React Hook Form",
-        "category": "Forms"
-      },
       "input_otp": {
         "version": "^1.4.2",
         "purpose": "OTP input component",
         "category": "Forms"
-      },
-      "zod": {
-        "version": "^3.25.76",
-        "purpose": "Schema validation and form validation",
-        "category": "Validation"
       }
     },
     "data_management": {
@@ -211,11 +194,6 @@
       }
     },
     "date_time": {
-      "date_fns": {
-        "version": "^4.1.0",
-        "purpose": "Modern date utility library",
-        "category": "Utilities"
-      },
       "react_day_picker": {
         "version": "^9.8.1",
         "purpose": "Date picker component",
@@ -251,28 +229,6 @@
         "version": "^1.1.1",
         "purpose": "Command palette component",
         "category": "Interactive"
-      },
-      "framer_motion": {
-        "version": "^12.23.12",
-        "purpose": "Animation library for React",
-        "category": "Animations"
-      }
-    },
-    "3d_graphics": {
-      "three": {
-        "version": "^0.176.0",
-        "purpose": "3D graphics library (WebGL)",
-        "category": "3D"
-      },
-      "react_three_fiber": {
-        "version": "^8.18.0",
-        "purpose": "React renderer for Three.js",
-        "category": "3D"
-      },
-      "react_three_drei": {
-        "version": "^9.122.0",
-        "purpose": "3D component helpers",
-        "category": "3D"
       }
     }
   },
@@ -308,11 +264,6 @@
       "types_react_dom": {
         "version": "^18.3.7",
         "purpose": "TypeScript definitions for React DOM",
-        "category": "Type Definitions"
-      },
-      "types_three": {
-        "version": "^0.176.0",
-        "purpose": "TypeScript definitions for Three.js",
         "category": "Type Definitions"
       },
       "types_node": {
@@ -359,13 +310,13 @@
     }
   },
   "summary": {
-    "total_direct_dependencies": 73,
-    "estimated_transitive_dependencies": 500,
+    "total_direct_dependencies": 66,
+    "estimated_transitive_dependencies": 450,
     "production_only": 7,
-    "frontend_packages": 45,
+    "frontend_packages": 38,
     "backend_packages": 7,
-    "dev_tools": 21,
-    "type_definitions": 7,
+    "dev_tools": 20,
+    "type_definitions": 6,
     "docker_image_size": "~200MB",
     "node_modules_size": "~1.2GB",
     "build_time": "2-3 minutes"
@@ -406,9 +357,9 @@
       "25+ accessible Radix UI components",
       "Utility-first Tailwind CSS styling",
       "Real-time data management (React Query)",
-      "Form validation (React Hook Form + Zod)",
+      "Form management (React Hook Form)",
       "Dark/light mode support",
-      "3D graphics capability (Three.js)",
+      "Date picker functionality (react-day-picker)",
       "Responsive design"
     ],
     "backend": [
@@ -417,7 +368,6 @@
       "Secure password hashing (bcryptjs)",
       "PostgreSQL persistence",
       "YAML Kubernetes manifest parsing",
-      "Type-safe validation (Zod)",
       "Serverless ready"
     ],
     "deployment": [
