@@ -1,0 +1,50 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: kubechart-postgres
+    environment:
+      POSTGRES_USER: kubechart
+      POSTGRES_PASSWORD: kubechart_dev_password
+      POSTGRES_DB: kubechart_dev
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kubechart"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - kubechart-network
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: kubechart-app
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: postgresql://kubechart:kubechart_dev_password@postgres:5432/kubechart_dev
+      JWT_SECRET: your-development-secret-key-change-this
+      PORT: 3000
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - kubechart-network
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/dist
+
+volumes:
+  postgres_data:
+
+networks:
+  kubechart-network:
+    driver: bridge
