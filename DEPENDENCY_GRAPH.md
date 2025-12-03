@@ -439,6 +439,7 @@ Container Layer
 ## Key Integration Points
 
 ### Frontend ↔ Backend
+
 ```
 HTTP/REST API (Fetch)
 ├─ Request: JSON (React Hook Form + Zod)
@@ -447,6 +448,7 @@ HTTP/REST API (Fetch)
 ```
 
 ### Backend ↔ Database
+
 ```
 PostgreSQL Protocol
 ├─ Connection: TCP/IP (pg driver)
@@ -456,6 +458,7 @@ PostgreSQL Protocol
 ```
 
 ### App ↔ Kubernetes
+
 ```
 Container Image
 ├─ Docker: Multi-stage build
@@ -501,22 +504,22 @@ Authentication
 
 ## Summary Statistics
 
-| Metric | Value |
-|--------|-------|
-| **Direct Dependencies** | 73 |
-| **Transitive Dependencies** | 500+ |
-| **Frontend Packages** | 45+ |
-| **Backend Packages** | 7 |
-| **Dev Tools** | 21+ |
-| **Radix UI Components** | 25+ |
-| **TypeScript Definitions** | 10+ |
-| **Vite Plugins** | 2 |
-| **Build Artifacts** | 2 (client + server) |
-| **Docker Image Size** | ~200MB |
-| **Node Modules Size** | ~1.2GB |
-| **TypeScript Files** | 50+ |
-| **CSS Classes** | Generated from Tailwind |
-| **Kubernetes Manifests** | 10 |
+| Metric                      | Value                   |
+| --------------------------- | ----------------------- |
+| **Direct Dependencies**     | 73                      |
+| **Transitive Dependencies** | 500+                    |
+| **Frontend Packages**       | 45+                     |
+| **Backend Packages**        | 7                       |
+| **Dev Tools**               | 21+                     |
+| **Radix UI Components**     | 25+                     |
+| **TypeScript Definitions**  | 10+                     |
+| **Vite Plugins**            | 2                       |
+| **Build Artifacts**         | 2 (client + server)     |
+| **Docker Image Size**       | ~200MB                  |
+| **Node Modules Size**       | ~1.2GB                  |
+| **TypeScript Files**        | 50+                     |
+| **CSS Classes**             | Generated from Tailwind |
+| **Kubernetes Manifests**    | 10                      |
 
 ---
 

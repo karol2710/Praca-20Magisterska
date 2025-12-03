@@ -11,6 +11,7 @@ KubeChart is a full-stack web application for Kubernetes deployment management b
 ## Frontend Stack
 
 ### Core Framework
+
 - **React** `^18.3.1`
   - Modern UI library for building user interfaces
   - Component-based architecture
@@ -28,6 +29,7 @@ KubeChart is a full-stack web application for Kubernetes deployment management b
 ### UI & Component Libraries
 
 #### Radix UI (Complete Component System)
+
 - `@radix-ui/react-accordion` `^1.2.11` - Collapsible content sections
 - `@radix-ui/react-alert-dialog` `^1.1.14` - Modal dialogs for alerts
 - `@radix-ui/react-aspect-ratio` `^1.1.7` - Maintains aspect ratio for elements
@@ -57,6 +59,7 @@ KubeChart is a full-stack web application for Kubernetes deployment management b
 - `@radix-ui/react-tooltip` `^1.2.7` - Tooltip components
 
 #### Other UI Libraries
+
 - **Lucide React** `^0.539.0`
   - Modern SVG icon library (~500+ icons)
   - Used for UI icons and visual indicators
@@ -74,6 +77,7 @@ KubeChart is a full-stack web application for Kubernetes deployment management b
   - Smooth transitions and interactive animations
 
 ### Form & Input Handling
+
 - **React Hook Form** `^7.62.0`
   - Lightweight form state management
   - Form validation and submission
@@ -88,6 +92,7 @@ KubeChart is a full-stack web application for Kubernetes deployment management b
   - Multi-step input handling
 
 ### Styling & CSS
+
 - **Tailwind CSS** `^3.4.17`
   - Utility-first CSS framework
   - Primary styling methodology
@@ -122,6 +127,7 @@ KubeChart is a full-stack web application for Kubernetes deployment management b
   - Class concatenation helper
 
 ### Data & State Management
+
 - **@tanstack/react-query** `^5.84.2`
   - Server state management
   - Data fetching, caching, synchronization
@@ -132,6 +138,7 @@ KubeChart is a full-stack web application for Kubernetes deployment management b
   - Type-safe data validation
 
 ### Date & Time
+
 - **date-fns** `^4.1.0`
   - Modern date utility library
   - Date formatting and manipulation
@@ -142,6 +149,7 @@ KubeChart is a full-stack web application for Kubernetes deployment management b
   - Calendar UI for date selection
 
 ### Theme & Dark Mode
+
 - **next-themes** `^0.4.6`
   - Theme management library
   - Dark/light mode toggling
@@ -152,6 +160,7 @@ KubeChart is a full-stack web application for Kubernetes deployment management b
   - User feedback notifications
 
 ### Layout & Panels
+
 - **react-resizable-panels** `^3.0.4`
   - Resizable panel layout
   - Drag-to-resize UI sections
@@ -161,12 +170,14 @@ KubeChart is a full-stack web application for Kubernetes deployment management b
   - Slide-out navigation
 
 ### Command Palette
+
 - **cmdk** `^1.1.1`
   - Command palette component
   - Keyboard-driven navigation
   - Command search interface
 
 ### 3D Graphics
+
 - **Three.js** `^0.176.0`
   - 3D graphics library
   - WebGL renderer for 3D visualizations
@@ -180,6 +191,7 @@ KubeChart is a full-stack web application for Kubernetes deployment management b
   - Pre-built 3D components and utilities
 
 ### Build & Compilation
+
 - **Vite** `^7.1.2`
   - Modern frontend build tool
   - Lightning-fast development server
@@ -196,6 +208,7 @@ KubeChart is a full-stack web application for Kubernetes deployment management b
   - TypeScript compilation
 
 ### Type Checking
+
 - **TypeScript** `^5.9.2`
   - Static type checking for JavaScript
   - Type safety across the application
@@ -211,6 +224,7 @@ KubeChart is a full-stack web application for Kubernetes deployment management b
   - Type definitions for Three.js
 
 ### Code Quality & Formatting
+
 - **Prettier** `^3.6.2`
   - Code formatter
   - Consistent code style
@@ -219,6 +233,7 @@ KubeChart is a full-stack web application for Kubernetes deployment management b
   - Code linting (configuration needed)
 
 ### Testing
+
 - **Vitest** `^3.2.4`
   - Unit testing framework
   - Vite-native test runner
@@ -233,6 +248,7 @@ KubeChart is a full-stack web application for Kubernetes deployment management b
 ## Backend Stack
 
 ### Runtime & Framework
+
 - **Node.js** `^22` (from Dockerfile)
   - JavaScript runtime
   - Server-side execution
@@ -248,6 +264,7 @@ KubeChart is a full-stack web application for Kubernetes deployment management b
   - Security for API endpoints
 
 ### Authentication & Security
+
 - **jsonwebtoken** `^9.0.2`
   - JWT token generation and verification
   - User authentication
@@ -259,30 +276,35 @@ KubeChart is a full-stack web application for Kubernetes deployment management b
   - Bcrypt algorithm implementation
 
 ### Database
+
 - **pg** `^8.16.3`
   - PostgreSQL client for Node.js
   - Database connection and queries
   - SQL query execution
 
 ### Configuration
+
 - **dotenv** `^17.2.1`
   - Environment variable loading
   - Load .env files
   - Configuration management
 
 ### Deployment & Serverless
+
 - **serverless-http** `^3.2.0`
   - Converts Express app to serverless functions
   - AWS Lambda, Netlify Functions support
   - FaaS compatibility
 
 ### Data Processing
+
 - **js-yaml** `^4.1.1`
   - YAML parser and serializer
   - Kubernetes manifest parsing
   - Configuration file handling
 
 ### Type Checking
+
 - **@types/node** `^24.2.1`
   - Type definitions for Node.js
 
@@ -297,6 +319,7 @@ KubeChart is a full-stack web application for Kubernetes deployment management b
 ## Shared Utilities
 
 ### Validation
+
 - **Zod** `^3.25.76` (shared)
   - Schema validation for API contracts
   - Type-safe data validation
@@ -306,23 +329,27 @@ KubeChart is a full-stack web application for Kubernetes deployment management b
 ## Development & Build Tools
 
 ### Package Manager
+
 - **pnpm** `10.14.0`
   - Fast, disk-space efficient package manager
   - Monorepo support
   - Dependency hoisting
 
 ### Build & Dev Server
+
 - **Vite** `^7.1.2`
   - Development server with HMR
   - Fast production builds
   - ESM support
 
 ### Code Quality Tools
+
 - **Prettier** `^3.6.2` - Code formatting
 - **TypeScript** `^5.9.2` - Type checking
 - **Vitest** `^3.2.4` - Unit testing
 
 ### Project Configuration
+
 - **tsx** `^4.20.3` - TypeScript executor
 - **globals** `^16.3.0` - Global variables for testing
 
@@ -331,6 +358,7 @@ KubeChart is a full-stack web application for Kubernetes deployment management b
 ## Database
 
 ### PostgreSQL
+
 - **Version:** 16 (from docker-compose.yml)
 - **Client:** pg (Node.js driver)
 - **Connection:** TCP/IP over port 5432
@@ -341,14 +369,17 @@ KubeChart is a full-stack web application for Kubernetes deployment management b
 ## Infrastructure & Deployment
 
 ### Docker
+
 - **Base Image:** node:22-alpine
 - **Build Tool:** Dockerfile (multi-stage)
 - **Orchestration:** Kubernetes 1.24+
 
 ### Container Registry
+
 - Docker Hub / ECR / GCR / Private registries
 
 ### Kubernetes
+
 - **Version:** 1.24+
 - **Deployment:** kubectl, Kustomize
 - **Service Mesh:** (Not required, optional)
@@ -360,6 +391,7 @@ KubeChart is a full-stack web application for Kubernetes deployment management b
 ## Development Environment
 
 ### Local Setup
+
 - **OS:** macOS, Linux, Windows (WSL2)
 - **Node.js:** 22+
 - **pnpm:** 10.14.0+
@@ -371,11 +403,13 @@ KubeChart is a full-stack web application for Kubernetes deployment management b
 ## API Endpoints Architecture
 
 ### Authentication Routes (Public)
+
 - `POST /api/auth/signup` - User registration
 - `POST /api/auth/login` - User login
 - `POST /api/auth/logout` - User logout
 
 ### Protected Routes (Authenticated)
+
 - `GET /api/auth/me` - Current user info
 - `POST /api/deploy` - Standard deployment
 - `POST /api/deploy-advanced` - Advanced deployment
@@ -385,6 +419,7 @@ KubeChart is a full-stack web application for Kubernetes deployment management b
 - `DELETE /api/deployments/:id` - Delete deployment
 
 ### Utility Routes
+
 - `GET /api/ping` - Health check
 
 ---
@@ -438,35 +473,38 @@ KubeChart
 
 ## Version Compatibility Matrix
 
-| Component | Version | Compatibility |
-|-----------|---------|---|
-| Node.js | 22+ | ✓ LTS |
-| React | 18.3.1 | ✓ Latest |
-| TypeScript | 5.9.2 | ✓ Latest |
-| Vite | 7.1.2 | ✓ Latest |
-| Tailwind CSS | 3.4.17 | ✓ Latest |
-| Express | 5.1.0 | ✓ Latest |
-| PostgreSQL | 16 | ✓ Current |
-| Kubernetes | 1.24+ | ✓ Supported |
-| Docker | 20.10+ | ✓ Supported |
+| Component    | Version | Compatibility |
+| ------------ | ------- | ------------- |
+| Node.js      | 22+     | ✓ LTS         |
+| React        | 18.3.1  | ✓ Latest      |
+| TypeScript   | 5.9.2   | ✓ Latest      |
+| Vite         | 7.1.2   | ✓ Latest      |
+| Tailwind CSS | 3.4.17  | ✓ Latest      |
+| Express      | 5.1.0   | ✓ Latest      |
+| PostgreSQL   | 16      | ✓ Current     |
+| Kubernetes   | 1.24+   | ✓ Supported   |
+| Docker       | 20.10+  | ✓ Supported   |
 
 ---
 
 ## Performance Characteristics
 
 ### Frontend
+
 - **Bundle Size (Optimized):** ~200KB (gzipped)
 - **Initial Load Time:** <2 seconds
 - **Time to Interactive:** <3 seconds
 - **Lighthouse Score:** 85+
 
 ### Backend
+
 - **Response Time:** <100ms (API calls)
 - **Database Queries:** Optimized with pg driver
 - **Memory Usage:** ~50-100MB (per container)
 - **CPU Usage:** 250m-500m per pod
 
 ### Build Times
+
 - **Development:** <1 second (HMR)
 - **Production Build:** <30 seconds
 - **Docker Build:** 2-3 minutes
@@ -476,19 +514,23 @@ KubeChart
 ## Security Dependencies
 
 ### Authentication
+
 - JWT for stateless authentication
 - bcryptjs for secure password hashing
 - Zod for input validation
 
 ### CORS
+
 - CORS middleware for cross-origin requests
 - Security headers in Express middleware
 
 ### YAML Processing
+
 - js-yaml with safe loading
 - Input validation before processing
 
 ### Secrets Management
+
 - Environment variables (.env)
 - Kubernetes Secrets (deployment)
 - No hardcoded credentials
@@ -498,6 +540,7 @@ KubeChart
 ## Dependencies by Category
 
 ### Production Dependencies (7)
+
 ```json
 {
   "bcryptjs": "^3.0.3",
@@ -511,6 +554,7 @@ KubeChart
 ```
 
 ### Development & UI Dependencies (66)
+
 - Radix UI components (25)
 - React ecosystem (10)
 - Styling (8)
@@ -525,16 +569,19 @@ KubeChart
 ## Update Strategy
 
 ### Critical Updates
+
 - Security patches: Apply immediately
 - Node.js versions: Follow LTS schedule
 - React/TypeScript: Quarterly updates
 
 ### Routine Updates
+
 - Minor versions: Monthly
 - Patch versions: As needed
 - Dev dependencies: Quarterly
 
 ### Compatibility Testing
+
 - Run full test suite after updates
 - Test in development first
 - Validate Kubernetes deployment
@@ -545,14 +592,17 @@ KubeChart
 ## Licensing
 
 ### MIT License (Most Dependencies)
+
 - Express, React, Vite, Tailwind CSS
 - Radix UI, Recharts, Framer Motion
 - Most open-source libraries
 
 ### ISC License
+
 - bcryptjs, pg, cors, dotenv
 
 ### Check specific licenses for:
+
 - Commercial tools integration
 - Enterprise deployments
 - Proprietary add-ons
@@ -562,6 +612,7 @@ KubeChart
 ## Future Tech Considerations
 
 ### Potential Additions
+
 - **Next.js** - For SSR/SSG capabilities
 - **Prisma** - For type-safe database ORM
 - **GraphQL** - For advanced API queries
@@ -570,6 +621,7 @@ KubeChart
 - **SendGrid** - For email notifications
 
 ### Performance Improvements
+
 - Server-side caching
 - Database connection pooling
 - Image optimization
@@ -577,6 +629,7 @@ KubeChart
 - Service workers for offline support
 
 ### Monitoring & Analytics
+
 - **Sentry** - Error tracking
 - **DataDog** - Infrastructure monitoring
 - **Prometheus** - Metrics collection
@@ -587,6 +640,7 @@ KubeChart
 ## Summary
 
 **KubeChart** is built on a modern, production-ready tech stack featuring:
+
 - ✅ React 18 with TypeScript
 - ✅ Tailwind CSS for styling
 - ✅ Express.js for backend
