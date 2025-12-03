@@ -367,13 +367,11 @@ User Request
 │  └─ Component Rendering
 │     ├─ Radix UI + Tailwind CSS
 │     ├─ Framer Motion (animations)
-│     └─ Three.js (3D graphics)
 │
 └─ Backend (Express)
    │
    ├─ Request Validation
    │  ├─ CORS check
-   │  └─ Zod schema validation
    │
    ├─ Authentication
    │  ├─ JWT verification (jsonwebtoken)
