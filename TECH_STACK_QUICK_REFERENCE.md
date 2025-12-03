@@ -13,7 +13,6 @@
 | **CSS Framework**      | Tailwind CSS         | 3.4.17         |
 | **UI Library**         | Radix UI             | 25+ components |
 | **Form Management**    | React Hook Form      | 7.62.0         |
-| **Data Validation**    | Zod                  | 3.25.76        |
 | **State Management**   | TanStack React Query | 5.84.2         |
 | **Charting**           | Recharts             | 2.12.7         |
 | **Authentication**     | JWT + bcryptjs       | 9.0.2, 3.0.3   |
