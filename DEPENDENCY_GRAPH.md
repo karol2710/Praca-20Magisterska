@@ -95,10 +95,6 @@ React 18.3.1 (Core)
 │  │
 │  └─ Embla Carousel 8.6.0 (Carousels)
 │
-├─ Date/Time Management
-│  ├─ date-fns 4.1.0 (Date utilities)
-│  └─ react-day-picker 9.8.1 (Date picker UI)
-│
 ├─ Theme Management
 │  ├─ next-themes 0.4.6 (Dark/light mode)
 │  └─ Sonner 1.7.4 (Notifications)
@@ -109,12 +105,6 @@ React 18.3.1 (Core)
 │
 ├─ Interactive Features
 │  └─ cmdk 1.1.1 (Command palette)
-│
-├─ 3D Graphics
-│  ├─ Three.js 0.176.0 (3D library)
-│  │  ├─ @react-three/fiber 8.18.0 (React renderer)
-│  │  └─ @react-three/drei 9.122.0 (Helpers)
-│  └─ Used for: 3D visualizations
 │
 ├─ Build & Bundling
 │  ├─ Vite 7.1.2 (Build tool, dev server)
