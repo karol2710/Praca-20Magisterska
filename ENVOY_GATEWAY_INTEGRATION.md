@@ -54,7 +54,7 @@ kubernetes/
 The `httproute.yaml` file defines:
 
 - **Parent References**: Links to the `platform-gateway` in `envoy-gateway-system`
-- **Hostnames**: 
+- **Hostnames**:
   - `kubechart.example.com` (primary)
   - `*.kubechart.example.com` (wildcard)
 - **Rules**: Routes all traffic (`/`) to the `kubechart` service on port 80
@@ -126,6 +126,7 @@ spec:
 ```
 
 This configuration:
+
 - References the Envoy Gateway from the `envoy-gateway-system` namespace
 - Listens on both HTTP (80) and HTTPS (443) ports
 - Ensures traffic is routed through the gateway listeners
@@ -141,6 +142,7 @@ backendRefs:
 ```
 
 The HTTPRoute points to:
+
 - Service name: `kubechart`
 - Target port: `80` (matches the Service definition)
 - Namespace: `kubechart` (inherited from HTTPRoute)
@@ -203,14 +205,14 @@ spec:
 
 ## Comparison: Ingress vs HTTPRoute
 
-| Feature | Ingress | HTTPRoute |
-|---------|---------|-----------|
-| API Group | `networking.k8s.io` | `gateway.networking.k8s.io` |
-| Gateway Control | Controller-specific | Standardized (Gateway API) |
-| Load Balancer Type | Ingress Controller | Gateway Implementation |
-| Flexibility | Limited | More powerful |
-| Future-proof | Legacy | Standard (Kubernetes GA) |
-| Multi-Tenancy | Limited | Better support |
+| Feature            | Ingress             | HTTPRoute                   |
+| ------------------ | ------------------- | --------------------------- |
+| API Group          | `networking.k8s.io` | `gateway.networking.k8s.io` |
+| Gateway Control    | Controller-specific | Standardized (Gateway API)  |
+| Load Balancer Type | Ingress Controller  | Gateway Implementation      |
+| Flexibility        | Limited             | More powerful               |
+| Future-proof       | Legacy              | Standard (Kubernetes GA)    |
+| Multi-Tenancy      | Limited             | Better support              |
 
 ## Troubleshooting
 

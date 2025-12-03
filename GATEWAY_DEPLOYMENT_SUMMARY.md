@@ -6,13 +6,13 @@ This integration adds **Envoy Gateway support** to KubeChart, enabling modern Ku
 
 ### New/Updated Files
 
-| File | Purpose |
-|------|---------|
-| `kubernetes/httproute.yaml` | HTTPRoute resource routing gateway traffic to KubeChart service |
-| `kubernetes/gateway.yaml` | Gateway and GatewayClass configuration for Envoy Gateway |
-| `ENVOY_GATEWAY_INTEGRATION.md` | Comprehensive integration guide |
-| `deploy-with-gateway.sh` | Automated deployment script |
-| `kubernetes/kustomization.yaml` | Updated to include HTTPRoute in deployment |
+| File                            | Purpose                                                         |
+| ------------------------------- | --------------------------------------------------------------- |
+| `kubernetes/httproute.yaml`     | HTTPRoute resource routing gateway traffic to KubeChart service |
+| `kubernetes/gateway.yaml`       | Gateway and GatewayClass configuration for Envoy Gateway        |
+| `ENVOY_GATEWAY_INTEGRATION.md`  | Comprehensive integration guide                                 |
+| `deploy-with-gateway.sh`        | Automated deployment script                                     |
+| `kubernetes/kustomization.yaml` | Updated to include HTTPRoute in deployment                      |
 
 ## Deployment Options
 
@@ -24,6 +24,7 @@ chmod +x deploy-with-gateway.sh
 ```
 
 This script:
+
 - Checks for Envoy Gateway installation
 - Installs Envoy Gateway if needed
 - Deploys gateway configuration
@@ -34,16 +35,19 @@ This script:
 ### Option 2: Manual Deployment
 
 **Step 1: Install Envoy Gateway**
+
 ```bash
 kubectl apply -f https://github.com/envoyproxy/gateway/releases/download/v0.6.0/install.yaml
 ```
 
 **Step 2: Deploy Gateway Configuration**
+
 ```bash
 kubectl apply -f kubernetes/gateway.yaml
 ```
 
 **Step 3: Deploy KubeChart with HTTPRoute**
+
 ```bash
 kubectl apply -k kubernetes/
 ```
@@ -64,6 +68,7 @@ gateway:
 ### HTTPRoute Integration
 
 The `kubernetes/httproute.yaml` file:
+
 - References the `platform-gateway` in `envoy-gateway-system`
 - Listens on HTTP (80) and HTTPS (443)
 - Routes all traffic to the `kubechart` service
@@ -80,6 +85,7 @@ parentRefs:
 ### Service Configuration
 
 The existing `kubernetes/service.yaml` remains unchanged:
+
 - Service name: `kubechart`
 - Type: `ClusterIP`
 - Port: `80`
@@ -130,6 +136,7 @@ Once DNS is configured and gateway is ready:
 For HTTPS support:
 
 1. Create a TLS secret in the `kubechart` namespace:
+
    ```bash
    kubectl create secret tls kubechart-tls \
      --cert=path/to/cert.crt \
@@ -138,6 +145,7 @@ For HTTPS support:
    ```
 
 2. Update `kubernetes/gateway.yaml` to reference the secret:
+
    ```yaml
    listeners:
      - name: https
