@@ -2395,7 +2395,7 @@ export default function CreateChart() {
                             <button
                               key={type}
                               onClick={() => setSelectedResourceType(type)}
-                              className={`p-3 rounded-lg border-2 text-sm font-medium transition-all ${
+                              className={`p-3 rounded-lg border-2 text-xs font-medium transition-all min-h-16 flex items-center justify-center text-center break-words whitespace-normal ${
                                 selectedResourceType === type
                                   ? "border-primary bg-primary/10 text-primary"
                                   : "border-border text-foreground hover:border-primary/50"
