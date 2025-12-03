@@ -36,7 +36,6 @@ TypeScript 5.9.2 (Type Safety)
 
 - **Radix UI** - 25+ accessible components
 - **Lucide React** - 500+ icons
-- **Framer Motion** - Animations
 - **Embla Carousel** - Carousels
 - **Recharts** - Charts & graphs
 
@@ -205,12 +204,11 @@ kubectl (Kubernetes CLI)
 
 - ✅ Type-safe components (TypeScript)
 - ✅ Accessible UI (Radix UI)
-- ✅ Smooth animations (Framer Motion)
 - ✅ Real-time data updates (React Query)
-- ✅ Form validation (Zod + React Hook Form)
+- ✅ Form management (React Hook Form)
 - ✅ Dark mode support (next-themes)
 - ✅ Mobile responsive (Tailwind CSS)
-- ✅ 3D visualizations (Three.js)
+- ✅ Date picker UI (react-day-picker)
 
 ### Backend
 
@@ -221,7 +219,6 @@ kubectl (Kubernetes CLI)
 - ✅ YAML configuration parsing
 - ✅ Serverless compatible
 - ✅ CORS support
-- ✅ Type-safe validation (Zod)
 
 ### Deployment
 
