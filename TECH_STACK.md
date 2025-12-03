@@ -72,20 +72,12 @@ KubeChart is a full-stack web application for Kubernetes deployment management b
   - React charting library
   - Charts for deployment metrics visualization
 
-- **Framer Motion** `^12.23.12`
-  - Animation library for React
-  - Smooth transitions and interactive animations
-
 ### Form & Input Handling
 
 - **React Hook Form** `^7.62.0`
   - Lightweight form state management
   - Form validation and submission
   - Used for deployment configuration forms
-
-- **@hookform/resolvers** `^5.2.1`
-  - Form validation resolver
-  - Schema validation integration with React Hook Form
 
 - **Input OTP** `^1.4.2`
   - OTP input component
@@ -133,16 +125,7 @@ KubeChart is a full-stack web application for Kubernetes deployment management b
   - Data fetching, caching, synchronization
   - Replaces Redux for server state
 
-- **Zod** `^3.25.76`
-  - TypeScript-first schema validation
-  - Type-safe data validation
-
 ### Date & Time
-
-- **date-fns** `^4.1.0`
-  - Modern date utility library
-  - Date formatting and manipulation
-  - Lightweight alternative to moment.js
 
 - **react-day-picker** `^9.8.1`
   - Date picker component
@@ -176,20 +159,6 @@ KubeChart is a full-stack web application for Kubernetes deployment management b
   - Keyboard-driven navigation
   - Command search interface
 
-### 3D Graphics
-
-- **Three.js** `^0.176.0`
-  - 3D graphics library
-  - WebGL renderer for 3D visualizations
-
-- **@react-three/fiber** `^8.18.0`
-  - React renderer for Three.js
-  - Declarative 3D component API
-
-- **@react-three/drei** `^9.122.0`
-  - Useful helpers for react-three-fiber
-  - Pre-built 3D components and utilities
-
 ### Build & Compilation
 
 - **Vite** `^7.1.2`
@@ -219,9 +188,6 @@ KubeChart is a full-stack web application for Kubernetes deployment management b
 
 - **@types/react-dom** `^18.3.7`
   - Type definitions for React DOM
-
-- **@types/three** `^0.176.0`
-  - Type definitions for Three.js
 
 ### Code Quality & Formatting
 
@@ -317,12 +283,6 @@ KubeChart is a full-stack web application for Kubernetes deployment management b
 ---
 
 ## Shared Utilities
-
-### Validation
-
-- **Zod** `^3.25.76` (shared)
-  - Schema validation for API contracts
-  - Type-safe data validation
 
 ---
 
