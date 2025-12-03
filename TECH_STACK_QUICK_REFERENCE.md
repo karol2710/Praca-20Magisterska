@@ -482,7 +482,6 @@ PING_MESSAGE=ping
 - [PostgreSQL Docs](https://www.postgresql.org/docs)
 - [Radix UI Docs](https://www.radix-ui.com/docs/primitives/overview/introduction)
 - [React Hook Form](https://react-hook-form.com)
-- [Zod Documentation](https://zod.dev)
 
 ---
 
