@@ -487,11 +487,11 @@ Authentication
 
 | Metric                      | Value                   |
 | --------------------------- | ----------------------- |
-| **Direct Dependencies**     | 73                      |
-| **Transitive Dependencies** | 500+                    |
-| **Frontend Packages**       | 45+                     |
+| **Direct Dependencies**     | 66                      |
+| **Transitive Dependencies** | 450+                    |
+| **Frontend Packages**       | 38+                     |
 | **Backend Packages**        | 7                       |
-| **Dev Tools**               | 21+                     |
+| **Dev Tools**               | 20                     |
 | **Radix UI Components**     | 25+                     |
 | **TypeScript Definitions**  | 10+                     |
 | **Vite Plugins**            | 2                       |
