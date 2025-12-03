@@ -5,6 +5,7 @@ Complete containerization and Kubernetes deployment setup for the KubeChart appl
 ## What's Included
 
 ### Docker Configuration
+
 - ✅ **Dockerfile** - Multi-stage build optimized for production
   - Build stage: Builds client + server with all dependencies
   - Production stage: Only runtime dependencies (optimized image size ~200MB)
@@ -20,23 +21,25 @@ Complete containerization and Kubernetes deployment setup for the KubeChart appl
   - Volume management
 
 ### Kubernetes Deployment
+
 Complete production-ready Kubernetes setup in `kubernetes/` directory:
 
-| File | Purpose |
-|------|---------|
-| `namespace.yaml` | Isolate resources in `kubechart` namespace |
-| `configmap.yaml` | Non-sensitive configuration (NODE_ENV, PORT, LOG_LEVEL) |
-| `secret.yaml` | Sensitive data (DATABASE_URL, JWT_SECRET) |
-| `serviceaccount.yaml` | Service account + RBAC permissions |
-| `deployment.yaml` | Main app deployment (3 replicas, health checks, resource limits) |
-| `service.yaml` | ClusterIP + LoadBalancer services |
-| `ingress.yaml` | HTTPS routing with cert-manager support |
-| `hpa.yaml` | Auto-scaling (3-10 replicas based on CPU/Memory) |
-| `network-policy.yaml` | Network security policies |
-| `kustomization.yaml` | Kustomize configuration for simplified management |
-| `secrets.env` | Environment file for secrets (⚠️ DO NOT COMMIT) |
+| File                  | Purpose                                                          |
+| --------------------- | ---------------------------------------------------------------- |
+| `namespace.yaml`      | Isolate resources in `kubechart` namespace                       |
+| `configmap.yaml`      | Non-sensitive configuration (NODE_ENV, PORT, LOG_LEVEL)          |
+| `secret.yaml`         | Sensitive data (DATABASE_URL, JWT_SECRET)                        |
+| `serviceaccount.yaml` | Service account + RBAC permissions                               |
+| `deployment.yaml`     | Main app deployment (3 replicas, health checks, resource limits) |
+| `service.yaml`        | ClusterIP + LoadBalancer services                                |
+| `ingress.yaml`        | HTTPS routing with cert-manager support                          |
+| `hpa.yaml`            | Auto-scaling (3-10 replicas based on CPU/Memory)                 |
+| `network-policy.yaml` | Network security policies                                        |
+| `kustomization.yaml`  | Kustomize configuration for simplified management                |
+| `secrets.env`         | Environment file for secrets (⚠️ DO NOT COMMIT)                  |
 
 ### Documentation
+
 - ✅ **DOCKER_KUBERNETES_DEPLOYMENT.md** (679 lines)
   - Complete setup guide
   - Docker configuration details
@@ -179,6 +182,7 @@ kubectl logs -f -n kubechart -l app=kubechart
 ## Key Features
 
 ### Security
+
 - ✅ Non-root container user
 - ✅ Read-only root filesystem option
 - ✅ No privilege escalation
@@ -188,6 +192,7 @@ kubectl logs -f -n kubechart -l app=kubechart
 - ✅ Secrets management (ConfigMap + Secret)
 
 ### High Availability
+
 - ✅ 3 default replicas for redundancy
 - ✅ Pod anti-affinity for distribution across nodes
 - ✅ Rolling update strategy
@@ -195,18 +200,21 @@ kubectl logs -f -n kubechart -l app=kubechart
 - ✅ Graceful shutdown on termination
 
 ### Scalability
+
 - ✅ Horizontal Pod Autoscaler (3-10 replicas)
 - ✅ CPU-based scaling (70% threshold)
 - ✅ Memory-based scaling (80% threshold)
 - ✅ Custom scaling policies
 
 ### Monitoring & Health
+
 - ✅ Liveness probe (healthcheck)
 - ✅ Readiness probe (traffic readiness)
 - ✅ Prometheus-compatible metrics endpoint
 - ✅ Structured logging ready
 
 ### Production Ready
+
 - ✅ Multi-stage Docker build
 - ✅ Minimal image size
 - ✅ Resource requests and limits
@@ -222,6 +230,7 @@ kubectl logs -f -n kubechart -l app=kubechart
 ### Environment Variables
 
 **ConfigMap (Non-sensitive):**
+
 ```yaml
 NODE_ENV: production
 PORT: 3000
@@ -229,6 +238,7 @@ LOG_LEVEL: info
 ```
 
 **Secrets (Sensitive):**
+
 ```
 DATABASE_URL: postgresql://user:password@host:5432/db
 JWT_SECRET: your-secure-jwt-secret-key
@@ -237,6 +247,7 @@ JWT_SECRET: your-secure-jwt-secret-key
 ### Update Configuration
 
 **Before Deployment:**
+
 ```bash
 # Edit secrets
 nano kubernetes/secrets.env
@@ -248,6 +259,7 @@ nano kubernetes/deployment.yaml
 ```
 
 **After Deployment:**
+
 ```bash
 # Update ConfigMap
 kubectl set env configmap/kubechart-config NODE_ENV=production -n kubechart
@@ -266,6 +278,7 @@ kubectl set image deployment/kubechart \
 ## Deployment Steps
 
 ### Prerequisites
+
 - Kubernetes 1.24+ cluster
 - kubectl configured
 - Docker installed
@@ -342,17 +355,20 @@ kubectl port-forward svc/kubechart 3000:80 -n kubechart
 ## Troubleshooting
 
 ### Check pod status
+
 ```bash
 kubectl get pods -n kubechart
 kubectl describe pod -n kubechart <pod-name>
 ```
 
 ### View logs
+
 ```bash
 kubectl logs -f -n kubechart <pod-name>
 ```
 
 ### Common issues and solutions are documented in:
+
 - **DOCKER_KUBERNETES_DEPLOYMENT.md** → "Monitoring and Troubleshooting"
 - **DEPLOYMENT_CHECKLIST.md** → "Troubleshooting"
 - **KUBERNETES_QUICK_REFERENCE.md** → "Common Issues"
@@ -374,21 +390,27 @@ kubectl delete -k kubernetes/
 ## Advanced Topics
 
 ### Database Setup
+
 - See: DOCKER_KUBERNETES_DEPLOYMENT.md → "Configuration and Secrets"
 
 ### TLS/HTTPS
+
 - See: DOCKER_KUBERNETES_DEPLOYMENT.md → "Advanced Configuration"
 
 ### Custom Domain
+
 - See: DOCKER_KUBERNETES_DEPLOYMENT.md → "Custom Domain"
 
 ### Resource Tuning
+
 - See: DOCKER_KUBERNETES_DEPLOYMENT.md → "Resource Management"
 
 ### Monitoring
+
 - See: DOCKER_KUBERNETES_DEPLOYMENT.md → "Monitoring and Troubleshooting"
 
 ### GitOps Workflow
+
 - Use Kustomize with ArgoCD
 - Use Sealed Secrets for secrets management
 - See: KUBERNETES_QUICK_REFERENCE.md → "Secrets Management"
@@ -456,6 +478,7 @@ root/
 ## Support
 
 For detailed information, refer to:
+
 - **Docker issues**: See section in DOCKER_KUBERNETES_DEPLOYMENT.md
 - **Kubernetes issues**: See troubleshooting sections
 - **Quick commands**: See KUBERNETES_QUICK_REFERENCE.md

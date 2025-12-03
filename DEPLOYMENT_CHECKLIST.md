@@ -3,11 +3,13 @@
 ## Files Created
 
 ### Docker Files
+
 - ✅ `Dockerfile` - Multi-stage Docker build configuration
 - ✅ `.dockerignore` - Files to exclude from Docker build context
 - ✅ `docker-compose.yml` - Local development environment setup
 
 ### Kubernetes Files
+
 - ✅ `kubernetes/namespace.yaml` - Kubernetes namespace
 - ✅ `kubernetes/configmap.yaml` - Application configuration
 - ✅ `kubernetes/secret.yaml` - Sensitive configuration (database, secrets)
@@ -21,6 +23,7 @@
 - ✅ `kubernetes/secrets.env` - Environment file for secrets (DO NOT COMMIT)
 
 ### Documentation Files
+
 - ✅ `DOCKER_KUBERNETES_DEPLOYMENT.md` - Comprehensive deployment guide
 - ✅ `KUBERNETES_QUICK_REFERENCE.md` - Quick reference for common commands
 - ✅ `DEPLOYMENT_CHECKLIST.md` - This file
@@ -56,11 +59,13 @@
 ### 3. Configuration Management
 
 #### ConfigMap (Non-sensitive)
+
 - [ ] Review `kubernetes/configmap.yaml`
 - [ ] Update if needed for your environment
 - [ ] Default values are suitable for most cases
 
 #### Secret (Sensitive)
+
 - [ ] Open `kubernetes/secrets.env`
 - [ ] Update DATABASE_URL with your PostgreSQL connection string
 - [ ] Update JWT_SECRET with a secure random string
@@ -71,6 +76,7 @@
 - [ ] **DO NOT commit `secrets.env` to git** - add to .gitignore
 
 #### Secret.yaml
+
 - [ ] Option 1: Update `kubernetes/secret.yaml` directly
   ```bash
   kubectl create secret generic kubechart-secrets \
@@ -121,6 +127,7 @@
   - [ ] Use existing database
 
 - [ ] Update DATABASE_URL in secrets with correct connection string:
+
   ```
   postgresql://username:password@hostname:5432/database_name
   ```
@@ -130,6 +137,7 @@
 ### 7. Resource Planning
 
 - [ ] Verify cluster resource availability:
+
   ```bash
   kubectl top nodes
   kubectl describe nodes
@@ -271,6 +279,7 @@ kubectl port-forward svc/kubechart 3000:80 -n kubechart
 ## Post-Deployment Verification
 
 - [ ] Application is responding to requests
+
   ```bash
   kubectl port-forward svc/kubechart 3000:80 -n kubechart
   curl http://localhost:3000/api/ping
@@ -278,6 +287,7 @@ kubectl port-forward svc/kubechart 3000:80 -n kubechart
   ```
 
 - [ ] Health checks are passing
+
   ```bash
   kubectl get pods -n kubechart
   # Status should be "Running"
@@ -285,12 +295,14 @@ kubectl port-forward svc/kubechart 3000:80 -n kubechart
   ```
 
 - [ ] HPA is working
+
   ```bash
   kubectl get hpa -n kubechart
   # View target CPU and memory usage
   ```
 
 - [ ] Logs are normal
+
   ```bash
   kubectl logs -n kubechart -l app=kubechart
   # No error messages in logs
@@ -398,8 +410,8 @@ Adjust in `kubernetes/deployment.yaml` based on monitoring:
 ```yaml
 resources:
   requests:
-    cpu: 250m      # Increase if frequently hitting limits
-    memory: 512Mi  # Increase if OOMKilled
+    cpu: 250m # Increase if frequently hitting limits
+    memory: 512Mi # Increase if OOMKilled
   limits:
     cpu: 500m
     memory: 1Gi
@@ -410,8 +422,8 @@ resources:
 Manual or automatic scaling in `kubernetes/hpa.yaml`:
 
 ```yaml
-minReplicas: 3      # Increase for high availability
-maxReplicas: 10     # Increase if expecting traffic spikes
+minReplicas: 3 # Increase for high availability
+maxReplicas: 10 # Increase if expecting traffic spikes
 ```
 
 ### Database Optimization
@@ -476,6 +488,7 @@ kubectl apply -f https://github.com/prometheus-operator/prometheus-operator/rele
 ### Alerting (Optional)
 
 Set up alerts for:
+
 - Pod CrashLoopBackOff
 - High CPU/Memory usage
 - Service unreachable
@@ -510,6 +523,7 @@ kubectl set image deployment/kubechart \
 ### Log Rotation
 
 Configure based on your logging setup:
+
 - Kubernetes logs: Usually handled by container runtime
 - Application logs: Configure in application
 - Aggregated logs: Depends on logging solution

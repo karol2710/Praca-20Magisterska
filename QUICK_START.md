@@ -39,6 +39,7 @@ chmod +x deploy.sh
 ```
 
 **Done!** Your app is now deployed. The script will:
+
 - ✅ Build Docker image
 - ✅ Push to registry
 - ✅ Update Kubernetes manifests
@@ -56,6 +57,7 @@ nano kubernetes/secrets.env
 ```
 
 Update:
+
 ```
 DATABASE_URL=postgresql://user:password@host:5432/db
 JWT_SECRET=your-secure-secret
@@ -234,11 +236,13 @@ curl http://localhost:3000/api/ping
 ## What Was Created
 
 ### Docker Setup
+
 - `Dockerfile` - Multi-stage build
 - `.dockerignore` - Build context optimization
 - `docker-compose.yml` - Local development
 
 ### Kubernetes Setup
+
 - `kubernetes/` directory with all manifests
   - Deployment (3 replicas)
   - Service (ClusterIP + LoadBalancer)
@@ -249,6 +253,7 @@ curl http://localhost:3000/api/ping
   - And more...
 
 ### Deployment Tools
+
 - `deploy.sh` - Automated deployment script
 - Complete documentation guides
 
@@ -277,15 +282,19 @@ For more detailed information:
 ## Support
 
 **Issue with Docker?**
+
 - See: DOCKER_KUBERNETES_DEPLOYMENT.md → "Building Docker Images"
 
 **Issue with Kubernetes?**
+
 - See: KUBERNETES_QUICK_REFERENCE.md → "Common Issues"
 
 **Need detailed setup?**
+
 - See: DOCKER_KUBERNETES_DEPLOYMENT.md → Full guide
 
 **Quick commands?**
+
 - See: KUBERNETES_QUICK_REFERENCE.md
 
 ---
@@ -293,6 +302,7 @@ For more detailed information:
 ## That's It! 🎉
 
 You now have:
+
 - ✅ Containerized application (Docker)
 - ✅ Kubernetes-ready manifests
 - ✅ Scalable deployment (3-10 replicas)

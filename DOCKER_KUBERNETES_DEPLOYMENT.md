@@ -27,6 +27,7 @@ This guide provides comprehensive instructions for containerizing and deploying 
 The application uses a multi-stage Dockerfile for optimal production builds:
 
 **Build Stage:**
+
 - Uses `node:22-alpine` as the base image
 - Installs build dependencies (python3, make, g++)
 - Installs pnpm package manager
@@ -34,6 +35,7 @@ The application uses a multi-stage Dockerfile for optimal production builds:
 - Builds both client and server using Vite
 
 **Production Stage:**
+
 - Uses lightweight `node:22-alpine` base
 - Copies only necessary artifacts from build stage
 - Installs production dependencies only
@@ -263,6 +265,7 @@ kubectl apply -f kubernetes/sealed-secret.yaml
 **Option 4: External Secrets Operator**
 
 For advanced GitOps workflows, use External Secrets Operator to fetch secrets from:
+
 - AWS Secrets Manager
 - HashiCorp Vault
 - Azure Key Vault
@@ -630,11 +633,11 @@ Adjust CPU/Memory requests and limits in `kubernetes/deployment.yaml`:
 ```yaml
 resources:
   requests:
-    cpu: 250m        # Minimum CPU
-    memory: 512Mi    # Minimum Memory
+    cpu: 250m # Minimum CPU
+    memory: 512Mi # Minimum Memory
   limits:
-    cpu: 500m        # Maximum CPU
-    memory: 1Gi      # Maximum Memory
+    cpu: 500m # Maximum CPU
+    memory: 1Gi # Maximum Memory
 ```
 
 ### Horizontal Pod Autoscaler
@@ -642,8 +645,8 @@ resources:
 HPA automatically scales pods based on metrics:
 
 ```yaml
-minReplicas: 3              # Minimum pods
-maxReplicas: 10             # Maximum pods
+minReplicas: 3 # Minimum pods
+maxReplicas: 10 # Maximum pods
 targetCPUUtilizationPercentage: 70
 targetMemoryUtilizationPercentage: 80
 ```
