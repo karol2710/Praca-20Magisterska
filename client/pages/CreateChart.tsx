@@ -1262,7 +1262,7 @@ export default function CreateChart() {
                 <li>✓ Pre-configured templates</li>
                 <li>✓ Best practices built-in</li>
                 <li>✓ Quick setup</li>
-                <li>◆◆◆◆◆ Suitable for common use cases</li>
+                <li>✓ Suitable for common use cases</li>
               </ul>
             </div>
 
