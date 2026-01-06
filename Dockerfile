@@ -18,6 +18,9 @@ RUN pnpm install --frozen-lockfile
 # Copy source code
 COPY . .
 
+# Verify critical config files exist
+RUN ls -la vite.config.ts tsconfig.json || echo "Config files missing!"
+
 # Clear Vite cache and build application
 RUN rm -rf .vite node_modules/.vite && pnpm run build
 
