@@ -24,12 +24,7 @@ next-env.d.ts
 .vite
 .vitest
 vitest.config.ts
-vite.config.ts
-vite.config.server.ts
-tsconfig.json
 prettier.config.js
-postcss.config.js
-tailwind.config.ts
 components.json
 Documentation/
 YAML samples/
